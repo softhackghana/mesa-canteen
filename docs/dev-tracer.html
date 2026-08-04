@@ -198,7 +198,7 @@
 <h2>5 · Remaining Work for a Full Build (prioritized)</h2>
 <h3>Hardware &amp; native layer (MVP completion)</h3>
 <ul>
-  <li><b>Native WebSocket bridge service</b> (browser ↔ USB) for biometrics + ESC/POS printers — both <code>DigitalPersonaAdapter</code> and <code>PrinterClient</code> already target <code>ws://127.0.0.1:8766</code>.</li>
+  <li><b>Native WebSocket bridge service</b> (browser ↔ USB) for biometrics + ESC/POS printers — <code>DigitalPersonaAdapter</code> targets <code>ws://127.0.0.1:8765</code>, <code>PrinterClient</code> targets <code>ws://127.0.0.1:8766</code> (two separate bridge ports).</li>
   <li><b>SourceAFIS matching</b> — WebAssembly/native engine for real template extraction + 1:N matching + duplicate detection.</li>
   <li><b>Suprema / ZKTeco adapters</b> against real SDKs once procured (PRD risk #1 mitigation: adapter pattern ready).</li>
   <li><b>Durable 72h offline</b> — move POS queue to IndexedDB (<code>lib/pos-db.ts</code> ready), encrypted template cache, heartbeat + auto-sync on reconnect.</li>
