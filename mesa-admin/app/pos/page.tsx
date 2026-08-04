@@ -67,16 +67,22 @@ export default function PosKiosk() {
   }, [start]);
 
   // Demo fingerprint keyboard shortcuts for quick kiosk testing:
-  // 1-4 → scan seeded identities, 5 → no match.
+  // 1-4 → scan seeded identities, 5 → no match. With a real adapter
+  // (metadata.hardware) the identity is not known up front — the key merely
+  // triggers a hardware capture, which 1:N matches against the bridge store.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (usePosStore.getState().screen !== "idle") return;
       const idx = Number(e.key) - 1;
       if (idx >= 0 && idx < demoIdentities.length) {
-        void usePosStore.getState().scan(demoIdentities[idx].template);
+        void usePosStore.getState().scan(
+          usePosStore.getState().adapter?.metadata.hardware ? undefined : demoIdentities[idx].template,
+        );
       } else if (e.key === "5") {
-        void usePosStore.getState().scan("tpl-nonexistent");
+        void usePosStore.getState().scan(
+          usePosStore.getState().adapter?.metadata.hardware ? undefined : "tpl-nonexistent",
+        );
       }
     };
     window.addEventListener("keydown", onKey);

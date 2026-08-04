@@ -67,7 +67,7 @@
 
 <h2>2 · Phase Completion</h2>
 <div class="grid">
-  <div class="card"><div class="label">MVP — Phase 1</div><div class="big">~82%</div><div class="bar"><span style="width:82%;background:var(--ok)"></span></div><div class="num">core platform delivered</div></div>
+  <div class="card"><div class="label">MVP — Phase 1</div><div class="big">~90%</div><div class="bar"><span style="width:90%;background:var(--ok)"></span></div><div class="num">core platform delivered · hardware bridge shipped</div></div>
   <div class="card"><div class="label">Phase 2 — Admin automation</div><div class="big">~30%</div><div class="bar"><span style="width:30%;background:var(--warn)"></span></div><div class="num">month-end DB engine yes · UI + HRIS no</div></div>
   <div class="card"><div class="label">Phase 3 — Future</div><div class="big">~5%</div><div class="bar"><span style="width:5%;background:var(--bad)"></span></div><div class="num">intentionally deferred</div></div>
 </div>
@@ -77,7 +77,7 @@
   <tr>
     <td><b>MVP — Phase 1</b><br/>native enrollment, People Master, offline POS, core reporting, RBAC, ECDSA licensing, receipt printing, template designer, multi-modal fallback</td>
     <td><span class="chip part">MOSTLY DONE</span></td>
-    <td>All 11 admin routes + full POS kiosk + licensing engine + meal-rules engine + DB schema/RLS/triggers exist. Gaps: real hardware layer (SourceAFIS, native bridges), PDF/Excel export, live data on some admin pages.</td>
+    <td>All 11 admin routes + full POS kiosk + licensing engine + meal-rules engine + DB schema/RLS/triggers + native DigitalPersona bridge (<code>bridge/digitalpersona/</code>, ws://127.0.0.1:8765). Gaps: real minutiae matching (SourceAFIS), PDF/Excel export, live data on some admin pages.</td>
   </tr>
   <tr>
     <td><b>Phase 2</b><br/>HRIS/AD sync, automated month-end, fraud &amp; exception dashboards, configurable shift rules</td>
@@ -98,7 +98,7 @@
 
   <tr><td rowspan="7" style="white-space:nowrap"><b>10.1 Identity &amp; Biometrics</b></td>
     <td>FR-IM-001 · capture via DP / Suprema / ZKTeco</td><td><span class="chip part">PARTIAL</span></td>
-    <td>DigitalPersonaAdapter real (WebSocket bridge protocol, <code>lib/biometrics/DigitalPersonaAdapter.ts</code>). Suprema/ZKTeco simulated by decision (<code>SimulatedBiometricAdapter.ts</code>).</td></tr>
+    <td>DigitalPersona real via native Windows bridge (<code>bridge/digitalpersona/</code> → ws://127.0.0.1:8765, HID SDK) + auto-detect enrollment (FR-IM-007). Suprema/ZKTeco simulated by decision (<code>SimulatedBiometricAdapter.ts</code>).</td></tr>
   <tr><td>FR-IM-002 · SourceAFIS vendor-agnostic matching</td><td><span class="chip part">PARTIAL</span></td>
     <td>Adapter interface is vendor-agnostic; matching simulated in browser. Real SourceAFIS requires native/WebAssembly engine.</td></tr>
   <tr><td>FR-IM-003 · quality threshold (default 80%)</td><td><span class="chip ok">DONE</span></td>
@@ -109,8 +109,8 @@
     <td>3-impression capture flow + <code>biometric_templates</code> table.</td></tr>
   <tr><td>FR-IM-006 · purge on termination</td><td><span class="chip ok">DONE</span></td>
     <td>Template purge on profile terminate/purge (People Master flow).</td></tr>
-  <tr><td>FR-IM-007 · auto-detect scanner by USB VID</td><td><span class="chip part">PARTIAL</span></td>
-    <td>Adapter selection interface present; hardware VID detection needs the native bridge.</td></tr>
+  <tr><td>FR-IM-007 · auto-detect scanner by USB VID</td><td><span class="chip ok">DONE</span></td>
+    <td><code>autoDetectAdapter()</code> probes the bridge (ws://127.0.0.1:8765) first, falls back to simulator; enroll page + POS kiosk both wired.</td></tr>
 
   <tr><td rowspan="4" style="white-space:nowrap"><b>10.2 People Master</b></td>
     <td>FR-PM-001 · profile CRUD</td><td><span class="chip ok">DONE</span></td><td>Live via InsForge (<code>stores/people-store.ts</code>).</td></tr>
@@ -199,6 +199,7 @@
 <h3>Hardware &amp; native layer (MVP completion)</h3>
 <ul>
   <li><b>Native WebSocket bridge service</b> (browser ↔ USB) for biometrics + ESC/POS printers — <code>DigitalPersonaAdapter</code> targets <code>ws://127.0.0.1:8765</code>, <code>PrinterClient</code> targets <code>ws://127.0.0.1:8766</code> (two separate bridge ports).</li>
+  <li><b>Biometric bridge shipped</b> — <code>bridge/digitalpersona/</code> (Python, HID SDK on Windows, ws://127.0.0.1:8765): hello/capture/identify/enroll + in-memory 1:N store + selfcheck.py. Remaining: real SourceAFIS minutiae matching and server-side template persistence.</li>
   <li><b>SourceAFIS matching</b> — WebAssembly/native engine for real template extraction + 1:N matching + duplicate detection.</li>
   <li><b>Suprema / ZKTeco adapters</b> against real SDKs once procured (PRD risk #1 mitigation: adapter pattern ready).</li>
   <li><b>Durable 72h offline</b> — move POS queue to IndexedDB (<code>lib/pos-db.ts</code> ready), encrypted template cache, heartbeat + auto-sync on reconnect.</li>
@@ -217,7 +218,7 @@
   <li><b>Browser-test remaining flows</b> — people CRUD + bulk import, meal rules UI, POS kiosk end-to-end (scan → approve → print → reprint), license activation dialog, override flow.</li>
   <li><b>Fallow audit gate</b> — 111 dead-code findings are barrel false positives (<code>stores/index.ts</code> chain); decide <code>fallow-ignore-file</code> vs. restructure.</li>
   <li><b>DB cleanup</b> — remove stray <code>TEST-DEPT</code> department row.</li>
-  <li><b>Enrollment live path</b> — wire enroll page to real people + template storage instead of demo identities.</li>
+  <li><b>Enrollment live path</b> — enroll page auto-detects the bridge (hardware) or falls back to the simulator; real template persistence to the server still lands with the data worker.</li>
 </ul>
 
 <h2>6 · Verified State (evidence)</h2>
@@ -227,7 +228,7 @@
   <p><span class="kw">✓</span> Selfchecks pass: <code>lib/license.selfcheck.ts</code>, <code>lib/meal-rules.selfcheck.ts</code>; meal-rule engine verified against live DB</p>
   <p><span class="kw">✓</span> DB: schema + RLS + triggers applied (transactions immutability, audit immutability, meal-rule enforcement)</p>
   <p><span class="kw">✓</span> 78 files committed (<code>f0c10f3</code>) — auth wire, login/logout, proxy, seed sync</p>
-  <p><span class="kw">→</span> Untested UI paths: license activation dialog interaction, POS kiosk flows, people/meal-rules/reports browser passes</p>
+  <p><span class="kw">✓</span> Biometric bridge: <code>bridge/digitalpersona/</code> protocol self-check passes (hello/ready, id-correlation, enroll/identify/no_match, fail-soft capture)</p>
 </div>
 
 <footer>

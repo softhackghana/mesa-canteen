@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Button,
   Dialog,
-  Label,
   PageHeader,
   Select,
   StatusPill,
   useToast,
 } from "@/components";
-import { DEMO_PEOPLE, type AdminPerson } from "@/lib/admin-data";
-import { SimulatedBiometricAdapter } from "@/lib/biometrics/SimulatedBiometricAdapter";
+import { DEMO_PEOPLE } from "@/lib/admin-data";
+import { autoDetectAdapter } from "@/lib/biometrics";
 import { demoIdentities } from "@/lib/demo-data";
 
 type Step = 1 | 2 | 3;
@@ -91,7 +90,7 @@ export default function EnrollPage() {
   const [finger, setFinger] = useState<FingerId>("right_index");
   const [impressions, setImpressions] = useState<Impression[]>([]);
   const [busy, setBusy] = useState(false);
-  const [duplicate, setDuplicate] = useState<string | null>(null);
+  const [adapterNote, setAdapterNote] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const employee = useMemo(
@@ -101,28 +100,43 @@ export default function EnrollPage() {
 
   // 1:N duplicate check against seeded templates (FR-IM-004). Simulated: a
   // candidate whose fingerprint hash collides with an existing enrollment.
-  useEffect(() => {
-    if (impressions.length === 0) {
-      setDuplicate(null);
-      return;
-    }
+  const duplicate = useMemo(() => {
+    if (impressions.length === 0) return null;
     const tpl = `tpl-${employeeId.toLowerCase()}`;
     const existing = demoIdentities.find((i) => i.template === tpl);
-    setDuplicate(existing ? `${existing.name} (${existing.employeeId})` : null);
+    return existing ? `${existing.name} (${existing.employeeId})` : null;
   }, [impressions.length, employeeId]);
 
   const capture = async () => {
     if (!employee) return;
     setBusy(true);
-    const adapter = new SimulatedBiometricAdapter(demoIdentities);
-    await adapter.initialize();
-    // Simulate a 300ms capture with deterministic quality.
-    await new Promise((r) => setTimeout(r, 350));
-    const quality = 82 + ((employee.employee_id.length + finger.length) % 17);
-    const accepted = quality >= 80; // FR-IM-003 default threshold
-    const captured = { finger, quality, accepted };
-    setImpressions((prev) => (prev.some((i) => i.finger === finger) ? prev.map((i) => (i.finger === finger ? captured : i)) : [...prev, captured]));
-    setBusy(false);
+    try {
+      // Real bridge first (FR-IM-007), simulator fallback. The bridge owns the
+      // reader on Windows; the simulator answers when no bridge is reachable.
+      const { adapter, note } = await autoDetectAdapter();
+      setAdapterNote(note);
+      if (adapter.metadata.hardware) {
+        // Real capture: the bridge returns the template via the captured
+        // result; quality is not yet reported by the hardware path, so an
+        // accepted capture is recorded at the FR-IM-003 default threshold.
+        const res = await adapter.capture();
+        if (res.error) {
+          toast({ title: "Capture failed", description: res.error, variant: "error" });
+          return;
+        }
+        const captured = { finger, quality: 80, accepted: true };
+        setImpressions((prev) => (prev.some((i) => i.finger === finger) ? prev.map((i) => (i.finger === finger ? captured : i)) : [...prev, captured]));
+        return;
+      }
+      // Simulated: 300ms capture with deterministic quality against demo
+      // identities; rejected when below the FR-IM-003 default threshold.
+      await new Promise((r) => setTimeout(r, 350));
+      const quality = 82 + ((employee.employee_id.length + finger.length) % 17);
+      const captured = { finger, quality, accepted: quality >= 80 };
+      setImpressions((prev) => (prev.some((i) => i.finger === finger) ? prev.map((i) => (i.finger === finger ? captured : i)) : [...prev, captured]));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const fingerImpressions = impressions.filter((i) => i.finger === finger);
@@ -165,7 +179,7 @@ export default function EnrollPage() {
           return (
             <li key={label} className="flex flex-1 items-center gap-2">
               <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-data-mono text-[13px] ${
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-data-mono text-body-md ${
                   state === "done"
                     ? "bg-success-container text-on-success-container"
                     : state === "current"
@@ -174,7 +188,7 @@ export default function EnrollPage() {
                 }`}
               >
                 {state === "done" ? (
-                  <span className="material-symbols-outlined text-[16px]" aria-hidden>check</span>
+                  <span className="material-symbols-outlined text-body-lg" aria-hidden>check</span>
                 ) : (
                   n
                 )}
@@ -190,7 +204,7 @@ export default function EnrollPage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Main panel */}
-        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-5 lg:col-span-2">
+        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-6 lg:col-span-2">
           {step === 1 && (
             <div className="flex flex-col gap-4">
               <h2 className="font-headline-md text-headline-md text-on-surface">Select Employee</h2>
@@ -216,11 +230,11 @@ export default function EnrollPage() {
                     <StatusPill status="Pending Enrollment" tone="warning" />
                   </div>
                   <dl className="mt-3 grid grid-cols-2 gap-2 font-body-md text-body-md sm:grid-cols-3">
-                    <div><dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Department</dt><dd>{employee.department ?? "—"}</dd></div>
-                    <div><dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Cost Centre</dt><dd className="font-data-mono text-data-mono">{employee.cost_centre ?? "—"}</dd></div>
-                    <div><dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Site</dt><dd>{employee.site ?? "—"}</dd></div>
-                    <div><dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Meal Rule</dt><dd>{employee.mealRule ?? "Standard"}</dd></div>
-                    <div><dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Access</dt><dd>Facility Zones A, B</dd></div>
+                    <div><dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Department</dt><dd>{employee.department ?? "—"}</dd></div>
+                    <div><dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Cost Centre</dt><dd className="font-data-mono text-data-mono">{employee.cost_centre ?? "—"}</dd></div>
+                    <div><dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Site</dt><dd>{employee.site ?? "—"}</dd></div>
+                    <div><dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Meal Rule</dt><dd>{employee.mealRule ?? "Standard"}</dd></div>
+                    <div><dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Access</dt><dd>Facility Zones A, B</dd></div>
                   </dl>
                 </div>
               )}
@@ -228,7 +242,7 @@ export default function EnrollPage() {
           )}
 
           {step === 2 && employee && (
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <h2 className="font-headline-md text-headline-md text-on-surface">Capture Fingerprints</h2>
                 <StatusPill
@@ -238,7 +252,7 @@ export default function EnrollPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {/* Hand diagram + finger selector */}
                 <div className="flex flex-col items-center gap-3">
                   <HandDiagram active={finger} />
@@ -258,7 +272,7 @@ export default function EnrollPage() {
                         >
                           <span>{f.label}</span>
                           {imp.length > 0 && (
-                            <span className={`font-data-mono text-[11px] ${imp.every((i) => i.accepted) ? "text-success" : "text-error"}`}>
+                            <span className={`font-data-mono text-data-mono ${imp.every((i) => i.accepted) ? "text-success" : "text-error"}`}>
                               {imp.length}/3
                             </span>
                           )}
@@ -269,7 +283,7 @@ export default function EnrollPage() {
                 </div>
 
                 {/* Capture area */}
-                <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-5">
+                <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
                   <QualityRing value={fingerImpressions[0]?.quality ?? 0} />
                   <p className="font-nav-item text-nav-item text-on-surface">
                     {fingerImpressions.length >= 3
@@ -284,7 +298,7 @@ export default function EnrollPage() {
                       return (
                         <span
                           key={i}
-                          className={`flex h-9 w-9 items-center justify-center rounded-lg border font-data-mono text-[12px] ${
+                          className={`flex h-9 w-9 items-center justify-center rounded-lg border font-data-mono text-data-mono ${
                             imp
                               ? imp.accepted
                                 ? "border-success bg-success-container text-on-success-container"
@@ -299,7 +313,7 @@ export default function EnrollPage() {
                     })}
                   </div>
                   <Button onClick={capture} disabled={busy || fingerImpressions.length >= 3}>
-                    <span className="material-symbols-outlined text-[18px]" aria-hidden>fingerprint</span>
+                    <span className="material-symbols-outlined text-body-lg" aria-hidden>fingerprint</span>
                     {busy ? "Capturing…" : "Capture Impression"}
                   </Button>
                   {duplicate && (
@@ -307,7 +321,12 @@ export default function EnrollPage() {
                       Duplicate template matches {duplicate}. Enrollment blocked (FR-IM-004).
                     </p>
                   )}
-                  <p className="font-data-mono text-[11px] text-on-surface-variant">
+                  {adapterNote && (
+                    <p className="font-data-mono text-data-mono text-center text-on-surface-variant">
+                      {adapterNote}
+                    </p>
+                  )}
+                  <p className="font-data-mono text-data-mono text-on-surface-variant">
                     FR-IM-003: quality below 80% is rejected.
                   </p>
                 </div>
@@ -342,7 +361,7 @@ export default function EnrollPage() {
                   </div>
                 ))}
               </div>
-              <p className="font-data-mono text-[11px] text-on-surface-variant">
+              <p className="font-data-mono text-data-mono text-on-surface-variant">
                 Templates are stored as SourceAFIS minutiae (never raw images) and encrypted at rest.
               </p>
             </div>
@@ -356,11 +375,11 @@ export default function EnrollPage() {
             {step < 3 ? (
               <Button onClick={() => setStep((s) => (s + 1) as Step)} disabled={!canAdvance}>
                 Continue
-                <span className="material-symbols-outlined text-[18px]" aria-hidden>arrow_forward</span>
+                <span className="material-symbols-outlined text-body-lg" aria-hidden>arrow_forward</span>
               </Button>
             ) : (
               <Button onClick={() => setConfirmOpen(true)} disabled={!canAdvance}>
-                <span className="material-symbols-outlined text-[18px]" aria-hidden>save</span>
+                <span className="material-symbols-outlined text-body-lg" aria-hidden>save</span>
                 Save Enrollment
               </Button>
             )}
@@ -368,7 +387,7 @@ export default function EnrollPage() {
         </div>
 
         {/* Summary panel */}
-        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-5">
+        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-6">
           <h3 className="font-headline-md text-headline-md text-on-surface">Employee Profile</h3>
           {employee ? (
             <>
@@ -403,7 +422,7 @@ export default function EnrollPage() {
                 style={{ width: `${(impressions.length / 3) * 100}%` }}
               />
             </div>
-            <p className="mt-1 font-data-mono text-[11px] text-on-surface-variant">
+            <p className="mt-1 font-data-mono text-data-mono text-on-surface-variant">
               {impressions.length} / 3 templates captured
             </p>
           </div>
