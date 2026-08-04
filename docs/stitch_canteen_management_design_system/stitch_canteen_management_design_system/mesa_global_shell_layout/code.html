@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA - Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed": "#00115a", "surface-container-lowest": "#ffffff", "on-primary-container": "#f0efff", "surface-container-high": "#e4e9ed", surface: "#f6fafe", "inverse-primary": "#bac3ff", "inverse-on-surface": "#edf1f5", "surface-container-low": "#f0f4f8", "on-surface": "#171c1f", "error-container": "#ffdad6", "on-tertiary-fixed": "#0b1c30", "surface-variant": "#dfe3e7", error: "#ba1a1a", "tertiary-container": "#5f6f86", "surface-dim": "#d6dade", "surface-tint": "#3f54c1", "outline-variant": "#c5c5d5", tertiary: "#47576c", "on-background": "#171c1f", "on-tertiary": "#ffffff", "surface-bright": "#f6fafe", "on-secondary-container": "#5c647c", "primary-container": "#4f64d1", "on-primary-fixed-variant": "#233aa8", "primary-fixed-dim": "#bac3ff", "on-secondary": "#ffffff", "tertiary-fixed-dim": "#b7c8e1", "primary-fixed": "#dee0ff", "on-primary": "#ffffff", "on-error": "#ffffff", "on-secondary-fixed-variant": "#3f465d", "tertiary-fixed": "#d3e4fe", "surface-container": "#eaeef2", "on-secondary-fixed": "#131b30", "on-surface-variant": "#444653", "on-error-container": "#93000a", primary: "#344ab7", secondary: "#565e76", background: "#f6fafe", "secondary-container": "#dbe1ff", "secondary-fixed": "#dbe1ff", "on-tertiary-fixed-variant": "#38485d", "secondary-fixed-dim": "#bec6e2", "surface-container-highest": "#dfe3e7", outline: "#757684", "inverse-surface": "#2c3134", "on-tertiary-container": "#ebf2ff"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"header-height": "64px", "margin-page": "24px", "sidebar-collapsed": "72px", "sidebar-expanded": "240px", gutter: "16px", "stack-sm": "0.5rem", "stack-md": "1rem", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"data-mono": ["JetBrains Mono"], "body-lg": ["Manrope"], "nav-item": ["Manrope"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "body-md": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+    }
+    .material-symbols-outlined[data-weight="fill"] {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen font-body-lg overflow-hidden">
+<!-- SideNavBar -->
+<aside class="w-sidebar-expanded h-full flex flex-col fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest z-50 py-4 px-3 overflow-y-auto">
+<div class="mb-8 px-3">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">MESA</h1>
+<p class="font-data-mono text-data-mono text-on-surface-variant text-[11px] uppercase tracking-wider mt-1">Meal Entitlement Platform</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<div class="mt-4 mb-2 px-3">
+<span class="font-data-mono text-data-mono text-on-surface-variant text-[11px] uppercase tracking-wider">OPERATIONS</span>
+</div>
+<a class="flex items-center gap-3 h-10 px-3 bg-primary-container/10 text-primary border-l-[3px] border-primary rounded-r-xl transition-colors scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-weight="fill">dashboard</span>
+<span class="font-nav-item text-nav-item">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-nav-item text-nav-item">POS Terminals</span>
+</a>
+<div class="mt-4 mb-2 px-3">
+<span class="font-data-mono text-data-mono text-on-surface-variant text-[11px] uppercase tracking-wider">IDENTITY</span>
+</div>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-nav-item text-nav-item">People Master</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">person_add</span>
+<span class="font-nav-item text-nav-item">Enrollment</span>
+</a>
+<div class="mt-4 mb-2 px-3">
+<span class="font-data-mono text-data-mono text-on-surface-variant text-[11px] uppercase tracking-wider">POLICY</span>
+</div>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">rule</span>
+<span class="font-nav-item text-nav-item">Meal Rules</span>
+</a>
+<div class="mt-4 mb-2 px-3">
+<span class="font-data-mono text-data-mono text-on-surface-variant text-[11px] uppercase tracking-wider">FINANCE</span>
+</div>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">event_repeat</span>
+<span class="font-nav-item text-nav-item">Period-End</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-nav-item text-nav-item">Reports</span>
+</a>
+<div class="mt-4 mb-2 px-3">
+<span class="font-data-mono text-data-mono text-on-surface-variant text-[11px] uppercase tracking-wider">SYSTEM</span>
+</div>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">devices</span>
+<span class="font-nav-item text-nav-item">Devices</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-nav-item text-nav-item">Audit Log</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-nav-item text-nav-item">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant/30 flex flex-col gap-1">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-nav-item text-nav-item">Support</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-nav-item text-nav-item">User Guide</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98 active:scale-95 duration-200 mt-2" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-nav-item text-nav-item">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="h-header-height w-[calc(100%-240px)] ml-[240px] fixed top-0 right-0 border-b border-outline-variant bg-surface-container-lowest flex justify-between items-center px-margin-page z-40">
+<div class="flex items-center gap-6 w-full max-w-3xl">
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold whitespace-nowrap">Dashboard</h2>
+<div class="relative w-full max-w-[420px]">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 border border-outline rounded-DEFAULT leading-5 bg-surface-container-lowest text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-all duration-200 font-body-md text-body-md" placeholder="Search operations, logs, or reports..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center ml-2 cursor-pointer border border-outline-variant/20 hover:ring-2 hover:ring-primary/30 transition-all">
+<span class="font-nav-item text-nav-item font-bold">JD</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[240px] mt-header-height p-margin-page h-[calc(100vh-64px)] overflow-y-auto">
+<div class="grid grid-cols-12 gap-gutter max-w-[1440px] mx-auto">
+<!-- Welcome Card -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col justify-center min-h-[200px]">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-2">Welcome back, System Admin</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+          System health is optimal. The period-end reconciliation process is currently active and requires your attention within the next 48 hours.
+        </p>
+<div class="mt-6 flex gap-3">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-DEFAULT font-nav-item text-nav-item hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+            Review Reconciliation
+          </button>
+<button class="border border-outline text-on-surface px-4 py-2 rounded-DEFAULT font-nav-item text-nav-item hover:bg-surface-container transition-colors">
+            View Audit Logs
+          </button>
+</div>
+</div>
+<!-- Quick Stats Card -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col min-h-[200px]">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-4">System Status</h4>
+<div class="flex-1 flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-outline-variant/30 pb-3">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Active POS Terminals</span>
+<span class="font-data-mono text-data-mono text-on-surface font-bold text-lg">142/145</span>
+</div>
+<div class="flex items-center justify-between border-b border-outline-variant/30 pb-3">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Meals Processed Today</span>
+<span class="font-data-mono text-data-mono text-on-surface font-bold text-lg">4,289</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Network Latency</span>
+<span class="font-data-mono text-data-mono text-success-container text-sm px-2 py-1 bg-success-container/10 rounded-full border border-success-container/20">12ms</span>
+</div>
+</div>
+</div>
+<!-- Placeholder Content Area -->
+<div class="col-span-12 bg-surface-container-lowest border border-outline-variant rounded-xl p-8 min-h-[400px] flex items-center justify-center mt-4 border-dashed">
+<div class="text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-outline mb-4 text-4xl">grid_view</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">Main Content Canvas</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+            This area utilizes the 12-column grid system with 16px gutters. Place primary operational widgets, data tables, or detailed views here. Background is surface-container-lowest (#FFFFFF) with a 1px outline-variant border.
+          </p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

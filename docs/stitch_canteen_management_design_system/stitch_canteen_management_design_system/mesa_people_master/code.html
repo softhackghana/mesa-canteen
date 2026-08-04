@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>People Master - Employee List - MESA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-variant": "#dfe3e7", "surface-bright": "#f6fafe", "on-tertiary-container": "#ebf2ff", "primary-container": "#4f64d1", "error-container": "#ffdad6", tertiary: "#47576c", "surface-dim": "#d6dade", "on-secondary-fixed": "#131b30", "tertiary-fixed": "#d3e4fe", "on-secondary-container": "#5c647c", "tertiary-container": "#5f6f86", "surface-container-low": "#f0f4f8", error: "#ba1a1a", "on-tertiary-fixed": "#0b1c30", "surface-container": "#eaeef2", "on-tertiary-fixed-variant": "#38485d", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "surface-tint": "#3f54c1", outline: "#757684", "on-surface": "#171c1f", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#3f465d", "on-primary-fixed": "#00115a", secondary: "#565e76", "on-primary": "#ffffff", "outline-variant": "#c5c5d5", "surface-container-high": "#e4e9ed", "primary-fixed-dim": "#bac3ff", "primary-fixed": "#dee0ff", "inverse-on-surface": "#edf1f5", "secondary-container": "#dbe1ff", "secondary-fixed": "#dbe1ff", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", background: "#f6fafe", "on-primary-container": "#f0efff", surface: "#f6fafe", "secondary-fixed-dim": "#bec6e2", "inverse-surface": "#2c3134", "inverse-primary": "#bac3ff", primary: "#344ab7", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#233aa8", "on-error-container": "#93000a", "surface-container-highest": "#dfe3e7", "on-surface-variant": "#444653", "success-container": "#d7f0dd", "on-success-container": "#0f5223", "warning-container": "#ffe6c8", "on-warning-container": "#7a4a00", "error-container-alt": "#fce8e8", "on-error-container-alt": "#9e1c1c"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"margin-page": "24px", "sidebar-expanded": "240px", gutter: "16px", "stack-sm": "0.5rem", "sidebar-collapsed": "72px", "header-height": "64px", "stack-md": "1rem", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"headline-md": ["Manrope"], "body-lg": ["Manrope"], "nav-item": ["Manrope"], "body-md": ["Manrope"], "data-mono": ["JetBrains Mono"], "headline-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "table-header": ["11px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+          font-variation-settings: 'FILL' 1;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-hidden">
+<!-- TopNavBar -->
+<header class="h-header-height w-[calc(100%-240px)] ml-[240px] fixed top-0 right-0 border-b border-outline-variant bg-surface-container-lowest flex justify-between items-center px-margin-page w-full z-40 transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="font-headline-md text-headline-md font-bold text-on-surface">MESA</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-2 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxhbwXwW_qJylDWbRBwvn39VAAjonm2wGSnD907uTVFjWJtKttsTZa1Zg6Qu8E1mV9lqp0uSPAShbb3BYKIVismi-ZsJRs3Iz7B41mLvqvtrKF0BcMEs4GFoB-oZkZNTZozcEajAHWzDtMCfrKcqhjzR-R2P9ZdjFupMiJrsz0rcb-eRWjcX6mplXRYHsp2VwSZ0RPdIOxhG1LxiHZWxnIljku_GsFYlljBC-FTy0Iv0E7-PVdHlNpt2iRC7GcsN-q-yC4zDLIT0U"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="w-sidebar-expanded h-full flex flex-col fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest z-50 py-4 px-3 overflow-y-auto">
+<div class="flex items-center gap-3 px-3 mb-8">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary font-bold">M</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-on-surface">MESA</div>
+<div class="font-data-mono text-[11px] uppercase tracking-wider text-on-surface-variant">Meal Entitlement Platform</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-nav-item text-nav-item">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="point_of_sale">point_of_sale</span>
+<span class="font-nav-item text-nav-item">POS Terminals</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 bg-primary-container/10 text-primary border-l-[3px] border-primary rounded-r-xl transition-colors scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined fill" data-icon="group" data-weight="fill">group</span>
+<span class="font-nav-item text-nav-item font-bold">People Master</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+<span class="font-nav-item text-nav-item">Enrollment</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="font-nav-item text-nav-item">Meal Rules</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="event_repeat">event_repeat</span>
+<span class="font-nav-item text-nav-item">Period-End</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-nav-item text-nav-item">Reports</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="devices">devices</span>
+<span class="font-nav-item text-nav-item">Devices</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-nav-item text-nav-item">Audit Log</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-nav-item text-nav-item">Support</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-nav-item text-nav-item">User Guide</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant hover:bg-surface-container rounded-xl transition-all scale-98 active:scale-95 duration-200 mt-2" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-nav-item text-nav-item">Settings</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-error hover:bg-error-container/20 rounded-xl transition-all scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-nav-item text-nav-item">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-[240px] mt-[64px] h-[calc(100vh-64px)] overflow-y-auto p-margin-page">
+<!-- Header & Action Bar -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Employee List</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage personnel, credentials, and biometrics.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<div class="relative w-full md:w-[300px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded bg-surface-container-lowest border border-outline text-on-surface placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-md text-body-md transition-shadow" placeholder="Search by name, ID, or department..." type="text"/>
+</div>
+<button class="h-10 px-4 rounded border border-outline text-on-surface hover:bg-surface-container-high font-nav-item text-nav-item flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                    Bulk Import CSV
+                </button>
+<button class="h-10 px-4 rounded bg-[#344AB7] text-white hover:bg-secondary font-nav-item text-nav-item flex items-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add Employee
+                </button>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex flex-wrap gap-2 mb-6">
+<button class="px-4 py-1.5 rounded-full bg-primary-container text-on-primary-container border border-primary-container font-nav-item text-nav-item text-[13px] hover:bg-primary hover:text-white transition-colors">All</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant font-nav-item text-nav-item text-[13px] hover:bg-surface-container-high transition-colors">Active</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant font-nav-item text-nav-item text-[13px] hover:bg-surface-container-high transition-colors">Inactive</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant font-nav-item text-nav-item text-[13px] hover:bg-surface-container-high transition-colors">Enrolled</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant font-nav-item text-nav-item text-[13px] hover:bg-surface-container-high transition-colors">Pending Enrollment</button>
+</div>
+<!-- Data Table Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container border-b border-outline-variant">
+<tr>
+<th class="p-3 w-12 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider">Employee</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider">Department</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider">Cost Centre</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider">Site</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider">Biometric Status</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider">Credential</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider">Status</th>
+<th class="p-3 font-data-mono text-table-header uppercase text-on-surface-variant tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="h-[56px] hover:bg-surface-bright transition-colors group">
+<td class="p-3 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="p-3">
+<div class="flex items-center gap-3">
+<img alt="Employee Photo" class="w-8 h-8 rounded-full border border-outline-variant object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD3YJIZy8ebFH23UtPntfPOsX2muIw7_DajxiEPNc0kE4Tf9P2T5n1nCvNe9V-gI3KT9jvtY7prOuGcZ5Mp8UmQ1EZ45MkCZ44IIbCtnEVvMQqeRLegD1Ypy-D9JnI04LNZMa_AvfiE5Yzq6y1Jq143M381DVAoPIP6e8BM8oQdfHC1i0UbWNdR6m00FhAu8XqKvJJgyxofyyhrGRkux0UtcD0y9QQVVbVrXiPPuIeHX6D3_1R5yCsHVq-UuabL0P79UN4ndYa5ZI"/>
+<div>
+<div class="font-medium">Marcus Johnson</div>
+<div class="font-data-mono text-data-mono text-on-surface-variant">EMP-10492</div>
+</div>
+</div>
+</td>
+<td class="p-3">Engineering</td>
+<td class="p-3 font-data-mono text-data-mono">CC-890</td>
+<td class="p-3">North Campus</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-success-container text-on-success-container font-data-mono text-[11px]">Enrolled</span>
+</td>
+<td class="p-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-data-mono text-[11px]">
+<span class="material-symbols-outlined text-[14px]">contactless</span> RFID
+                                </span>
+</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-success-container text-on-success-container text-[12px] font-medium">Active</span>
+</td>
+<td class="p-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-[56px] hover:bg-surface-bright transition-colors group">
+<td class="p-3 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="p-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant font-medium text-[12px] border border-outline-variant">SL</div>
+<div>
+<div class="font-medium">Sarah Lopez</div>
+<div class="font-data-mono text-data-mono text-on-surface-variant">EMP-10493</div>
+</div>
+</div>
+</td>
+<td class="p-3">Human Resources</td>
+<td class="p-3 font-data-mono text-data-mono">CC-210</td>
+<td class="p-3">HQ Building</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-warning-container text-on-warning-container font-data-mono text-[11px]">Pending</span>
+</td>
+<td class="p-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-data-mono text-[11px]">
+<span class="material-symbols-outlined text-[14px]">pin</span> PIN
+                                </span>
+</td>
+<td class="p-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-success-container text-on-success-container text-[12px] font-medium">Active</span>
+</td>
+<td class="p-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="border-t border-outline-variant bg-surface-container-lowest p-3 flex items-center justify-between">
+<div class="font-body-md text-[13px] text-on-surface-variant">
+                    Showing <span class="font-medium text-on-surface">1</span> to <span class="font-medium text-on-surface">10</span> of <span class="font-medium text-on-surface">97</span> employees
+                </div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-outline hover:bg-surface-container-high transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-nav-item text-nav-item">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-high font-nav-item text-nav-item text-on-surface">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-high font-nav-item text-nav-item text-on-surface">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

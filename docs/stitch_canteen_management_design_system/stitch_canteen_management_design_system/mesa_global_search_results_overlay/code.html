@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA Global Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@450;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed": "#00115a", secondary: "#565e76", "on-primary": "#ffffff", "outline-variant": "#c5c5d5", "surface-container-high": "#e4e9ed", "primary-fixed-dim": "#bac3ff", "primary-fixed": "#dee0ff", "inverse-on-surface": "#edf1f5", "secondary-container": "#dbe1ff", "secondary-fixed": "#dbe1ff", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", background: "#f6fafe", "on-primary-container": "#f0efff", surface: "#f6fafe", "secondary-fixed-dim": "#bec6e2", "inverse-surface": "#2c3134", "inverse-primary": "#bac3ff", primary: "#344ab7", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#233aa8", "on-error-container": "#93000a", "surface-container-highest": "#dfe3e7", "on-surface-variant": "#444653", "surface-variant": "#dfe3e7", "surface-bright": "#f6fafe", "on-tertiary-container": "#ebf2ff", "primary-container": "#4f64d1", "error-container": "#ffdad6", tertiary: "#47576c", "surface-dim": "#d6dade", "on-secondary-fixed": "#131b30", "tertiary-fixed": "#d3e4fe", "on-secondary-container": "#5c647c", "tertiary-container": "#5f6f86", "surface-container-low": "#f0f4f8", error: "#ba1a1a", "on-tertiary-fixed": "#0b1c30", "surface-container": "#eaeef2", "on-tertiary-fixed-variant": "#38485d", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "surface-tint": "#3f54c1", outline: "#757684", "on-surface": "#171c1f", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#3f465d"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"header-height": "64px", "stack-md": "1rem", "margin-page": "24px", "sidebar-expanded": "240px", gutter: "16px", "stack-sm": "0.5rem", "sidebar-collapsed": "72px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"headline-lg": ["Manrope"], "data-mono": ["JetBrains Mono"], "nav-item": ["Manrope"], "body-md": ["Manrope"], "headline-md": ["Manrope"], "body-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        body {
+            background-color: #f6fafe; /* surface */
+            margin: 0;
+            font-family: 'Manrope', sans-serif;
+            color: #171c1f; /* on-surface */
+        }
+        .overlay-shadow {
+            box-shadow: 0 4px 20px rgba(23, 28, 31, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen flex flex-col relative">
+<!-- TopNavBar Mockup Context -->
+<header class="h-header-height w-[calc(100%-240px)] ml-[240px] fixed top-0 right-0 border-b border-outline-variant bg-surface-container-lowest z-40 flex justify-between items-center px-margin-page">
+<div class="flex items-center gap-4 w-full">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="w-[420px] bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-outline-variant outline-none" placeholder="Search MESA..." type="text" value="john"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-2 transition-all duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A close up portrait of a professional corporate employee in a brightly lit modern office. The lighting is crisp and even, suitable for a professional headshot. The color palette is neutral with soft whites and grays, emphasizing a clean, light-mode corporate aesthetic. The mood is confident and reliable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoNfelcibV20Zlq_2iKri32QsLYlFVT_zmFWK80RxWFYd4CzInGfzpzgH7FPLhY9NkkSeV4Q0GlhNIJ8HfKoH_eZJ8tzVDgsosHh0k9s2RogKZjBNIHz1o1jqr4kzVrU9TKfElv6iKsHtRMGTQclETvZI-PafZ3QLkfsXP7_i4odXc-rocmx4ITTV9sPuYEWdweacObag0FH7JGUfz-iZ5bCMOWOmeo1PL3gaA8fK7akTKUqhvS1tKCxo3Ev3EaWqd-N2teMqYZjs"/>
+</div>
+</div>
+<!-- Search Results Overlay -->
+<div class="absolute top-[calc(100%+8px)] left-margin-page w-[420px] bg-surface-container-lowest border border-outline-variant rounded-lg overlay-shadow overflow-hidden flex flex-col z-50">
+<!-- Employees Section -->
+<div class="py-2">
+<div class="px-4 py-2 flex items-center gap-2">
+<span class="font-data-mono text-data-mono text-[11px] uppercase tracking-wider text-outline">EMPLOYEES</span>
+</div>
+<a class="flex items-center gap-3 px-4 py-2 hover:bg-surface-container-lowest transition-colors cursor-pointer group" href="#">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden shrink-0">
+<img alt="John Doe" class="w-full h-full object-cover" data-alt="A professional headshot of a smiling male employee in a modern office environment. Soft, diffused lighting highlights his features against a clean, light-colored background. The image aligns with a corporate, light-mode design system using neutral tones. The mood is approachable and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9kYd4SK-0sN_BTZzm5Zpw0g1skstKm6azmnDgIya2kvePlKbBSrP1jTLrvUpCRoNh22tfQLnHx46kYtbxDxDL1Jg3NB2-hLMrzw0UHkR-ubP-h68TDIIbYlh2RmWaqnCBbykzhUN87OJc4ekYV2qrdLn55RklPizjfaoP_uN2gsygT-wYCjT7H-4TGixEDMKASEdReak1Bb29w7UsORnvxk-GsJvhtfJlplYgudUDl8oQRwUJ3Aq4W0JFARXdy7YFIJo8Pw4BkXk"/>
+</div>
+<div class="flex flex-col flex-grow">
+<span class="font-nav-item text-nav-item text-on-surface group-hover:text-primary transition-colors">John Doe</span>
+<span class="font-data-mono text-data-mono text-outline">ENG-492 • Software Engineer</span>
+</div>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 hover:bg-surface-container-lowest transition-colors cursor-pointer group" href="#">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden shrink-0">
+<img alt="Johnna Smith" class="w-full h-full object-cover" data-alt="A professional headshot of a female executive in a bright, contemporary workspace. High-key lighting creates a crisp, clear image. The background is a soft, out-of-focus office setting in pale grays and whites. The overall aesthetic is clean, corporate, and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlSxYql6_aF4-gOGgUg8d4DtBXi5Y0WXA1qYWfiLrr-iiR0qRsrR_NE_ZkY07mbzXKlfsBTKXXK1zscSWsKRIRwt0g1HFhvTxoC2yFIWoZ0krgJqfEbv5W5vLUW8Kvf1Q_o18UPvzE77UYasnLDlhICNLSMwNIzEjvlzRVHAJfs0Fe5SYMUA5jpPv8YdZyeu75G0ICsiZ9Kvn3yme5up5AFcEZ16faGUnjkTxbjexlXiAy1wRZyQPNQq-2yGmpGsEfzpf2i2Dgt8o"/>
+</div>
+<div class="flex flex-col flex-grow">
+<span class="font-nav-item text-nav-item text-on-surface group-hover:text-primary transition-colors">Johnna Smith</span>
+<span class="font-data-mono text-data-mono text-outline">HR-110 • HR Manager</span>
+</div>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 hover:bg-surface-container-lowest transition-colors cursor-pointer group" href="#">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0 text-on-surface-variant font-nav-item text-nav-item">
+                        JA
+                    </div>
+<div class="flex flex-col flex-grow">
+<span class="font-nav-item text-nav-item text-on-surface group-hover:text-primary transition-colors">Johnny Appleseed</span>
+<span class="font-data-mono text-data-mono text-outline">FAC-005 • Facilities</span>
+</div>
+</a>
+</div>
+<div class="h-px bg-outline-variant w-full"></div>
+<!-- Terminals Section -->
+<div class="py-2">
+<div class="px-4 py-2 flex items-center gap-2">
+<span class="font-data-mono text-data-mono text-[11px] uppercase tracking-wider text-outline">TERMINALS</span>
+</div>
+<a class="flex items-center gap-3 px-4 py-2 hover:bg-surface-container-lowest transition-colors cursor-pointer group" href="#">
+<div class="shrink-0 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex items-center justify-between">
+<span class="font-nav-item text-nav-item text-on-surface group-hover:text-primary transition-colors">Cafeteria POS 1 - St. John</span>
+<div class="w-2 h-2 rounded-full bg-[#16309f]"></div> <!-- primary for active, standardizing status dot -->
+</div>
+<span class="font-data-mono text-data-mono text-outline">TRM-882 • Main Campus</span>
+</div>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 hover:bg-surface-container-lowest transition-colors cursor-pointer group" href="#">
+<div class="shrink-0 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex items-center justify-between">
+<span class="font-nav-item text-nav-item text-on-surface group-hover:text-primary transition-colors">Kiosk - John Hancock Bldg</span>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div> <!-- offline status -->
+</div>
+<span class="font-data-mono text-data-mono text-outline">TRM-419 • North Wing</span>
+</div>
+</a>
+</div>
+<div class="h-px bg-outline-variant w-full"></div>
+<!-- Reports Section -->
+<div class="py-2">
+<div class="px-4 py-2 flex items-center gap-2">
+<span class="font-data-mono text-data-mono text-[11px] uppercase tracking-wider text-outline">REPORTS</span>
+</div>
+<a class="flex items-center gap-3 px-4 py-2 hover:bg-surface-container-lowest transition-colors cursor-pointer group" href="#">
+<div class="shrink-0 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div class="flex flex-col flex-grow">
+<span class="font-nav-item text-nav-item text-on-surface group-hover:text-primary transition-colors">Monthly Meal Entitlement - Johnston</span>
+<span class="font-data-mono text-data-mono text-outline">Generated: Oct 24, 2023</span>
+</div>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 hover:bg-surface-container-lowest transition-colors cursor-pointer group" href="#">
+<div class="shrink-0 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div class="flex flex-col flex-grow">
+<span class="font-nav-item text-nav-item text-on-surface group-hover:text-primary transition-colors">Access Log Exceptions (John)</span>
+<span class="font-data-mono text-data-mono text-outline">Generated: Oct 22, 2023</span>
+</div>
+</a>
+</div>
+<!-- Footer -->
+<div class="bg-surface-container-low px-4 py-3 border-t border-outline-variant">
+<a class="font-nav-item text-nav-item text-primary hover:text-primary-container transition-colors flex items-center justify-center w-full" href="#">
+                    View all results for "john"
+                </a>
+</div>
+</div>
+</header>
+<!-- SideNavBar Mockup Context -->
+<nav class="w-sidebar-expanded h-full flex flex-col fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest z-50">
+<div class="p-4 flex items-center gap-3 h-header-height border-b border-outline-variant">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-on-primary font-bold">M</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-on-surface">MESA</div>
+</div>
+</div>
+<div class="flex-grow py-4 px-3 overflow-y-auto space-y-1">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-nav-item text-nav-item">Dashboard</span>
+</a>
+<!-- ... other nav items omitted for brevity ... -->
+</div>
+</nav>
+<!-- Main Content Area Context -->
+<main class="ml-[240px] mt-header-height p-margin-page">
+<!-- Content blurred to emphasize overlay -->
+<div class="opacity-50 blur-sm pointer-events-none grid grid-cols-12 gap-gutter">
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl h-64 p-6">
+<div class="font-headline-md text-headline-md text-on-surface mb-4">Recent Activity</div>
+<div class="space-y-4">
+<div class="h-12 bg-surface-container-low rounded"></div>
+<div class="h-12 bg-surface-container-low rounded"></div>
+<div class="h-12 bg-surface-container-low rounded"></div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl h-64 p-6">
+<div class="font-headline-md text-headline-md text-on-surface mb-4">System Status</div>
+<div class="w-32 h-32 rounded-full border-4 border-primary mx-auto mt-8"></div>
+</div>
+</div>
+</main>
+</body></html>

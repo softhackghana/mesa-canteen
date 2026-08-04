@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA - Edit Meal Rule</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@450&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-variant": "#dfe3e7", "surface-bright": "#f6fafe", "on-tertiary-container": "#ebf2ff", "primary-container": "#4f64d1", "error-container": "#ffdad6", tertiary: "#47576c", "surface-dim": "#d6dade", "on-secondary-fixed": "#131b30", "tertiary-fixed": "#d3e4fe", "on-secondary-container": "#5c647c", "tertiary-container": "#5f6f86", "surface-container-low": "#f0f4f8", error: "#ba1a1a", "on-tertiary-fixed": "#0b1c30", "surface-container": "#eaeef2", "on-tertiary-fixed-variant": "#38485d", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "surface-tint": "#3f54c1", outline: "#757684", "on-surface": "#171c1f", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#3f465d", "on-primary-fixed": "#00115a", secondary: "#565e76", "on-primary": "#ffffff", "outline-variant": "#c5c5d5", "surface-container-high": "#e4e9ed", "primary-fixed-dim": "#bac3ff", "primary-fixed": "#dee0ff", "inverse-on-surface": "#edf1f5", "secondary-container": "#dbe1ff", "secondary-fixed": "#dbe1ff", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", background: "#f6fafe", "on-primary-container": "#f0efff", surface: "#f6fafe", "secondary-fixed-dim": "#bec6e2", "inverse-surface": "#2c3134", "inverse-primary": "#bac3ff", primary: "#344ab7", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#233aa8", "on-error-container": "#93000a", "surface-container-highest": "#dfe3e7", "on-surface-variant": "#444653"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"margin-page": "24px", "sidebar-expanded": "240px", gutter: "16px", "stack-sm": "0.5rem", "sidebar-collapsed": "72px", "header-height": "64px", "stack-md": "1rem", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"headline-md": ["Manrope"], "body-lg": ["Manrope"], "nav-item": ["Manrope"], "body-md": ["Manrope"], "data-mono": ["JetBrains Mono"], "headline-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex w-sidebar-expanded h-full flex-col fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant z-50 py-4 px-3 overflow-y-auto">
+<div class="mb-8 px-3">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">MESA</h1>
+<p class="font-data-mono text-[11px] uppercase tracking-wider text-on-surface-variant mt-1">Meal Entitlement Platform</p>
+</div>
+<ul class="flex flex-col gap-1 flex-1">
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-nav-item text-nav-item">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="point_of_sale">point_of_sale</span>
+<span class="font-nav-item text-nav-item">POS Terminals</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-nav-item text-nav-item">People Master</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+<span class="font-nav-item text-nav-item">Enrollment</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 bg-primary-container/10 text-primary border-l-[3px] border-primary rounded-r-xl transition-colors scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="rule" style="font-variation-settings: 'FILL' 1;">rule</span>
+<span class="font-nav-item text-nav-item font-semibold">Meal Rules</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="event_repeat">event_repeat</span>
+<span class="font-nav-item text-nav-item">Period-End</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-nav-item text-nav-item">Reports</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="devices">devices</span>
+<span class="font-nav-item text-nav-item">Devices</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-nav-item text-nav-item">Audit Log</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-nav-item text-nav-item">Settings</span>
+</a>
+</li>
+<li class="mt-auto">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-nav-item text-nav-item">Support</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-nav-item text-nav-item">User Guide</span>
+</a>
+</li>
+<li class="mt-4 pt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-nav-item text-nav-item">Logout</span>
+</a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-sidebar-expanded flex flex-col min-h-screen relative">
+<!-- TopNavBar -->
+<header class="h-header-height flex justify-between items-center px-margin-page w-full z-40 bg-surface-container-lowest border-b border-outline-variant sticky top-0">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant hover:bg-surface-container-high rounded-full p-2 transition-all duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<nav aria-label="Breadcrumb" class="hidden sm:flex text-sm text-on-surface-variant font-nav-item">
+<ol class="inline-flex items-center space-x-1 md:space-x-2">
+<li class="inline-flex items-center">
+<a class="inline-flex items-center hover:text-primary transition-colors" href="#">
+                        Meal Rules
+                      </a>
+</li>
+<li>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
+<span class="text-on-surface font-semibold ml-1 md:ml-2">Edit Rule</span>
+</div>
+</li>
+</ol>
+</nav>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="h-10 pl-10 pr-4 rounded-full border border-outline bg-surface-container-lowest text-body-md focus:border-primary focus:ring-1 focus:ring-primary w-64" placeholder="Search..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm ml-2 cursor-pointer border border-outline-variant">
+                    JD
+                </div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-margin-page pb-24 overflow-y-auto">
+<div class="max-w-[720px] mx-auto">
+<div class="mb-6 flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Night Shift Entitlement</h2>
+<p class="text-on-surface-variant font-body-md mt-1">Configure eligibility and subsidy limits for this rule.</p>
+</div>
+<span class="px-3 py-1 bg-surface-variant text-on-surface-variant font-data-mono text-[11px] uppercase tracking-wider rounded-full border border-outline-variant">ID: MR-10492</span>
+</div>
+<!-- Form Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<!-- Basic Info -->
+<section class="p-6 border-b border-outline-variant">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                            Basic Information
+                        </h3>
+<div class="space-y-4">
+<div>
+<label class="block text-nav-item font-nav-item text-on-surface mb-1">Rule Name</label>
+<input class="w-full h-10 px-3 rounded-lg border border-outline bg-surface-container-lowest text-body-md focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="Night Shift Entitlement"/>
+</div>
+<div>
+<label class="block text-nav-item font-nav-item text-on-surface mb-1">Description</label>
+<textarea class="w-full p-3 rounded-lg border border-outline bg-surface-container-lowest text-body-md focus:border-primary focus:ring-1 focus:ring-primary resize-none" rows="2">Applies to warehouse and logistics staff working the 22:00 to 06:00 shift.</textarea>
+</div>
+<div class="flex items-center justify-between pt-2">
+<div>
+<span class="block text-nav-item font-nav-item text-on-surface">Status</span>
+<span class="text-[12px] text-on-surface-variant">Active rules are applied immediately to eligible swipes.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Scope -->
+<section class="p-6 border-b border-outline-variant bg-surface-bright">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">my_location</span>
+                            Scope &amp; Eligibility
+                        </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-nav-item font-nav-item text-on-surface mb-2">Applicable Sites</label>
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium bg-secondary-container text-on-secondary-container border border-secondary-fixed-dim">
+                                        Site A - North
+                                        <button class="text-on-secondary-container hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium bg-secondary-container text-on-secondary-container border border-secondary-fixed-dim">
+                                        Site B - Logistics
+                                        <button class="text-on-secondary-container hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+</div>
+<div class="relative">
+<input class="w-full h-9 pl-3 pr-8 rounded-lg border border-outline bg-surface-container-lowest text-body-md focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Add site..." type="text"/>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[16px]">add_circle</span>
+</div>
+</div>
+<div>
+<label class="block text-nav-item font-nav-item text-on-surface mb-2">Applicable Departments</label>
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium bg-surface-container-highest text-on-surface border border-outline-variant">
+                                        Warehouse
+                                        <button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</span>
+</div>
+<div class="relative">
+<input class="w-full h-9 pl-3 pr-8 rounded-lg border border-outline bg-surface-container-lowest text-body-md focus:border-primary focus:ring-1 focus:ring-primary text-sm" placeholder="Add department..." type="text"/>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[16px]">add_circle</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Meal Window -->
+<section class="p-6 border-b border-outline-variant">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
+                            Meal Window
+                        </h3>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="flex-1">
+<label class="block text-[12px] text-on-surface-variant uppercase tracking-wider font-semibold mb-1">Start Time</label>
+<div class="relative">
+<input class="w-full h-10 px-3 rounded-lg border border-outline bg-surface-container-lowest text-body-md font-data-mono focus:border-primary focus:ring-1 focus:ring-primary" type="time" value="22:00"/>
+</div>
+</div>
+<div class="pt-5 text-outline-variant">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+<div class="flex-1">
+<label class="block text-[12px] text-on-surface-variant uppercase tracking-wider font-semibold mb-1">End Time</label>
+<div class="relative">
+<input class="w-full h-10 px-3 rounded-lg border border-outline bg-surface-container-lowest text-body-md font-data-mono focus:border-primary focus:ring-1 focus:ring-primary" type="time" value="06:00"/>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-nav-item font-nav-item text-on-surface mb-2">Active Days</label>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full border border-primary bg-primary text-on-primary font-nav-item flex items-center justify-center">M</button>
+<button class="w-10 h-10 rounded-full border border-primary bg-primary text-on-primary font-nav-item flex items-center justify-center">T</button>
+<button class="w-10 h-10 rounded-full border border-primary bg-primary text-on-primary font-nav-item flex items-center justify-center">W</button>
+<button class="w-10 h-10 rounded-full border border-primary bg-primary text-on-primary font-nav-item flex items-center justify-center">T</button>
+<button class="w-10 h-10 rounded-full border border-primary bg-primary text-on-primary font-nav-item flex items-center justify-center">F</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-nav-item flex items-center justify-center hover:bg-surface-container">S</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-nav-item flex items-center justify-center hover:bg-surface-container">S</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Subsidy Configuration -->
+<section class="p-6 bg-surface-bright">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">payments</span>
+                            Subsidy Configuration
+                        </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-nav-item font-nav-item text-on-surface mb-1">Max Meals per Window</label>
+<div class="flex items-center border border-outline rounded-lg bg-surface-container-lowest w-32 h-10">
+<button class="w-10 h-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container border-r border-outline transition-colors"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<input class="flex-1 h-full w-full text-center border-none bg-transparent font-data-mono focus:ring-0 text-sm" type="text" value="1"/>
+<button class="w-10 h-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container border-l border-outline transition-colors"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+</div>
+<div>
+<label class="block text-nav-item font-nav-item text-on-surface mb-1">Company Subsidy</label>
+<div class="flex items-center gap-3 h-10">
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="0" type="range" value="75"/>
+<span class="font-data-mono font-semibold w-12 text-right">75%</span>
+</div>
+</div>
+<div class="md:col-span-2 flex flex-col gap-2 p-4 rounded-lg bg-surface-container border border-outline-variant">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">block</span>
+<span class="font-nav-item text-on-surface">Block Duplicate Swipes</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<p class="text-[12px] text-on-surface-variant ml-7">Prevent users from swiping again within 30 minutes of an accepted meal.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar -->
+<div class="fixed bottom-0 right-0 w-full md:w-[calc(100%-240px)] bg-surface-container-lowest border-t border-outline-variant p-4 px-margin-page flex justify-end gap-3 z-30">
+<button class="px-5 py-2 rounded font-nav-item text-nav-item text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+<button class="px-5 py-2 rounded font-nav-item text-nav-item bg-primary text-on-primary hover:bg-surface-tint transition-colors shadow-sm">Save Rule</button>
+</div>
+</div>
+</body></html>

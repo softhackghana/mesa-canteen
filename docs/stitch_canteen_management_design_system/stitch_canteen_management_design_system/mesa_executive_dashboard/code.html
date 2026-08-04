@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA Executive Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@450;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-variant": "#dfe3e7", "surface-bright": "#f6fafe", "on-tertiary-container": "#ebf2ff", "primary-container": "#4f64d1", "error-container": "#ffdad6", tertiary: "#47576c", "surface-dim": "#d6dade", "on-secondary-fixed": "#131b30", "tertiary-fixed": "#d3e4fe", "on-secondary-container": "#5c647c", "tertiary-container": "#5f6f86", "surface-container-low": "#f0f4f8", error: "#ba1a1a", "on-tertiary-fixed": "#0b1c30", "surface-container": "#eaeef2", "on-tertiary-fixed-variant": "#38485d", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "surface-tint": "#3f54c1", outline: "#757684", "on-surface": "#171c1f", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#3f465d", "on-primary-fixed": "#00115a", secondary: "#565e76", "on-primary": "#ffffff", "outline-variant": "#c5c5d5", "surface-container-high": "#e4e9ed", "primary-fixed-dim": "#bac3ff", "primary-fixed": "#dee0ff", "inverse-on-surface": "#edf1f5", "secondary-container": "#dbe1ff", "secondary-fixed": "#dbe1ff", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", background: "#f6fafe", "on-primary-container": "#f0efff", surface: "#f6fafe", "secondary-fixed-dim": "#bec6e2", "inverse-surface": "#2c3134", "inverse-primary": "#bac3ff", primary: "#344ab7", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#233aa8", "on-error-container": "#93000a", "surface-container-highest": "#dfe3e7", "on-surface-variant": "#444653", success: "#198754", "success-container": "#d1e7dd"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"margin-page": "24px", "sidebar-expanded": "240px", gutter: "16px", "stack-sm": "0.5rem", "sidebar-collapsed": "72px", "header-height": "64px", "stack-md": "1rem", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"headline-md": ["Manrope"], "body-lg": ["Manrope"], "nav-item": ["Manrope"], "body-md": ["Manrope"], "data-mono": ["JetBrains Mono"], "headline-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        body {
+            background-color: theme('colors.surface');
+            color: theme('colors.on-surface');
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface selection:bg-primary/20">
+<!-- SideNavBar -->
+<nav class="w-sidebar-expanded h-full flex flex-col fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant z-50">
+<div class="h-header-height flex items-center px-4 border-b border-outline-variant">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">MESA</span>
+<span class="ml-2 font-data-mono text-[11px] text-on-surface-variant uppercase tracking-wider hidden">Meal Entitlement Platform</span>
+</div>
+<div class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+<a class="flex items-center gap-3 h-10 px-3 bg-primary-container/10 text-primary border-l-[3px] border-primary rounded-r-xl transition-colors font-nav-item text-nav-item" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+                POS Terminals
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+                People Master
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">person_add</span>
+                Enrollment
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">rule</span>
+                Meal Rules
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">event_repeat</span>
+                Period-End
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Reports
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">devices</span>
+                Devices
+            </a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">history</span>
+                Audit Log
+            </a>
+<div class="pt-4 mt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all font-nav-item text-nav-item scale-98 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface-container-lowest">
+<button class="w-full flex items-center justify-center gap-2 h-10 bg-primary-container text-on-primary-container rounded-lg font-nav-item text-nav-item hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">person</span>
+                User Profile
+            </button>
+<div class="flex justify-around mt-4">
+<a class="text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-1 font-data-mono text-[10px] uppercase" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">help</span>
+                    Support
+                </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-1 font-data-mono text-[10px] uppercase" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">description</span>
+                    Guide
+                </a>
+<a class="text-on-surface-variant hover:text-error transition-colors flex flex-col items-center gap-1 font-data-mono text-[10px] uppercase" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">logout</span>
+                    Logout
+                </a>
+</div>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="h-header-height w-[calc(100%-240px)] ml-[240px] fixed top-0 right-0 bg-surface-container-lowest border-b border-outline-variant z-40 flex justify-between items-center px-margin-page">
+<div class="flex items-center">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Dashboard</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-2 border border-outline rounded bg-surface-container-lowest text-body-md font-body-md w-64 focus:border-primary focus:ring-0 focus:outline-none placeholder-outline" placeholder="Search MESA..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all duration-200 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant cursor-pointer" data-alt="A small, professional headshot photo of a business user, neutral lighting, corporate context. Used as an avatar placeholder. Light mode UI theme with high quality photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQCg15idd9-z5FcjKQigEdH_RCYRYp-x8oqbRdM43m_wm1PBXd1rbcGas2nP6OoWGB3Nxew-SIZ6KZ4qPMPOdw1sbjf6OjatDTbWVD_p-trYm146ddA9kIuS7i_rtfhoztr39wxa1mOb__AxG_LiKegQvPl4Ii90HxhwqFKO1AmAV7X6oNE4hdcg58MLXPpcN0VriF9rKDVkjMdy8wU-oFfhPvR6lUhcgrMqbee_d4T-v5L6fcWusTtP8xU6eLZ2JfXOPFvVQgEaw"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[240px] mt-[64px] p-margin-page max-w-[1440px]">
+<!-- Top KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-gutter">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-nav-item text-nav-item">Today's Meals Served</span>
+<span class="material-symbols-outlined text-outline">restaurant</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">1,847</span>
+<span class="text-success font-data-mono text-data-mono flex items-center"><span class="material-symbols-outlined text-[16px]">trending_up</span>+3.2%</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-nav-item text-nav-item">Biometric Success Rate</span>
+<span class="material-symbols-outlined text-outline">fingerprint</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">97.4%</span>
+<span class="bg-success-container text-success px-2 py-0.5 rounded-full font-data-mono text-[11px] uppercase tracking-wider">Excellent</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-nav-item text-nav-item">Active POS Terminals</span>
+<span class="material-symbols-outlined text-outline">point_of_sale</span>
+</div>
+<div class="flex items-baseline justify-between w-full">
+<span class="font-headline-lg text-headline-lg text-on-surface">12 / 14 <span class="text-body-md font-body-md text-on-surface-variant ml-1">Online</span></span>
+<span class="text-error font-data-mono text-[11px] bg-error-container px-2 py-0.5 rounded-full uppercase">2 Offline</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-nav-item text-nav-item">Pending Sync Backlog</span>
+<span class="material-symbols-outlined text-outline">sync</span>
+</div>
+<div class="flex items-baseline gap-2 mt-auto">
+<span class="font-headline-lg text-headline-lg text-on-surface">34</span>
+<span class="text-on-surface-variant font-body-md text-body-md">transactions</span>
+</div>
+</div>
+</div>
+<!-- Second Row: Chart & Health List -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-gutter">
+<!-- Chart Area (2/3) -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Meals Served This Week</h2>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 relative min-h-[240px] w-full border-b border-l border-outline-variant relative">
+<!-- Placeholder for Chart -->
+<div class="absolute bottom-0 left-0 w-full h-[150px] bg-gradient-to-t from-primary/15 to-transparent rounded-bl"></div>
+<svg class="absolute bottom-0 left-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0,80 Q10,70 20,75 T40,60 T60,65 T80,40 T100,20 L100,100 L0,100 Z" fill="none" stroke="theme('colors.primary')" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+<!-- Y Axis Labels -->
+<div class="absolute -left-8 bottom-0 flex flex-col justify-between h-full py-2 font-data-mono text-[10px] text-on-surface-variant">
+<span>2k</span>
+<span>1k</span>
+<span>0</span>
+</div>
+<!-- X Axis Labels -->
+<div class="absolute -bottom-6 left-0 w-full flex justify-between px-2 font-data-mono text-[10px] text-on-surface-variant">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+</div>
+<!-- Terminal Health (1/3) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-0 flex flex-col overflow-hidden">
+<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+<h2 class="font-nav-item text-nav-item text-on-surface">Terminal Health</h2>
+<span class="font-data-mono text-[11px] text-on-surface-variant">Auto-refresh 30s</span>
+</div>
+<div class="flex-1 overflow-y-auto">
+<table class="w-full text-left">
+<tbody>
+<tr class="border-b border-outline-variant last:border-0 hover:bg-surface transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-success"></div>
+<span class="font-body-md text-body-md text-on-surface">Term-CA-01</span>
+</td>
+<td class="py-3 px-4 text-right font-data-mono text-data-mono text-on-surface-variant">2s ago</td>
+</tr>
+<tr class="border-b border-outline-variant last:border-0 hover:bg-surface transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-success"></div>
+<span class="font-body-md text-body-md text-on-surface">Term-CA-02</span>
+</td>
+<td class="py-3 px-4 text-right font-data-mono text-data-mono text-on-surface-variant">4s ago</td>
+</tr>
+<tr class="border-b border-outline-variant last:border-0 hover:bg-surface transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="font-body-md text-body-md text-error">Term-NY-01</span>
+</td>
+<td class="py-3 px-4 text-right font-data-mono text-data-mono text-error">OFFLINE</td>
+</tr>
+<tr class="border-b border-outline-variant last:border-0 hover:bg-surface transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-success"></div>
+<span class="font-body-md text-body-md text-on-surface">Term-NY-02</span>
+</td>
+<td class="py-3 px-4 text-right font-data-mono text-data-mono text-on-surface-variant">1s ago</td>
+</tr>
+<tr class="border-b border-outline-variant last:border-0 hover:bg-surface transition-colors">
+<td class="py-3 px-4 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="font-body-md text-body-md text-error">Term-TX-03</span>
+</td>
+<td class="py-3 px-4 text-right font-data-mono text-data-mono text-error">OFFLINE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Third Row: Exceptions, Windows, Overrides -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Biometric Exception Log -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="p-3 border-b border-outline-variant bg-surface-bright">
+<h3 class="font-nav-item text-nav-item text-on-surface">Biometric Exception Log</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface text-on-surface-variant font-body-md font-semibold border-b border-outline-variant">
+<tr>
+<th class="py-2 px-3">Time</th>
+<th class="py-2 px-3">Terminal</th>
+<th class="py-2 px-3">Issue</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-data-mono text-on-surface">
+<tr class="border-b border-outline-variant hover:bg-surface">
+<td class="py-2 px-3">11:42:05</td>
+<td class="py-2 px-3">Term-CA-01</td>
+<td class="py-2 px-3 text-error">Low Qual</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface">
+<td class="py-2 px-3">11:38:12</td>
+<td class="py-2 px-3">Term-NY-02</td>
+<td class="py-2 px-3 text-error">No Match</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface">
+<td class="py-2 px-3">11:15:55</td>
+<td class="py-2 px-3">Term-CA-01</td>
+<td class="py-2 px-3 text-error">Timeout</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Top Meal Windows -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col">
+<div class="mb-3">
+<h3 class="font-nav-item text-nav-item text-on-surface">Top Meal Windows</h3>
+</div>
+<div class="space-y-4 flex-1 flex flex-col justify-center">
+<div>
+<div class="flex justify-between font-data-mono text-[11px] mb-1">
+<span class="text-on-surface">Breakfast (06:00-09:00)</span>
+<span class="text-on-surface-variant">450</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 35%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-data-mono text-[11px] mb-1">
+<span class="text-on-surface">Lunch (11:30-14:00)</span>
+<span class="text-on-surface-variant">890</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 75%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-data-mono text-[11px] mb-1">
+<span class="text-on-surface">Dinner (17:30-20:00)</span>
+<span class="text-on-surface-variant">507</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Overrides -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="p-3 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
+<h3 class="font-nav-item text-nav-item text-on-surface">Recent Overrides</h3>
+<a class="text-primary font-data-mono text-[11px] hover:underline" href="#">View All</a>
+</div>
+<ul class="divide-y divide-outline-variant">
+<li class="p-3 flex justify-between items-center hover:bg-surface transition-colors">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">J. Smith (EMP-4092)</span>
+<span class="font-data-mono text-[11px] text-on-surface-variant">Approved by: M. Manager</span>
+</div>
+<span class="bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-data-mono text-[10px] uppercase">Card Lost</span>
+</li>
+<li class="p-3 flex justify-between items-center hover:bg-surface transition-colors">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">A. Davis (EMP-1120)</span>
+<span class="font-data-mono text-[11px] text-on-surface-variant">Approved by: System (Rule)</span>
+</div>
+<span class="bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-data-mono text-[10px] uppercase">Temp Access</span>
+</li>
+<li class="p-3 flex justify-between items-center hover:bg-surface transition-colors">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">R. Chen (EMP-8831)</span>
+<span class="font-data-mono text-[11px] text-on-surface-variant">Approved by: M. Manager</span>
+</div>
+<span class="bg-error-container text-error px-2 py-1 rounded font-data-mono text-[10px] uppercase">Bio Fail</span>
+</li>
+</ul>
+</div>
+</div>
+</main>
+</body></html>

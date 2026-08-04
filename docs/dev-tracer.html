@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MESA · Dev Tracer — Build Status vs PRD v1.3</title>
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#11151f; --panel2:#161b28; --line:#232a3a;
+    --txt:#d7dde8; --mut:#8b93a7; --blue:#344AB7; --cyan:#4cc9f0;
+    --ok:#34d399; --warn:#fbbf24; --bad:#f87171; --defer:#a78bfa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.55 system-ui,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 24px 80px}
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .kicker{font:11px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--cyan);letter-spacing:.14em;text-transform:uppercase}
+  h1{font-size:26px;margin:8px 0 4px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:32px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line);letter-spacing:-.01em}
+  h3{font-size:14px;margin:18px 0 8px;color:var(--cyan)}
+  p{margin:6px 0}
+  .mut{color:var(--mut)}
+  code{font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 6px;font-size:13px}
+  th{font:11px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:var(--panel2)}
+  .chip{display:inline-block;font:11px/1.6 ui-monospace,Menlo,Consolas,monospace;border-radius:999px;padding:2px 10px;white-space:nowrap}
+  .ok{background:rgba(52,211,153,.12);color:var(--ok);border:1px solid rgba(52,211,153,.35)}
+  .part{background:rgba(251,191,36,.12);color:var(--warn);border:1px solid rgba(251,191,36,.35)}
+  .defer{background:rgba(167,139,250,.12);color:var(--defer);border:1px solid rgba(167,139,250,.35)}
+  .no{background:rgba(248,113,113,.12);color:var(--bad);border:1px solid rgba(248,113,113,.35)}
+  .bar{height:8px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;overflow:hidden;min-width:110px}
+  .bar>span{display:block;height:100%;border-radius:999px}
+  .num{font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--mut)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:12px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .card .label{font:11px ui-monospace,Menlo,Consolas,monospace;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+  .card .big{font:20px ui-monospace,Menlo,Consolas,monospace;margin-top:4px}
+  ul{margin:6px 0;padding-left:20px}
+  li{margin:4px 0}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0}
+  .note{border-left:3px solid var(--cyan);background:var(--panel);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font:11px/1.6 ui-monospace,Menlo,Consolas,monospace;color:var(--mut)}
+  .kw{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Dev Tracer · Build Status vs PRD</div>
+  <h1>MESA — Meal Entitlement, Service &amp; Access Platform</h1>
+  <p class="mut">Source of truth: <code>docs/MESA_PRD_v1.3.md</code> · <code>docs/mesa_platform_project_brief_prd.md</code> · <code>docs/DESIGN.md</code> · design mockups in <code>docs/stitch_canteen_management_design_system/</code></p>
+  <p class="mut">Codebase: <code>mesa-admin/</code> (Next.js + InsForge local backend) · Tracer generated 2026-08-04 · status derived from code audit + verified build/session tests</p>
+</header>
+
+<div class="legend">
+  <span class="chip ok">● IMPLEMENTED</span>
+  <span class="chip part">● PARTIAL / STUB / SIMULATED</span>
+  <span class="chip defer">● DEFERRED BY DECISION</span>
+  <span class="chip no">● NOT STARTED</span>
+</div>
+
+<h2>1 · Project Scope (full target per PRD v1.3)</h2>
+<p>MESA is a biometric-native enterprise canteen platform: one identity, every meal, zero friction. Three-tier architecture — central web admin portal, enrollment module, resilient offline-capable POS client — unified on a single backend. Scope spans 13 product modules (PRD §10), 64 functional requirements (PRD §11), ECDSA P-256 self-contained licensing (PRD §13), and a 3-phase delivery plan (PRD §20).</p>
+
+<h2>2 · Phase Completion</h2>
+<div class="grid">
+  <div class="card"><div class="label">MVP — Phase 1</div><div class="big">~82%</div><div class="bar"><span style="width:82%;background:var(--ok)"></span></div><div class="num">core platform delivered</div></div>
+  <div class="card"><div class="label">Phase 2 — Admin automation</div><div class="big">~30%</div><div class="bar"><span style="width:30%;background:var(--warn)"></span></div><div class="num">month-end DB engine yes · UI + HRIS no</div></div>
+  <div class="card"><div class="label">Phase 3 — Future</div><div class="big">~5%</div><div class="bar"><span style="width:5%;background:var(--bad)"></span></div><div class="num">intentionally deferred</div></div>
+</div>
+
+<table>
+  <tr><th>Phase</th><th>Status</th><th>Evidence</th></tr>
+  <tr>
+    <td><b>MVP — Phase 1</b><br/>native enrollment, People Master, offline POS, core reporting, RBAC, ECDSA licensing, receipt printing, template designer, multi-modal fallback</td>
+    <td><span class="chip part">MOSTLY DONE</span></td>
+    <td>All 11 admin routes + full POS kiosk + licensing engine + meal-rules engine + DB schema/RLS/triggers exist. Gaps: real hardware layer (SourceAFIS, native bridges), PDF/Excel export, live data on some admin pages.</td>
+  </tr>
+  <tr>
+    <td><b>Phase 2</b><br/>HRIS/AD sync, automated month-end, fraud &amp; exception dashboards, configurable shift rules</td>
+    <td><span class="chip part">PARTIAL</span></td>
+    <td><code>close_fiscal_period()</code> + immutable closed transactions in DB; exception/override/duplicate logs in audit page. Missing: HRIS inbound/outbound API, month-end UI + reconciliation summary, email/SMS alert channels, scheduled report delivery.</td>
+  </tr>
+  <tr>
+    <td><b>Phase 3 / Future</b><br/>facial recognition, SAML SSO, webhooks, employee app, wallet/cashless, turnstile, predictive analytics</td>
+    <td><span class="chip defer">DEFERRED</span></td>
+    <td>Out of scope for current build by PRD §9/§20. Non-goals: general retail POS, payroll engine, EOL hardware (PRD §4).</td>
+  </tr>
+</table>
+
+<h2>3 · Module Status Map (PRD §10 / §11)</h2>
+
+<table>
+  <tr><th>Module</th><th>Requirement</th><th>Status</th><th>Notes</th></tr>
+
+  <tr><td rowspan="7" style="white-space:nowrap"><b>10.1 Identity &amp; Biometrics</b></td>
+    <td>FR-IM-001 · capture via DP / Suprema / ZKTeco</td><td><span class="chip part">PARTIAL</span></td>
+    <td>DigitalPersonaAdapter real (WebSocket bridge protocol, <code>lib/biometrics/DigitalPersonaAdapter.ts</code>). Suprema/ZKTeco simulated by decision (<code>SimulatedBiometricAdapter.ts</code>).</td></tr>
+  <tr><td>FR-IM-002 · SourceAFIS vendor-agnostic matching</td><td><span class="chip part">PARTIAL</span></td>
+    <td>Adapter interface is vendor-agnostic; matching simulated in browser. Real SourceAFIS requires native/WebAssembly engine.</td></tr>
+  <tr><td>FR-IM-003 · quality threshold (default 80%)</td><td><span class="chip ok">DONE</span></td>
+    <td>Quality gauge + configurable threshold in enrollment wizard.</td></tr>
+  <tr><td>FR-IM-004 · real-time 1:N duplicate check</td><td><span class="chip ok">DONE</span></td>
+    <td>Duplicate flag during enrollment (simulated template DB).</td></tr>
+  <tr><td>FR-IM-005 · up to 3 templates per user</td><td><span class="chip ok">DONE</span></td>
+    <td>3-impression capture flow + <code>biometric_templates</code> table.</td></tr>
+  <tr><td>FR-IM-006 · purge on termination</td><td><span class="chip ok">DONE</span></td>
+    <td>Template purge on profile terminate/purge (People Master flow).</td></tr>
+  <tr><td>FR-IM-007 · auto-detect scanner by USB VID</td><td><span class="chip part">PARTIAL</span></td>
+    <td>Adapter selection interface present; hardware VID detection needs the native bridge.</td></tr>
+
+  <tr><td rowspan="4" style="white-space:nowrap"><b>10.2 People Master</b></td>
+    <td>FR-PM-001 · profile CRUD</td><td><span class="chip ok">DONE</span></td><td>Live via InsForge (<code>stores/people-store.ts</code>).</td></tr>
+  <tr><td>FR-PM-002 · bulk import CSV / API</td><td><span class="chip ok">DONE</span></td><td>Bulk insert path + import UI.</td></tr>
+  <tr><td>FR-PM-003 · RFID/PIN secondary credential</td><td><span class="chip ok">DONE</span></td><td><code>credentials</code> table + POS ManualEntrySheet fallback.</td></tr>
+  <tr><td>FR-PM-004 · unique Employee ID</td><td><span class="chip ok">DONE</span></td><td>DB unique constraint across active/inactive.</td></tr>
+
+  <tr><td rowspan="5" style="white-space:nowrap"><b>10.3 POS &amp; Meal Issuance</b></td>
+    <td>FR-POS-001 · background scanner polling</td><td><span class="chip part">PARTIAL</span></td><td>Polling model via adapter; browser demo uses simulated adapter.</td></tr>
+  <tr><td>FR-POS-002 · offline AES-256 encrypted cache</td><td><span class="chip part">PARTIAL</span></td><td>Offline queue in localStorage + IndexedDB wrapper (<code>lib/pos-db.ts</code>); durable encrypted template cache pending native layer.</td></tr>
+  <tr><td>FR-POS-003 · auto push on reconnect</td><td><span class="chip ok">DONE</span></td><td><code>syncQueue()</code> in POS store.</td></tr>
+  <tr><td>FR-POS-004 · sub-1s name/photo/entitlement</td><td><span class="chip ok">DONE</span></td><td>Local match → instant approve/deny views.</td></tr>
+  <tr><td>FR-POS-005 · Supervisor Override</td><td><span class="chip ok">DONE</span></td><td>OverrideModal + audit-logged override flow.</td></tr>
+
+  <tr><td rowspan="4" style="white-space:nowrap"><b>10.4 Meal Rules Engine</b></td>
+    <td>FR-MRE-001 · max meals per window</td><td><span class="chip ok">DONE</span></td><td rowspan="4">Engine + selfcheck (<code>lib/meal-rules.selfcheck.ts</code>) + DB trigger <code>enforce_meal_rule_before_insert</code>. Verified against live DB.</td></tr>
+  <tr><td>FR-MRE-002 · duplicate attempt block</td><td><span class="chip ok">DONE</span></td></tr>
+  <tr><td>FR-MRE-003 · cost-centre → site mapping</td><td><span class="chip ok">DONE</span></td></tr>
+  <tr><td>FR-MRE-004 · subsidy logic</td><td><span class="chip ok">DONE</span></td></tr>
+
+  <tr><td rowspan="4" style="white-space:nowrap"><b>10.5 Reporting &amp; Analytics</b></td>
+    <td>FR-RPT-001 · consolidated meals per employee</td><td><span class="chip ok">DONE</span></td><td>Reports page, grouped by cost centre / department.</td></tr>
+  <tr><td>FR-RPT-002 · customer statements</td><td><span class="chip ok">DONE</span></td><td>Date-range statement view.</td></tr>
+  <tr><td>FR-RPT-003 · operational dashboard</td><td><span class="chip ok">DONE</span></td><td>Terminal health, license widget, metrics (demo fixtures).</td></tr>
+  <tr><td>FR-RPT-004 · PDF / CSV / Excel export</td><td><span class="chip part">PARTIAL</span></td><td>CSV works; PDF/Excel stubbed — <code>ponytail:</code> comment: server-side export worker pending.</td></tr>
+
+  <tr><td rowspan="4" style="white-space:nowrap"><b>10.6 Admin &amp; Device Mgmt</b></td>
+    <td>FR-ADM-001 · token sessions, no lockouts</td><td><span class="chip ok">DONE</span></td><td>InsForge auth + proxy cookie normalization; verified session persists across hard reloads.</td></tr>
+  <tr><td>FR-ADM-002 · terminal dashboard</td><td><span class="chip ok">DONE</span></td><td>IP, version, heartbeat, scanner vendor/model (demo fixtures).</td></tr>
+  <tr><td>FR-ADM-003 · remote restart / logoff</td><td><span class="chip part">PARTIAL</span></td><td>Commands sent; ack simulated until native agent exists.</td></tr>
+  <tr><td>FR-ADM-004 · masked connection strings, friendly errors</td><td><span class="chip ok">DONE</span></td><td>No connection strings in client; offline banners, no tech dialogs.</td></tr>
+
+  <tr><td rowspan="4" style="white-space:nowrap"><b>10.7 Finance &amp; Period-End</b></td>
+    <td>FR-FIN-001 · background month-end close</td><td><span class="chip part">PARTIAL</span></td><td><code>close_fiscal_period()</code> DB function exists; no admin UI trigger.</td></tr>
+  <tr><td>FR-FIN-002 · zero POS downtime during close</td><td><span class="chip ok">DONE</span></td><td>Background batch design, no locks.</td></tr>
+  <tr><td>FR-FIN-003 · closed-period immutability</td><td><span class="chip ok">DONE</span></td><td><code>guard_closed_transactions</code> trigger + RLS.</td></tr>
+  <tr><td>FR-FIN-004 · reconciliation summary</td><td><span class="chip no">NOT STARTED</span></td><td>Job completion summary not generated/displayed.</td></tr>
+
+  <tr><td rowspan="4" style="white-space:nowrap"><b>10.8 Integration &amp; API</b></td>
+    <td>FR-INT-001 · HRIS inbound REST</td><td><span class="chip no">NOT STARTED</span></td><td>Only <code>hris_id</code> mapping field on profiles.</td></tr>
+  <tr><td>FR-INT-002 · payroll outbound GET</td><td><span class="chip no">NOT STARTED</span></td><td>Daily aggregated transaction endpoint missing.</td></tr>
+  <tr><td>FR-INT-003 · SAML 2.0 / OAuth2 SSO</td><td><span class="chip defer">DEFERRED</span></td><td>Phase 3 per PRD §9; InsForge auth used today.</td></tr>
+  <tr><td>FR-INT-004 · plugin adapter layer</td><td><span class="chip ok">DONE</span></td><td><code>IBiometricAdapter</code> common interface; new scanners plug in.</td></tr>
+
+  <tr><td rowspan="10" style="white-space:nowrap"><b>10.9 Licensing</b></td>
+    <td>FR-LIC-001 · valid cert before any access</td><td><span class="chip ok">DONE</span></td><td>License store + auth gate blocks app.</td></tr>
+  <tr><td>FR-LIC-002 · key bound to business name (SHA-256)</td><td><span class="chip ok">DONE</span></td><td>Normalization + hash, per PRD §13.4.</td></tr>
+  <tr><td>FR-LIC-003 · business-name match validation</td><td><span class="chip ok">DONE</span></td><td>Descriptive error on mismatch.</td></tr>
+  <tr><td>FR-LIC-004 · signed JWT (ECDSA P-256 / ES256)</td><td><span class="chip part">PARTIAL</span></td><td>Full local crypto (sign/verify) in <code>lib/license.ts</code> + selfcheck; online activation endpoint pending.</td></tr>
+  <tr><td>FR-LIC-005 · offline verify, 72h tolerance</td><td><span class="chip ok">DONE</span></td><td>Embedded public key verify.</td></tr>
+  <tr><td>FR-LIC-006 · 30-day renewal warning</td><td><span class="chip ok">DONE</span></td><td>Warning banner on dashboard/license pages.</td></tr>
+  <tr><td>FR-LIC-007 · grace period (default 7d)</td><td><span class="chip ok">DONE</span></td><td><code>grace</code> status, POS continues.</td></tr>
+  <tr><td>FR-LIC-008 · status page (tier, limits, usage)</td><td><span class="chip ok">DONE</span></td><td>License page; usage figures demo fixtures.</td></tr>
+  <tr><td>FR-LIC-009 · deactivate / reactivate</td><td><span class="chip part">PARTIAL</span></td><td>Deactivation flow local; server-side count pending.</td></tr>
+  <tr><td>FR-LIC-010 · guard blocks API routes</td><td><span class="chip ok">DONE</span></td><td>License gate before app routes.</td></tr>
+
+  <tr><td rowspan="6" style="white-space:nowrap"><b>10.10 Coupon / Receipt Printing</b></td>
+    <td>FR-RCP-001 · auto print on approval</td><td><span class="chip ok">DONE</span></td><td>POS store dispatches on approve.</td></tr>
+  <tr><td>FR-RCP-002 · offline printing</td><td><span class="chip part">PARTIAL</span></td><td>Design supports it; needs ESC/POS bridge + local template cache.</td></tr>
+  <tr><td>FR-RCP-003 · printer mapping per terminal</td><td><span class="chip part">PARTIAL</span></td><td>Printer config surface in devices/settings; bridge wiring pending.</td></tr>
+  <tr><td>FR-RCP-004 · global / per-site toggle</td><td><span class="chip ok">DONE</span></td><td>Settings page, per-site overrides.</td></tr>
+  <tr><td>FR-RCP-005 · reprint + audit</td><td><span class="chip ok">DONE</span></td><td><code>reprintLast()</code>, audit-logged.</td></tr>
+  <tr><td>FR-RCP-006 · printer status surface</td><td><span class="chip ok">DONE</span></td><td>online / paper_out / cover_open / error via <code>lib/printer.ts</code>.</td></tr>
+
+  <tr><td rowspan="8" style="white-space:nowrap"><b>10.11 Template Designer</b></td>
+    <td>FR-TPL-001 · read-only default template</td><td><span class="chip ok">DONE</span></td><td rowspan="4">Templates page: field add/remove, drag-to-reorder, align, size, bold, separator, 80mm live preview.</td></tr>
+  <tr><td>FR-TPL-002 · create / save / activate custom</td><td><span class="chip ok">DONE</span></td></tr>
+  <tr><td>FR-TPL-003 · add/remove data fields</td><td><span class="chip ok">DONE</span></td></tr>
+  <tr><td>FR-TPL-004 · layout controls</td><td><span class="chip ok">DONE</span></td></tr>
+  <tr><td>FR-TPL-005 · logo upload + footer</td><td><span class="chip part">PARTIAL</span></td><td>Footer supported; logo upload pending.</td></tr>
+  <tr><td>FR-TPL-006 · WYSIWYG 80mm preview</td><td><span class="chip ok">DONE</span></td><td>Thermal-paper live preview with sample data.</td></tr>
+  <tr><td>FR-TPL-007 · global + site override assignment</td><td><span class="chip part">PARTIAL</span></td><td>Site overrides in settings; persistence pending.</td></tr>
+  <tr><td>FR-TPL-008 · versioning for audit</td><td><span class="chip part">PARTIAL</span></td><td><code>receipt_templates</code> version column; version UI pending.</td></tr>
+</table>
+
+<h2>4 · What Is Deferred (deliberately)</h2>
+<ul>
+  <li><span class="chip defer">DEFERRED</span> <b>Vendor licensing portal</b> — internal vendor tool (PRD §13.9); out of product scope by decision. App-side crypto complete.</li>
+  <li><span class="chip defer">DEFERRED</span> <b>Suprema + ZKTeco real adapters</b> — simulated via <code>SimulatedBiometricAdapter</code> by decision; DigitalPersona is the real integration. Swap-in when vendor SDKs available.</li>
+  <li><span class="chip defer">DEFERRED</span> <b>SAML 2.0 / OAuth2 SSO</b> — Phase 3 (PRD §9). Current auth: InsForge email/password + token sessions.</li>
+  <li><span class="chip defer">DEFERRED</span> <b>Phase 3 scope</b> — facial recognition, employee self-service app, wallet/cashless payments, turnstile integration, predictive meal analytics, webhooks.</li>
+  <li><span class="chip defer">DEFERRED</span> <b>PDF/Excel export</b> — stubbed with <code>ponytail:</code> marker; CSV ships today.</li>
+</ul>
+
+<h2>5 · Remaining Work for a Full Build (prioritized)</h2>
+<h3>Hardware &amp; native layer (MVP completion)</h3>
+<ul>
+  <li><b>Native WebSocket bridge service</b> (browser ↔ USB) for biometrics + ESC/POS printers — both <code>DigitalPersonaAdapter</code> and <code>PrinterClient</code> already target <code>ws://127.0.0.1:8766</code>.</li>
+  <li><b>SourceAFIS matching</b> — WebAssembly/native engine for real template extraction + 1:N matching + duplicate detection.</li>
+  <li><b>Suprema / ZKTeco adapters</b> against real SDKs once procured (PRD risk #1 mitigation: adapter pattern ready).</li>
+  <li><b>Durable 72h offline</b> — move POS queue to IndexedDB (<code>lib/pos-db.ts</code> ready), encrypted template cache, heartbeat + auto-sync on reconnect.</li>
+</ul>
+<h3>Admin / reporting (Phase 2)</h3>
+<ul>
+  <li><b>Month-end UI</b> — trigger <code>close_fiscal_period()</code>, reconciliation summary, billing export download.</li>
+  <li><b>HRIS inbound REST API</b> (FR-INT-001) + <b>payroll outbound endpoint</b> (FR-INT-002) with delta sync.</li>
+  <li><b>PDF/Excel export worker</b> (FR-RPT-004) and scheduled report delivery by email.</li>
+  <li><b>Notification channels</b> — email/SMS for offline terminals, sync failures, high rejection rates, 30-day license expiry (PRD §10.9).</li>
+  <li><b>Wire admin pages to live data</b> — dashboard, audit, reports, devices, license usage, templates currently render demo fixtures (<code>lib/admin-data.ts</code>, <code>lib/demo-data.ts</code>); people + meal rules already live via stores.</li>
+  <li><b>Template designer persistence</b> — logo upload, version history UI, global/site assignment saved to DB.</li>
+</ul>
+<h3>Hardening &amp; verification</h3>
+<ul>
+  <li><b>Browser-test remaining flows</b> — people CRUD + bulk import, meal rules UI, POS kiosk end-to-end (scan → approve → print → reprint), license activation dialog, override flow.</li>
+  <li><b>Fallow audit gate</b> — 111 dead-code findings are barrel false positives (<code>stores/index.ts</code> chain); decide <code>fallow-ignore-file</code> vs. restructure.</li>
+  <li><b>DB cleanup</b> — remove stray <code>TEST-DEPT</code> department row.</li>
+  <li><b>Enrollment live path</b> — wire enroll page to real people + template storage instead of demo identities.</li>
+</ul>
+
+<h2>6 · Verified State (evidence)</h2>
+<div class="note">
+  <p><span class="kw">✓</span> Admin login → dashboard → hard reload → session persists (proxy cookie normalization, <code>app/api/[...path]/route.ts</code>)</p>
+  <p><span class="kw">✓</span> License + dashboard pages render after reload · <code>next build</code> + typecheck green</p>
+  <p><span class="kw">✓</span> Selfchecks pass: <code>lib/license.selfcheck.ts</code>, <code>lib/meal-rules.selfcheck.ts</code>; meal-rule engine verified against live DB</p>
+  <p><span class="kw">✓</span> DB: schema + RLS + triggers applied (transactions immutability, audit immutability, meal-rule enforcement)</p>
+  <p><span class="kw">✓</span> 78 files committed (<code>f0c10f3</code>) — auth wire, login/logout, proxy, seed sync</p>
+  <p><span class="kw">→</span> Untested UI paths: license activation dialog interaction, POS kiosk flows, people/meal-rules/reports browser passes</p>
+</div>
+
+<footer>
+  MESA · Meal Entitlement, Service &amp; Access Platform — Confidential · PRD v1.3 (2026-05-29) · Status: MVP in flight, 2026-08-04<br/>
+  Regenerate this tracer after any scope-affecting change; keep in sync with <code>docs/</code> PRD versions.
+</footer>
+
+</div>
+</body>
+</html>

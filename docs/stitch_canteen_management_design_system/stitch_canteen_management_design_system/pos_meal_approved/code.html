@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA POS - Approved</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#5f6f86", error: "#ba1a1a", "surface-dim": "#d6dade", "surface-bright": "#f6fafe", "on-background": "#171c1f", "inverse-surface": "#2c3134", "secondary-fixed": "#dbe1ff", "secondary-container": "#dbe1ff", "on-secondary-fixed": "#131b30", "on-surface-variant": "#444653", "primary-container": "#4f64d1", "on-secondary-container": "#5c647c", "on-tertiary-container": "#ebf2ff", "surface-container-highest": "#dfe3e7", "on-primary-fixed": "#00115a", "on-surface": "#171c1f", "inverse-on-surface": "#edf1f5", "surface-container-high": "#e4e9ed", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "outline-variant": "#c5c5d5", primary: "#344ab7", outline: "#757684", "tertiary-fixed-dim": "#b7c8e1", "primary-fixed": "#dee0ff", secondary: "#565e76", "on-secondary-fixed-variant": "#3f465d", "on-tertiary-fixed-variant": "#38485d", "error-container": "#ffdad6", "surface-container-low": "#f0f4f8", "on-primary-container": "#f0efff", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", surface: "#f6fafe", "on-tertiary-fixed": "#0b1c30", "on-error-container": "#93000a", "tertiary-fixed": "#d3e4fe", "surface-tint": "#3f54c1", "on-primary-fixed-variant": "#233aa8", "inverse-primary": "#bac3ff", "surface-variant": "#dfe3e7", "primary-fixed-dim": "#bac3ff", background: "#f6fafe", "on-error": "#ffffff", "surface-container": "#eaeef2", "secondary-fixed-dim": "#bec6e2", tertiary: "#47576c", "success-container": "#dcfce7", "on-success-container": "#166534"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"stack-sm": "0.5rem", "sidebar-collapsed": "72px", "header-height": "64px", gutter: "16px", "stack-md": "1rem", "sidebar-expanded": "240px", "margin-page": "24px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"nav-item": ["Manrope"], "headline-md": ["Manrope"], "data-mono": ["JetBrains Mono"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "headline-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        .progress-bar-fill {
+            animation: progress 2s linear forwards;
+        }
+        @keyframes progress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        .success-bg-overlay {
+            background-color: rgba(220, 252, 231, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col relative font-body-md">
+<!-- Top Overlay Area -->
+<div class="absolute top-0 left-0 w-full h-[40%] success-bg-overlay z-0 flex flex-col items-center justify-start pt-header-height">
+<div class="text-on-success-container flex flex-col items-center gap-2 mt-8 animate-bounce">
+<span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<h1 class="font-headline-lg text-headline-lg text-on-success-container tracking-wider">MEAL APPROVED</h1>
+</div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-grow z-10 flex flex-col items-center justify-center px-gutter w-full h-full pt-[20%]">
+<!-- Identity Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 flex flex-col items-center w-full max-w-md text-center shadow-[0_4px_20px_rgba(23,28,31,0.04)] mt-16 relative">
+<!-- Avatar positioned overlapping the card edge -->
+<div class="absolute -top-12 w-24 h-24 rounded-full border-4 border-surface-container-lowest overflow-hidden bg-surface-variant flex items-center justify-center">
+<img alt="Avatar of Robert Chen" class="w-full h-full object-cover" data-alt="A professional headshot portrait of an Asian man with short dark hair, wearing a casual modern corporate outfit. The lighting is clean, flat, and bright, fitting a modern corporate identity badge style. The background is a plain, neutral light gray to match the corporate modern aesthetic. High quality, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADizSWlKf1Tgdk1CigZUJebr4bG71POgxeStaqrNXoVW2K_w4Ly88DzztwkwCRf_wU02NVLD2oZQs5X7nJ1Xy1R_J9Ry3lVOcW4fWt4eqqwi2PM9YFXhZTGHfXnagUfrzqyRejF2oYNZHxZfUcfPrIzgmFshlgyfPB8CUaeAg5iU0iQjpsKzmhmWekLSmkSdH1HwgBM2LgArKspYdPkIb803tKFk-YbljMs-_7ufbI-vxG3coBYaXKVoKYXcm22PaRMnwKL11-FXQ"/>
+</div>
+<div class="mt-10 flex flex-col items-center gap-1 w-full">
+<h2 class="font-headline-md text-headline-md text-on-surface">Robert Chen</h2>
+<span class="font-data-mono text-data-mono text-outline">EMP-84729</span>
+</div>
+<div class="w-full border-t border-outline-variant my-6"></div>
+<div class="flex flex-col gap-4 w-full">
+<div class="flex justify-between items-center w-full">
+<span class="text-on-surface-variant">Entitlement</span>
+<span class="font-headline-md text-body-lg text-on-surface">Lunch</span>
+</div>
+<div class="flex justify-between items-center w-full">
+<span class="text-on-surface-variant">Status</span>
+<span class="font-body-md text-body-md text-on-success-container bg-success-container px-3 py-1 rounded-[9999px]">1 of 1 remaining today</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-4 mt-2 border border-outline-variant">
+<p class="font-data-mono text-data-mono text-on-surface-variant text-center">Subsidy Split</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-primary font-body-md">Company: 50%</span>
+<span class="text-on-surface-variant font-body-md">Employee: 50%</span>
+</div>
+</div>
+</div>
+<!-- Manual Action Button (Optional override) -->
+<button class="mt-8 bg-surface-container-lowest border border-outline text-on-surface px-6 py-2 rounded font-body-md w-full hover:bg-surface-container transition-colors">
+                Return to Scanning
+            </button>
+</div>
+</main>
+<!-- Bottom Auto-return Progress -->
+<div class="fixed bottom-0 left-0 w-full h-1 bg-surface-variant z-50">
+<div class="h-full bg-primary progress-bar-fill"></div>
+</div>
+</body></html>

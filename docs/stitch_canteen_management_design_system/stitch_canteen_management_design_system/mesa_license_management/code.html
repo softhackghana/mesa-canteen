@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@450;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .scale-98:active { transform: scale(0.98); }
+        .scale-95:active { transform: scale(0.95); }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"inverse-on-surface": "#edf1f5", "error-container": "#ffdad6", surface: "#f6fafe", "secondary-fixed": "#dbe1ff", "on-primary-container": "#f0efff", "primary-fixed-dim": "#bac3ff", primary: "#344ab7", background: "#f6fafe", tertiary: "#47576c", "on-primary": "#ffffff", "on-tertiary-fixed": "#0b1c30", "inverse-primary": "#bac3ff", "on-surface": "#171c1f", "on-secondary-container": "#5c647c", "on-primary-fixed": "#00115a", "surface-container": "#eaeef2", "on-tertiary-container": "#ebf2ff", "on-surface-variant": "#444653", "on-error": "#ffffff", "surface-tint": "#3f54c1", "inverse-surface": "#2c3134", error: "#ba1a1a", outline: "#757684", "secondary-fixed-dim": "#bec6e2", "secondary-container": "#dbe1ff", "tertiary-container": "#5f6f86", "on-primary-fixed-variant": "#233aa8", "primary-fixed": "#dee0ff", "on-secondary-fixed-variant": "#3f465d", "surface-container-highest": "#dfe3e7", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#d3e4fe", secondary: "#565e76", "outline-variant": "#c5c5d5", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", "on-tertiary": "#ffffff", "surface-dim": "#d6dade", "surface-container-low": "#f0f4f8", "surface-variant": "#dfe3e7", "on-secondary-fixed": "#131b30", "primary-container": "#4f64d1", "on-tertiary-fixed-variant": "#38485d", "on-error-container": "#93000a", "surface-bright": "#f6fafe", "surface-container-high": "#e4e9ed", "on-secondary": "#ffffff"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"stack-sm": "0.5rem", "stack-md": "1rem", "header-height": "64px", "sidebar-collapsed": "72px", "margin-page": "24px", gutter: "16px", "sidebar-expanded": "240px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"nav-item": ["Manrope"], "data-mono": ["JetBrains Mono"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 bottom-0 z-50 py-4 px-3 overflow-y-auto w-[240px] bg-surface-container-lowest border-r border-outline-variant flex flex-col h-full">
+<div class="mb-8 px-3">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">MESA</h1>
+<p class="text-[10px] uppercase tracking-widest text-outline font-data-mono">Meal Entitlement Platform</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-nav-item text-nav-item">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="point_of_sale">point_of_sale</span>
+<span class="font-nav-item text-nav-item">POS Terminals</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-nav-item text-nav-item">People Master</span>
+</a>
+<div class="pt-4 pb-2 px-3">
+<span class="font-data-mono text-[11px] uppercase tracking-wider text-outline">Configuration</span>
+</div>
+<a class="flex items-center gap-3 h-10 px-3 bg-primary-container/10 text-primary border-l-[3px] border-primary rounded-r-xl transition-colors scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-nav-item text-nav-item">Settings</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-nav-item text-nav-item">Reports</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-nav-item text-nav-item">Audit Log</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4 space-y-1">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-nav-item text-nav-item">Support</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-nav-item text-nav-item">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas Area -->
+<main class="ml-[240px] w-[calc(100%-240px)] h-screen overflow-y-auto">
+<!-- Top Navigation Bar -->
+<header class="h-header-height flex justify-between items-center px-margin-page w-full z-40 bg-surface-container-lowest border-b border-outline-variant sticky top-0">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-body-md text-body-md">Settings</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-body-md text-body-md font-bold text-on-surface">License</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute inset-y-0 left-3 flex items-center text-outline">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full w-64 text-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Search settings..." type="text"/>
+</div>
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="flex items-center gap-3 ml-2 pl-4 border-l border-outline-variant">
+<img alt="User Avatar" class="w-8 h-8 rounded-full bg-primary-container/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq9RagIdszqznygbOigCChLYEMgxGS-wKKK3uqU1KOuqTTugPsp4kUNQmk8pI1LnZv1mlJ4hdlCDhhQ6xbztYzw7CBNTi9gNKVyDiNljy-wJYPXj39t_Xb0YUMMhDTTxcoiwO5sN5i02x8N5Gco1zR0-lcdRH-35nfbLaQjYAH-cbnnHMH4ym5zyLSMPFC9ZrIIg7VGBtl9tAVbiXar0bps4VCUtYH58wDTrovvMmeLExQp9AcdMh0agthCs1-FGiXYuFZMBWU1p0"/>
+<div class="hidden xl:block">
+<p class="text-[12px] font-bold leading-none">Admin User</p>
+<p class="text-[10px] text-outline uppercase font-data-mono">Super Administrator</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Page -->
+<div class="p-margin-page max-w-6xl mx-auto space-y-6">
+<!-- License Header Card -->
+<div class="bg-surface-container-lowest border border-outline-variant border-l-[4px] border-l-primary rounded-xl overflow-hidden">
+<div class="p-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h2 class="font-headline-md text-headline-md text-on-surface">Global Canteen Services</h2>
+<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold uppercase tracking-wider">License Active</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-data-mono text-data-mono text-on-surface-variant tracking-wider bg-surface-container px-2 py-0.5 rounded" id="license-key">MESA-XXXX-XXXX-XXXX-2027</span>
+<button class="text-primary font-bold text-[12px] hover:underline flex items-center gap-1" onclick="toggleLicense()">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                                        View
+                                    </button>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="bg-primary text-on-primary px-4 py-2 rounded font-bold text-body-md scale-98 transition-transform">Update License</button>
+</div>
+</div>
+<!-- Data Grid Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+<div class="space-y-1">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono">License Tier</p>
+<p class="font-bold text-body-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                Professional Tier
+                            </p>
+</div>
+<div class="space-y-1">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono">Expiry Date</p>
+<p class="font-bold text-body-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="calendar_today">calendar_today</span>
+                                27 May 2027
+                            </p>
+</div>
+<div class="space-y-1">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono">Activation Date</p>
+<p class="font-bold text-body-lg text-on-surface">12 June 2022</p>
+</div>
+<div class="space-y-1">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono">Regional Node</p>
+<p class="font-bold text-body-lg text-on-surface">North America - Central</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Layout for Usage and Limits -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Usage Card 1 -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
+<h3 class="font-headline-md text-headline-md mb-6">License Usage Tracking</h3>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between items-end mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline" data-icon="point_of_sale">point_of_sale</span>
+<span class="font-body-md text-on-surface font-semibold">Terminals in use</span>
+</div>
+<span class="font-data-mono text-body-md text-on-surface-variant">12 / 20</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 60%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline" data-icon="person_add">person_add</span>
+<span class="font-body-md text-on-surface font-semibold">Enrolled identities</span>
+</div>
+<span class="font-data-mono text-body-md text-on-surface-variant">3,847 / 5,000</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 77%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Limits Summary -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col justify-between">
+<div>
+<h3 class="font-data-mono text-[11px] uppercase tracking-widest text-outline mb-4">Capacity Limits</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-body-md text-on-surface-variant">Max Sites</span>
+<span class="font-bold text-on-surface">05</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-body-md text-on-surface-variant">API Threshold</span>
+<span class="font-bold text-on-surface">50k / day</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-body-md text-on-surface-variant">Data Retention</span>
+<span class="font-bold text-on-surface">36 Months</span>
+</div>
+</div>
+</div>
+<button class="mt-6 w-full py-2 border border-outline text-primary font-bold rounded hover:bg-surface-container transition-colors">
+                        Download License PDF
+                    </button>
+</div>
+</div>
+<!-- Warning Banner -->
+<div class="bg-[#FFF8E1] border border-[#FFD54F] rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3 text-[#795548]">
+<span class="material-symbols-outlined text-[24px]" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<p class="font-body-md font-semibold text-[#5D4037]">Your license expires in <span class="underline">14 days</span>. Renew now to avoid service disruption.</p>
+</div>
+<button class="bg-[#FFC107] hover:bg-[#FFB300] text-black px-4 py-2 rounded font-bold text-body-md shadow-sm transition-all scale-98 active:scale-95">
+                    Activate Renewal Key
+                </button>
+</div>
+<!-- Deactivate Section -->
+<div class="pt-8 border-t border-outline-variant">
+<details class="group bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-surface-container transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform">expand_more</span>
+<span class="font-bold text-on-surface-variant uppercase tracking-wider text-[12px]">Advanced Management</span>
+</div>
+<span class="text-[11px] text-outline font-data-mono">System ID: MES-4920-X9-AL</span>
+</summary>
+<div class="p-6 border-t border-outline-variant bg-surface">
+<div class="flex items-start gap-4">
+<div class="flex-1">
+<h4 class="font-bold text-on-surface mb-2">Deactivate Local Instance</h4>
+<p class="text-body-md text-on-surface-variant max-w-2xl">
+                                    Deactivating this license will immediately cease all meal entitlement validation and access control services across all connected terminals. This action cannot be undone without a new activation token.
+                                </p>
+</div>
+<button class="border border-error text-error px-6 py-2 rounded font-bold hover:bg-error-container/20 transition-all scale-98">
+                                Deactivate License
+                            </button>
+</div>
+</div>
+</details>
+</div>
+</div>
+</main>
+<script>
+        let isMasked = true;
+        function toggleLicense() {
+            const key = document.getElementById('license-key');
+            if (isMasked) {
+                key.innerText = 'MESA-8F22-KP91-Z021-2027';
+                isMasked = false;
+            } else {
+                key.innerText = 'MESA-XXXX-XXXX-XXXX-2027';
+                isMasked = true;
+            }
+        }
+
+        // Simple animation for progress bars on load
+        window.onload = () => {
+            const bars = document.querySelectorAll('.h-full.bg-primary, .h-full.bg-secondary');
+            bars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.transition = 'width 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                    bar.style.width = width;
+                }, 100);
+            });
+        }
+    </script>
+</body></html>

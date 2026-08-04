@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA POS - Supervisor Override Modal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#5f6f86", error: "#ba1a1a", "surface-dim": "#d6dade", "surface-bright": "#f6fafe", "on-background": "#171c1f", "inverse-surface": "#2c3134", "secondary-fixed": "#dbe1ff", "secondary-container": "#dbe1ff", "on-secondary-fixed": "#131b30", "on-surface-variant": "#444653", "primary-container": "#4f64d1", "on-secondary-container": "#5c647c", "on-tertiary-container": "#ebf2ff", "surface-container-highest": "#dfe3e7", "on-primary-fixed": "#00115a", "on-surface": "#171c1f", "inverse-on-surface": "#edf1f5", "surface-container-high": "#e4e9ed", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "outline-variant": "#c5c5d5", primary: "#344ab7", outline: "#757684", "tertiary-fixed-dim": "#b7c8e1", "primary-fixed": "#dee0ff", secondary: "#565e76", "on-secondary-fixed-variant": "#3f465d", "on-tertiary-fixed-variant": "#38485d", "error-container": "#ffdad6", "surface-container-low": "#f0f4f8", "on-primary-container": "#f0efff", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", surface: "#f6fafe", "on-tertiary-fixed": "#0b1c30", "on-error-container": "#93000a", "tertiary-fixed": "#d3e4fe", "surface-tint": "#3f54c1", "on-primary-fixed-variant": "#233aa8", "inverse-primary": "#bac3ff", "surface-variant": "#dfe3e7", "primary-fixed-dim": "#bac3ff", background: "#f6fafe", "on-error": "#ffffff", "surface-container": "#eaeef2", "secondary-fixed-dim": "#bec6e2", tertiary: "#47576c"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"stack-sm": "0.5rem", "sidebar-collapsed": "72px", "header-height": "64px", gutter: "16px", "stack-md": "1rem", "sidebar-expanded": "240px", "margin-page": "24px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"nav-item": ["Manrope"], "headline-md": ["Manrope"], "data-mono": ["JetBrains Mono"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "headline-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md h-screen overflow-hidden flex flex-col">
+<!-- Top App Bar (Background Canvas) -->
+<header class="flex justify-between items-center h-header-height px-margin-page w-full bg-surface text-primary border-b border-outline-variant flat no shadows relative z-0">
+<div class="flex items-center gap-4">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">MESA POS</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined">wifi</span>
+<span class="material-symbols-outlined">schedule</span>
+<span class="material-symbols-outlined">person</span>
+<span class="material-symbols-outlined">location_on</span>
+</div>
+</header>
+<!-- Main Content Area (Background Canvas) -->
+<main class="flex-1 p-margin-page relative z-0 flex flex-col items-center justify-center opacity-30 pointer-events-none">
+<!-- Mock background content to show modal context -->
+<div class="w-full max-w-4xl bg-surface-container-lowest border border-outline-variant rounded-xl p-8 flex flex-col gap-6">
+<div class="h-8 bg-surface-container-high rounded w-1/3"></div>
+<div class="grid grid-cols-3 gap-4">
+<div class="h-32 bg-surface-container rounded"></div>
+<div class="h-32 bg-surface-container rounded"></div>
+<div class="h-32 bg-surface-container rounded"></div>
+</div>
+</div>
+</main>
+<!-- Fullscreen Scrim & Modal Container -->
+<div class="fixed inset-0 bg-on-background/60 z-50 flex items-center justify-center p-gutter backdrop-blur-sm">
+<!-- Supervisor Override Modal Card -->
+<div aria-labelledby="modal-title" aria-modal="true" class="bg-surface-container-lowest w-full max-w-[600px] rounded-xl border border-outline-variant flex flex-col overflow-hidden shadow-[0_4px_20px_rgba(23,28,31,0.04)]" role="dialog">
+<!-- Modal Header -->
+<div class="p-6 border-b border-outline-variant flex items-start gap-4">
+<div class="bg-error-container text-on-error-container p-3 rounded-full flex-shrink-0">
+<span class="material-symbols-outlined fill">admin_panel_settings</span>
+</div>
+<div class="flex-1">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2" id="modal-title">Supervisor Authorization Required</h2>
+<!-- Employee Summary Chip -->
+<div class="inline-flex items-center bg-surface-container-high rounded-full pl-1 pr-3 py-1 gap-2 border border-outline-variant">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-xs font-bold">SL</div>
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+                            Sarah Lopez <span class="text-error font-medium flex items-center gap-1 ml-1"><span class="material-symbols-outlined" style="font-size: 14px;">fingerprint</span> Biometric failure</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Modal Body -->
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 bg-surface-bright">
+<!-- Left Column: PIN Pad -->
+<div class="flex flex-col items-center justify-center border-r border-outline-variant pr-0 md:pr-8">
+<div class="w-full mb-6 relative">
+<input aria-label="Supervisor PIN" class="w-full bg-surface-container-lowest border-b-2 border-primary text-center font-headline-lg text-headline-lg py-2 tracking-[0.5em] text-on-surface focus:outline-none" readonly="" type="password" value="••••"/>
+<div class="absolute right-0 top-1/2 -translate-y-1/2 text-outline cursor-pointer hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">backspace</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-3 w-full max-w-[240px]">
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">1</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">2</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">3</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">4</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">5</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">6</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">7</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">8</button>
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">9</button>
+<div class="h-14"></div> <!-- Empty space -->
+<button class="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant font-headline-md text-headline-md text-on-surface hover:bg-surface-container-high transition-colors">0</button>
+<div class="h-14"></div> <!-- Empty space -->
+</div>
+</div>
+<!-- Right Column: Reason & Info -->
+<div class="flex flex-col justify-center">
+<label class="font-body-md text-body-md text-on-surface-variant font-medium mb-2 block" for="override-reason">Override Reason</label>
+<div class="relative mb-6">
+<select class="w-full appearance-none bg-surface-container-lowest border border-outline rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer" id="override-reason">
+<option disabled="" selected="" value="">Select a reason...</option>
+<option value="biometric">Biometric Damage</option>
+<option value="lost_card">Lost Card</option>
+<option value="system_error">System Error</option>
+<option value="management">Management Approval</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">arrow_drop_down</span>
+</div>
+<div class="bg-surface-container p-4 rounded-lg border border-outline-variant/50">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">info</span>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">
+                                Terminal 4 is currently operating in restricted mode. Supervisor overrides are temporarily required for all manual entries.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-6 border-t border-outline-variant bg-surface-container-lowest flex flex-col gap-4">
+<div class="flex justify-end gap-3 w-full">
+<button class="px-6 py-2.5 rounded border border-outline text-on-surface font-body-md text-body-md font-medium hover:bg-surface-container transition-colors">
+                        Cancel
+                    </button>
+<button class="px-6 py-2.5 rounded bg-surface-container-highest text-outline font-body-md text-body-md font-medium cursor-not-allowed flex items-center gap-2" disabled="">
+<span class="material-symbols-outlined" style="font-size: 18px;">lock</span>
+                        Authorise Override
+                    </button>
+</div>
+<div class="flex items-center justify-center gap-1.5 text-outline text-xs mt-2">
+<span class="material-symbols-outlined" style="font-size: 14px;">policy</span>
+<span class="font-data-mono text-data-mono uppercase tracking-wide">This action is logged for audit purposes (ID: AX-9921)</span>
+</div>
+</div>
+</div>
+</div>
+</body></html>

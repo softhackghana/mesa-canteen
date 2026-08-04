@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA POS - Idle State</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#5f6f86", error: "#ba1a1a", "surface-dim": "#d6dade", "surface-bright": "#f6fafe", "on-background": "#171c1f", "inverse-surface": "#2c3134", "secondary-fixed": "#dbe1ff", "secondary-container": "#dbe1ff", "on-secondary-fixed": "#131b30", "on-surface-variant": "#444653", "primary-container": "#4f64d1", "on-secondary-container": "#5c647c", "on-tertiary-container": "#ebf2ff", "surface-container-highest": "#dfe3e7", "on-primary-fixed": "#00115a", "on-surface": "#171c1f", "inverse-on-surface": "#edf1f5", "surface-container-high": "#e4e9ed", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "outline-variant": "#c5c5d5", primary: "#344ab7", outline: "#757684", "tertiary-fixed-dim": "#b7c8e1", "primary-fixed": "#dee0ff", secondary: "#565e76", "on-secondary-fixed-variant": "#3f465d", "on-tertiary-fixed-variant": "#38485d", "error-container": "#ffdad6", "surface-container-low": "#f0f4f8", "on-primary-container": "#f0efff", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", surface: "#f6fafe", "on-tertiary-fixed": "#0b1c30", "on-error-container": "#93000a", "tertiary-fixed": "#d3e4fe", "surface-tint": "#3f54c1", "on-primary-fixed-variant": "#233aa8", "inverse-primary": "#bac3ff", "surface-variant": "#dfe3e7", "primary-fixed-dim": "#bac3ff", background: "#f6fafe", "on-error": "#ffffff", "surface-container": "#eaeef2", "secondary-fixed-dim": "#bec6e2", tertiary: "#47576c"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"stack-sm": "0.5rem", "sidebar-collapsed": "72px", "header-height": "64px", gutter: "16px", "stack-md": "1rem", "sidebar-expanded": "240px", "margin-page": "24px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"nav-item": ["Manrope"], "headline-md": ["Manrope"], "data-mono": ["JetBrains Mono"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "headline-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            80% { transform: scale(1.5); opacity: 0; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface h-screen w-screen flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background flex justify-between items-center h-header-height px-margin-page w-full border-b border-outline-variant flat no shadows">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed">MESA POS</h1>
+<span class="font-data-mono text-data-mono text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">TERM-NY-01</span>
+</div>
+<div class="flex items-center gap-6 font-body-md text-body-md text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">location_on</span>
+<span>Site: HQ Campus</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">person</span>
+<span>Operator: John Doe</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">schedule</span>
+<span>Time: 12:45 PM</span>
+</div>
+<div class="flex items-center gap-2 relative">
+<span class="material-symbols-outlined text-outline">wifi</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-surface"></span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center p-6 pb-24 md:pb-6 relative">
+<!-- Fingerprint Scanner UI -->
+<div class="flex flex-col items-center justify-center space-y-8 flex-1">
+<div class="relative flex items-center justify-center w-48 h-48">
+<div class="absolute inset-0 bg-primary-container rounded-full pulse-ring"></div>
+<div class="absolute inset-4 bg-primary-fixed rounded-full pulse-ring" style="animation-delay: 0.5s;"></div>
+<div class="relative z-10 w-32 h-32 bg-surface-container-lowest rounded-full shadow-[0_4px_20px_rgba(23,28,31,0.04)] flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-size: 64px; font-variation-settings: 'FILL' 1;">fingerprint</span>
+</div>
+</div>
+<div class="text-center space-y-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Ready to Scan</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Ask employee to place finger on scanner</p>
+</div>
+</div>
+<!-- Bottom Actions & Footer Info -->
+<div class="w-full max-w-2xl mt-auto space-y-6">
+<div class="flex justify-center gap-4">
+<button class="font-nav-item text-nav-item text-primary px-6 py-3 rounded hover:bg-surface-container-high transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">keyboard</span>
+                    Manual Entry
+                </button>
+<button class="font-nav-item text-nav-item text-on-surface border border-outline px-6 py-3 rounded hover:bg-surface-container-low transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">admin_panel_settings</span>
+                    Supervisor Override
+                </button>
+</div>
+<div class="text-center pb-4 md:pb-0">
+<span class="font-data-mono text-data-mono text-on-surface-variant bg-surface-container-lowest px-4 py-2 rounded-full border border-outline-variant inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">restaurant</span>
+                    Meals served this shift: 47
+                </span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Visible on Mobile/Tablet down) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center h-20 bg-surface dark:bg-on-background px-gutter border-t border-outline-variant flat no shadows">
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-2 min-w-[64px]">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+<span class="font-nav-item text-nav-item mt-1">Terminal</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container transition-all min-w-[64px]">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-nav-item text-nav-item mt-1">History</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container transition-all min-w-[64px]">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-nav-item text-nav-item mt-1">Summary</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container transition-all min-w-[64px]">
+<span class="material-symbols-outlined">help</span>
+<span class="font-nav-item text-nav-item mt-1">Support</span>
+</div>
+</nav>
+</body></html>

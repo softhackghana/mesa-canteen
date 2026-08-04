@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA | Receipt Template Designer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"inverse-on-surface": "#edf1f5", "error-container": "#ffdad6", surface: "#f6fafe", "secondary-fixed": "#dbe1ff", "on-primary-container": "#f0efff", "primary-fixed-dim": "#bac3ff", primary: "#344ab7", background: "#f6fafe", tertiary: "#47576c", "on-primary": "#ffffff", "on-tertiary-fixed": "#0b1c30", "inverse-primary": "#bac3ff", "on-surface": "#171c1f", "on-secondary-container": "#5c647c", "on-primary-fixed": "#00115a", "surface-container": "#eaeef2", "on-tertiary-container": "#ebf2ff", "on-surface-variant": "#444653", "on-error": "#ffffff", "surface-tint": "#3f54c1", "inverse-surface": "#2c3134", error: "#ba1a1a", outline: "#757684", "secondary-fixed-dim": "#bec6e2", "secondary-container": "#dbe1ff", "tertiary-container": "#5f6f86", "on-primary-fixed-variant": "#233aa8", "primary-fixed": "#dee0ff", "on-secondary-fixed-variant": "#3f465d", "surface-container-highest": "#dfe3e7", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#d3e4fe", secondary: "#565e76", "outline-variant": "#c5c5d5", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", "on-tertiary": "#ffffff", "surface-dim": "#d6dade", "surface-container-low": "#f0f4f8", "surface-variant": "#dfe3e7", "on-secondary-fixed": "#131b30", "primary-container": "#4f64d1", "on-tertiary-fixed-variant": "#38485d", "on-error-container": "#93000a", "surface-bright": "#f6fafe", "surface-container-high": "#e4e9ed", "on-secondary": "#ffffff"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"stack-sm": "0.5rem", "stack-md": "1rem", "header-height": "64px", "sidebar-collapsed": "72px", "margin-page": "24px", gutter: "16px", "sidebar-expanded": "240px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"nav-item": ["Manrope"], "data-mono": ["JetBrains Mono"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "body-md": ["Manrope"], "body-lg": ["Manrope"], receipt: ["Courier Prime", "monospace"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        .thermal-paper {
+            background: linear-gradient(to right, #ffffff, #fdfdfd 20%, #ffffff 80%, #f9f9f9);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        .thermal-paper::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: radial-gradient(circle, transparent 70%, #ffffff 70%);
+            background-size: 12px 24px;
+            background-position: 0 -12px;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c5c5d5; border-radius: 10px; }
+        .drag-handle { cursor: grab; }
+        .drag-handle:active { cursor: grabbing; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Sidebar Navigation Shell -->
+<aside class="w-sidebar-expanded h-full flex flex-col fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest z-50">
+<div class="py-6 px-4 mb-2">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">MESA</h1>
+<p class="text-[11px] font-data-mono uppercase tracking-wider text-on-surface-variant">Meal Entitlement Platform</p>
+</div>
+<nav class="flex-1 px-3 space-y-1 custom-scrollbar overflow-y-auto">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-nav-item text-nav-item">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-nav-item text-nav-item">POS Terminals</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-nav-item text-nav-item">People Master</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">person_add</span>
+<span class="font-nav-item text-nav-item">Enrollment</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">rule</span>
+<span class="font-nav-item text-nav-item">Meal Rules</span>
+</a>
+<div class="py-4 px-3 text-[11px] font-data-mono uppercase tracking-wider text-outline">Configuration</div>
+<a class="flex items-center gap-3 h-10 px-3 bg-primary-container/10 text-primary border-l-[3px] border-primary rounded-r-xl transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-nav-item text-nav-item">Settings</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-nav-item text-nav-item">Reports</span>
+</a>
+</nav>
+<div class="p-3 border-t border-outline-variant">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-nav-item text-nav-item">Support</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-nav-item text-nav-item">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[240px] h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="h-header-height flex justify-between items-center px-margin-page w-full bg-surface-container-lowest border-b border-outline-variant z-40">
+<div class="flex items-center gap-4">
+<nav class="flex items-center text-on-surface-variant font-body-md text-sm">
+<span>Settings</span>
+<span class="material-symbols-outlined text-sm mx-2">chevron_right</span>
+<span>Receipt Templates</span>
+<span class="material-symbols-outlined text-sm mx-2">chevron_right</span>
+<span class="text-on-surface font-semibold">Edit Template</span>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined hover:bg-surface-container-high rounded-full p-2 text-on-surface-variant transition-all">notifications</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary text-xs font-bold">JD</div>
+</div>
+</header>
+<!-- Two-Panel Layout -->
+<div class="flex-1 flex overflow-hidden">
+<!-- LEFT PANEL: Editor (40%) -->
+<section class="w-[40%] bg-surface flex flex-col border-r border-outline-variant">
+<div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+<!-- Template Name -->
+<div>
+<label class="block text-[11px] font-data-mono uppercase tracking-wider text-on-surface-variant mb-2">Template Name</label>
+<input class="w-full bg-surface-container-lowest border border-outline rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-body-md transition-all" type="text" value="Standard Cafeteria Receipt"/>
+</div>
+<!-- Accordion Sections -->
+<div class="space-y-3">
+<!-- Header Section -->
+<details class="group bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm" open="">
+<summary class="flex justify-between items-center p-4 cursor-pointer hover:bg-surface-container-low list-none">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">dock_to_bottom</span>
+<span class="font-semibold">Header Configuration</span>
+</div>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="p-4 border-t border-outline-variant space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-sm">Corporate Logo</span>
+<input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm">Facility Name</span>
+<input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/>
+</div>
+</div>
+</details>
+<!-- Fields Section -->
+<details class="group bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm" open="">
+<summary class="flex justify-between items-center p-4 cursor-pointer hover:bg-surface-container-low list-none">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">reorder</span>
+<span class="font-semibold">Receipt Fields</span>
+</div>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="p-4 border-t border-outline-variant space-y-3">
+<!-- Draggable Rows -->
+<div class="space-y-2" id="fields-container">
+<div class="flex items-center gap-3 p-3 bg-surface rounded-lg border border-outline-variant group/row">
+<span class="material-symbols-outlined drag-handle text-outline-variant group-hover/row:text-outline transition-colors">drag_indicator</span>
+<span class="flex-1 text-sm font-medium">Transaction ID</span>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-lg p-1 hover:bg-surface-container-high rounded text-on-surface-variant">format_align_left</button>
+<button class="material-symbols-outlined text-lg p-1 hover:bg-surface-container-high rounded text-on-surface-variant">text_fields</button>
+<div class="w-8 h-4 bg-primary-container/20 rounded-full relative cursor-pointer ml-2">
+<div class="absolute right-0.5 top-0.5 w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3 p-3 bg-surface rounded-lg border border-outline-variant group/row">
+<span class="material-symbols-outlined drag-handle text-outline-variant group-hover/row:text-outline transition-colors">drag_indicator</span>
+<span class="flex-1 text-sm font-medium">Employee Name</span>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-lg p-1 hover:bg-surface-container-high rounded text-on-surface-variant">format_align_center</button>
+<button class="material-symbols-outlined text-lg p-1 hover:bg-surface-container-high rounded text-on-surface-variant">text_fields</button>
+<div class="w-8 h-4 bg-primary-container/20 rounded-full relative cursor-pointer ml-2">
+<div class="absolute right-0.5 top-0.5 w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3 p-3 bg-surface rounded-lg border border-outline-variant group/row">
+<span class="material-symbols-outlined drag-handle text-outline-variant group-hover/row:text-outline transition-colors">drag_indicator</span>
+<span class="flex-1 text-sm font-medium">Items List</span>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-lg p-1 hover:bg-surface-container-high rounded text-on-surface-variant">format_align_justify</button>
+<button class="material-symbols-outlined text-lg p-1 hover:bg-surface-container-high rounded text-on-surface-variant">format_size</button>
+<div class="w-8 h-4 bg-primary-container/20 rounded-full relative cursor-pointer ml-2">
+<div class="absolute right-0.5 top-0.5 w-3 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Field Chips -->
+<div class="pt-4 space-y-3">
+<p class="text-[11px] font-data-mono uppercase text-outline">Available Components</p>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-full text-xs font-medium flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-base">qr_code_2</span> QR Code
+                                        </button>
+<button class="px-3 py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-full text-xs font-medium flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-base">barcode</span> Barcode
+                                        </button>
+<button class="px-3 py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-full text-xs font-medium flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-base">calendar_today</span> Date/Time
+                                        </button>
+<button class="px-3 py-1.5 bg-primary-container text-on-primary rounded-full text-xs font-medium flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-base">add</span> Add Field
+                                        </button>
+</div>
+</div>
+</div>
+</details>
+<!-- Footer Section -->
+<details class="group bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<summary class="flex justify-between items-center p-4 cursor-pointer hover:bg-surface-container-low list-none">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">dock_to_bottom</span>
+<span class="font-semibold">Footer Configuration</span>
+</div>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="p-4 border-t border-outline-variant">
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-sm h-24 focus:ring-primary focus:border-primary outline-none" placeholder="Thank you for using MESA!"></textarea>
+</div>
+</details>
+</div>
+</div>
+<!-- Bottom Action -->
+<div class="p-4 border-t border-outline-variant bg-surface-container-lowest flex justify-between">
+<button class="px-6 py-2 text-primary font-semibold hover:bg-primary/5 rounded-lg transition-colors">Reset Changes</button>
+<button class="px-8 py-2 bg-primary text-on-primary font-semibold rounded-lg shadow-lg hover:brightness-110 active:scale-95 transition-all">Save Template</button>
+</div>
+</section>
+<!-- RIGHT PANEL: Preview (60%) -->
+<section class="w-[60%] bg-surface-container flex flex-col items-center justify-center relative overflow-y-auto p-12 custom-scrollbar">
+<div class="mb-6 flex flex-col items-center gap-2">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined">visibility</span>
+<span class="font-headline-md">Live Preview — 80mm Thermal</span>
+</div>
+<p class="text-xs text-outline">Real-time rendering of your printer output</p>
+</div>
+<!-- Simulated Thermal Receipt -->
+<div class="thermal-paper w-[320px] min-h-[500px] p-8 font-receipt text-black flex flex-col items-center transition-all duration-300" id="receipt-canvas">
+<!-- Logo Area -->
+<div class="mb-6 opacity-80 grayscale">
+<img alt="Company Logo" class="w-16 h-16 object-contain" data-alt="A minimalist black and white circular corporate emblem with a stylized mountain peak and digital circuit lines inside. The logo is rendered with a slight grit and dithering effect, mimicking the limitation of a low-resolution thermal printer. It is isolated on a stark white textured paper background with high contrast and sharp edges." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGKfH60d5GOvxgoETKkwiM_qYkDpySAF14otem45IwHc6HamOeEsM1S6EOZrwLs5sVcw1ABSJ0P0Fg1E0OLmYxxCyp-4QvC-RrnjWA9FeaLe1DfmVhJJ3KBUOBrPclbe3hUmFXJ4TJ_0Tl3oTHnP5hVS9nPQO5yTgn3A8l3pS14jPlhR7x7tztC9ZhfPYey3OSkb1o_LS-fgqmPDylqD1dW-waxR-GAdw1Y1HUa-wbuD0EatnO_mW1RJyVC8tRGpEJl9mE6EqcVTU"/>
+</div>
+<div class="w-full text-center mb-4">
+<h2 class="text-lg font-bold tracking-widest uppercase">MESA PLATFORM</h2>
+<p class="text-[12px]">Central Facility - Gate 4</p>
+<p class="text-[11px]">Tax ID: 88-1029-44-01</p>
+</div>
+<div class="w-full border-t border-dashed border-black/30 my-3"></div>
+<div class="w-full text-[12px] space-y-1">
+<div class="flex justify-between">
+<span>TRANS:</span>
+<span>#TXN-8849201</span>
+</div>
+<div class="flex justify-between">
+<span>DATE:</span>
+<span>24 MAY 2024</span>
+</div>
+<div class="flex justify-between">
+<span>TIME:</span>
+<span>12:44:02 PM</span>
+</div>
+</div>
+<div class="w-full border-t border-dashed border-black/30 my-3"></div>
+<div class="w-full text-[13px] font-bold mb-2">EMPLOYEE: J. DOE (EMP00234)</div>
+<div class="w-full text-[12px] space-y-2 mt-4">
+<div class="flex justify-between">
+<span>Daily Lunch Menu</span>
+<span>1.00</span>
+</div>
+<div class="flex justify-between">
+<span>Beverage - Coffee</span>
+<span>0.00</span>
+</div>
+<div class="flex justify-between pl-4 italic text-[11px]">
+<span>(Entitlement Used)</span>
+</div>
+</div>
+<div class="w-full border-t-2 border-black my-4"></div>
+<div class="w-full flex justify-between font-bold text-lg">
+<span>TOTAL QTY:</span>
+<span>2</span>
+</div>
+<div class="mt-8 flex flex-col items-center opacity-90">
+<img alt="Barcode" class="w-48 h-12 object-cover" data-alt="A crisp, high-contrast black and white Code 128 barcode graphic. The bars are perfectly vertical and varied in width. It appears slightly softened as if printed on thermal paper, showing very faint paper grain texture beneath the solid black ink lines. The lighting is even and flat, typical of a scanned document." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmBaGXReQm10LKLJMf9Vd_iuezKevBOCfgtiAV73xw4eU-ICT6YLThdRUpBRutchamitbyQTfYRlc82agynSUaAo8OboIG75ybaWCn46X2CeG1S26XFXx3oQFx-A4oYxFU-SLNwGXxf3sIEncA3H47vlEDTjnl6WvuInI1JLAcxFeh9CakC1ywnJmEsbCW6qRC32PnPoWhICjzF3gxEshvhLMGJf7AKLZdEtDVnGuSYX4GfcAf4CaGQrcBN1PgasWFW9azkBwWdzw"/>
+<span class="text-[10px] mt-1 tracking-[4px]">TXN-8849201-MESA</span>
+</div>
+<div class="w-full mt-10 text-center text-[10px] space-y-1 pb-4">
+<p>POWERED BY MESA SYSTEMS</p>
+<p>SUPPORT: +1-800-MEAL-ENT</p>
+<p>THANK YOU FOR YOUR SERVICE</p>
+</div>
+</div>
+<!-- Footer Tools -->
+<div class="mt-12 flex flex-col items-center gap-6">
+<div class="bg-surface-container-lowest p-1 rounded-full border border-outline-variant flex items-center shadow-sm">
+<button class="px-6 py-2 rounded-full text-sm font-semibold transition-all text-on-surface-variant hover:text-on-surface" id="width-58">58mm</button>
+<button class="px-6 py-2 rounded-full text-sm font-semibold transition-all bg-primary text-on-primary shadow-md" id="width-80">80mm</button>
+</div>
+<button class="flex items-center gap-3 px-8 py-3 bg-surface-container-lowest border border-primary text-primary font-bold rounded-xl hover:bg-primary/5 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined">print</span>
+                        Print Test Coupon
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Paper Width Toggle Logic
+        const w58 = document.getElementById('width-58');
+        const w80 = document.getElementById('width-80');
+        const canvas = document.getElementById('receipt-canvas');
+
+        w58.addEventListener('click', () => {
+            canvas.style.width = '240px';
+            w58.classList.add('bg-primary', 'text-on-primary', 'shadow-md');
+            w58.classList.remove('text-on-surface-variant');
+            w80.classList.remove('bg-primary', 'text-on-primary', 'shadow-md');
+            w80.classList.add('text-on-surface-variant');
+        });
+
+        w80.addEventListener('click', () => {
+            canvas.style.width = '320px';
+            w80.classList.add('bg-primary', 'text-on-primary', 'shadow-md');
+            w80.classList.remove('text-on-surface-variant');
+            w58.classList.remove('bg-primary', 'text-on-primary', 'shadow-md');
+            w58.classList.add('text-on-surface-variant');
+        });
+
+        // Toggle Micro-interaction simulation
+        document.querySelectorAll('.relative.cursor-pointer').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const knob = this.querySelector('div');
+                if (knob.style.right === 'auto') {
+                    knob.style.right = '0.125rem';
+                    knob.style.left = 'auto';
+                    this.classList.replace('bg-outline-variant', 'bg-primary-container/20');
+                    knob.classList.replace('bg-surface-container-highest', 'bg-primary');
+                } else {
+                    knob.style.right = 'auto';
+                    knob.style.left = '0.125rem';
+                    this.classList.replace('bg-primary-container/20', 'bg-outline-variant');
+                    knob.classList.replace('bg-primary', 'bg-surface-container-highest');
+                }
+            });
+        });
+    </script>
+</body></html>

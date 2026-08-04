@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bulk Import Employees Modal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed": "#00115a", secondary: "#565e76", "on-primary": "#ffffff", "outline-variant": "#c5c5d5", "surface-container-high": "#e4e9ed", "primary-fixed-dim": "#bac3ff", "primary-fixed": "#dee0ff", "inverse-on-surface": "#edf1f5", "secondary-container": "#dbe1ff", "secondary-fixed": "#dbe1ff", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", background: "#f6fafe", "on-primary-container": "#f0efff", surface: "#f6fafe", "secondary-fixed-dim": "#bec6e2", "inverse-surface": "#2c3134", "inverse-primary": "#bac3ff", primary: "#344ab7", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#233aa8", "on-error-container": "#93000a", "surface-container-highest": "#dfe3e7", "on-surface-variant": "#444653", "surface-variant": "#dfe3e7", "surface-bright": "#f6fafe", "on-tertiary-container": "#ebf2ff", "primary-container": "#4f64d1", "error-container": "#ffdad6", tertiary: "#47576c", "surface-dim": "#d6dade", "on-secondary-fixed": "#131b30", "tertiary-fixed": "#d3e4fe", "on-secondary-container": "#5c647c", "tertiary-container": "#5f6f86", "surface-container-low": "#f0f4f8", error: "#ba1a1a", "on-tertiary-fixed": "#0b1c30", "surface-container": "#eaeef2", "on-tertiary-fixed-variant": "#38485d", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "surface-tint": "#3f54c1", outline: "#757684", "on-surface": "#171c1f", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#3f465d"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"header-height": "64px", "stack-md": "1rem", "margin-page": "24px", "sidebar-expanded": "240px", gutter: "16px", "stack-sm": "0.5rem", "sidebar-collapsed": "72px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"headline-lg": ["Manrope"], "data-mono": ["JetBrains Mono"], "nav-item": ["Manrope"], "body-md": ["Manrope"], "headline-md": ["Manrope"], "body-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #f0f4f8; /* A light background behind the modal to simulate a page */
+        }
+        .data-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="antialiased text-on-surface h-screen w-screen flex items-center justify-center relative overflow-hidden">
+<!-- Scrim / Backdrop -->
+<div aria-hidden="true" class="fixed inset-0 bg-inverse-surface/60 backdrop-blur-sm z-40"></div>
+<!-- Modal Container -->
+<div aria-labelledby="modal-title" aria-modal="true" class="bg-surface-container-lowest rounded-xl border border-outline-variant w-full max-w-[640px] flex flex-col z-50 shadow-[0_4px_20px_rgba(23,28,31,0.04)] max-h-[921px] overflow-hidden" role="dialog">
+<!-- Header -->
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest shrink-0">
+<h2 class="font-headline-md text-headline-md text-on-surface" id="modal-title">Bulk Import Employees</h2>
+<button aria-label="Close modal" class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined block text-[20px]">close</span>
+</button>
+</div>
+<!-- Scrollable Content Area -->
+<div class="p-6 overflow-y-auto flex flex-col gap-6 custom-scrollbar">
+<!-- Step 1: Upload Zone -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary text-[12px] flex items-center justify-center font-bold">1</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold">Upload File</h3>
+</div>
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center bg-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer group">
+<span class="material-symbols-outlined text-[48px] text-primary mb-4 group-hover:scale-110 transition-transform duration-200" style="font-variation-settings: 'FILL' 1;">cloud_upload</span>
+<p class="font-body-md text-body-md text-on-surface text-center mb-1"><span class="font-bold text-primary">Click to upload</span> or drag and drop</p>
+<p class="font-data-mono text-data-mono text-on-surface-variant text-center">CSV, XLS, XLSX (Max 10MB)</p>
+</div>
+</div>
+<hr class="border-outline-variant"/>
+<!-- Step 2: Column Mapping -->
+<div class="flex flex-col gap-3 opacity-50 pointer-events-none" id="step-2"> <!-- Simulated disabled state until step 1 is done -->
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface-variant text-[12px] flex items-center justify-center font-bold">2</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold">Map Columns</h3>
+</div>
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="py-3 px-4 font-body-md text-body-md font-semibold text-on-surface w-1/2">CSV Header</th>
+<th class="py-3 px-4 font-body-md text-body-md font-semibold text-on-surface w-1/2">MESA Field</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant bg-surface-container-lowest">
+<tr>
+<td class="py-2 px-4 font-data-mono text-data-mono text-on-surface-variant">emp_id</td>
+<td class="py-2 px-4">
+<select class="w-full bg-surface-container-lowest border border-outline rounded text-body-md font-body-md py-1.5 px-3 focus:border-primary focus:ring-0">
+<option>Employee ID</option>
+<option>First Name</option>
+<option>Last Name</option>
+<option>Department</option>
+<option>Role</option>
+</select>
+</td>
+</tr>
+<tr>
+<td class="py-2 px-4 font-data-mono text-data-mono text-on-surface-variant">first_name</td>
+<td class="py-2 px-4">
+<select class="w-full bg-surface-container-lowest border border-outline rounded text-body-md font-body-md py-1.5 px-3 focus:border-primary focus:ring-0">
+<option>First Name</option>
+<option>Employee ID</option>
+<option>Last Name</option>
+<option>Department</option>
+<option>Role</option>
+</select>
+</td>
+</tr>
+<tr>
+<td class="py-2 px-4 font-data-mono text-data-mono text-on-surface-variant">last_name</td>
+<td class="py-2 px-4">
+<select class="w-full bg-surface-container-lowest border border-outline rounded text-body-md font-body-md py-1.5 px-3 focus:border-primary focus:ring-0">
+<option>Last Name</option>
+<option>Employee ID</option>
+<option>First Name</option>
+<option>Department</option>
+<option>Role</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr class="border-outline-variant"/>
+<!-- Step 3: Preview -->
+<div class="flex flex-col gap-3 opacity-50 pointer-events-none" id="step-3"> <!-- Simulated disabled state -->
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface-variant text-[12px] flex items-center justify-center font-bold">3</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold">Preview (First 5 Rows)</h3>
+</div>
+<div class="border border-outline-variant rounded-lg overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[500px]">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="py-2 px-3 font-body-md text-body-md font-semibold text-on-surface">Employee ID</th>
+<th class="py-2 px-3 font-body-md text-body-md font-semibold text-on-surface">First Name</th>
+<th class="py-2 px-3 font-body-md text-body-md font-semibold text-on-surface">Last Name</th>
+<th class="py-2 px-3 font-body-md text-body-md font-semibold text-on-surface">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant bg-surface-container-lowest">
+<tr>
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">E1001</td>
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">Alice</td>
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">Smith</td>
+<td class="py-2 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container-highest text-on-surface">Valid</span>
+</td>
+</tr>
+<tr class="bg-error-container/20">
+<td class="py-2 px-3 font-data-mono text-data-mono text-error font-semibold">E1001</td> <!-- Duplicate ID Error -->
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">Bob</td>
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">Johnson</td>
+<td class="py-2 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-error-container text-on-error-container">Duplicate ID</span>
+</td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">E1003</td>
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">Charlie</td>
+<td class="py-2 px-3 font-data-mono text-data-mono text-on-surface">Brown</td>
+<td class="py-2 px-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container-highest text-on-surface">Valid</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="font-data-mono text-[11px] text-error flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                    1 error found. Please correct before importing.
+                </p>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="px-6 py-4 border-t border-outline-variant bg-surface-container-lowest flex justify-end gap-3 shrink-0">
+<button class="font-body-md text-body-md font-semibold text-on-surface-variant hover:bg-surface-container px-4 py-2 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+                Cancel
+            </button>
+<button class="font-body-md text-body-md font-semibold bg-primary-container text-on-primary px-4 py-2 rounded hover:bg-primary-fixed-variant transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary opacity-50 cursor-not-allowed"> <!-- Disabled state -->
+                Import 0 Records
+            </button>
+</div>
+</div>
+<!-- Minimal JS to simulate file drop interaction for UI demonstration -->
+<script>
+        const dropZone = document.querySelector('.border-dashed');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const importBtn = document.querySelector('button.bg-primary-container');
+        const steps = document.querySelectorAll('.rounded-full.bg-surface-container-highest');
+
+        dropZone.addEventListener('click', () => {
+            // Simulate upload success
+            dropZone.classList.replace('border-outline-variant', 'border-primary');
+            dropZone.classList.add('bg-primary-container/5');
+            dropZone.innerHTML = `
+                <span class="material-symbols-outlined text-[48px] text-primary mb-2" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                <p class="font-body-md text-body-md text-on-surface text-center font-bold">employees_q3.csv</p>
+                <p class="font-data-mono text-data-mono text-on-surface-variant text-center">Ready to map</p>
+            `;
+
+            // Enable next steps
+            step2.classList.remove('opacity-50', 'pointer-events-none');
+            step3.classList.remove('opacity-50', 'pointer-events-none');
+            
+            // Update step indicators visually
+            steps.forEach(step => {
+                step.classList.replace('bg-surface-container-highest', 'bg-primary-container');
+                step.classList.replace('text-on-surface-variant', 'text-on-primary');
+            });
+
+            // Update button (still disabled because of the error in preview, but change text)
+            importBtn.textContent = 'Import 2 Records';
+        });
+    </script>
+</body></html>

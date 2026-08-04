@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA - Receipt &amp; Coupon Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"inverse-on-surface": "#edf1f5", "error-container": "#ffdad6", surface: "#f6fafe", "secondary-fixed": "#dbe1ff", "on-primary-container": "#f0efff", "primary-fixed-dim": "#bac3ff", primary: "#344ab7", background: "#f6fafe", tertiary: "#47576c", "on-primary": "#ffffff", "on-tertiary-fixed": "#0b1c30", "inverse-primary": "#bac3ff", "on-surface": "#171c1f", "on-secondary-container": "#5c647c", "on-primary-fixed": "#00115a", "surface-container": "#eaeef2", "on-tertiary-container": "#ebf2ff", "on-surface-variant": "#444653", "on-error": "#ffffff", "surface-tint": "#3f54c1", "inverse-surface": "#2c3134", error: "#ba1a1a", outline: "#757684", "secondary-fixed-dim": "#bec6e2", "secondary-container": "#dbe1ff", "tertiary-container": "#5f6f86", "on-primary-fixed-variant": "#233aa8", "primary-fixed": "#dee0ff", "on-secondary-fixed-variant": "#3f465d", "surface-container-highest": "#dfe3e7", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#d3e4fe", secondary: "#565e76", "outline-variant": "#c5c5d5", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", "on-tertiary": "#ffffff", "surface-dim": "#d6dade", "surface-container-low": "#f0f4f8", "surface-variant": "#dfe3e7", "on-secondary-fixed": "#131b30", "primary-container": "#4f64d1", "on-tertiary-fixed-variant": "#38485d", "on-error-container": "#93000a", "surface-bright": "#f6fafe", "surface-container-high": "#e4e9ed", "on-secondary": "#ffffff"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"stack-sm": "0.5rem", "stack-md": "1rem", "header-height": "64px", "sidebar-collapsed": "72px", "margin-page": "24px", gutter: "16px", "sidebar-expanded": "240px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"nav-item": ["Manrope"], "data-mono": ["JetBrains Mono"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f6fafe;
+            color: #171c1f;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c5c5d5;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden">
+<!-- Side Navigation Bar -->
+<aside class="w-sidebar-expanded h-full flex flex-col fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant z-50 py-4 px-3 overflow-y-auto">
+<div class="mb-8 px-3">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">MESA</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-data-mono">Meal Entitlement Platform</p>
+</div>
+<nav class="flex-1 space-y-1 custom-scrollbar">
+<p class="px-3 py-2 font-data-mono text-[11px] uppercase tracking-wider text-outline">Main Operations</p>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-nav-item">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="point_of_sale">point_of_sale</span>
+<span class="font-nav-item">POS Terminals</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-nav-item">People Master</span>
+</a>
+<p class="px-3 py-2 mt-4 font-data-mono text-[11px] uppercase tracking-wider text-outline">Configuration</p>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+<span class="font-nav-item">Enrollment</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="font-nav-item">Meal Rules</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 bg-primary-container/10 text-primary border-l-[3px] border-primary rounded-r-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-nav-item">Settings</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-nav-item">Reports</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4 px-3 space-y-1">
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-nav-item">Support</span>
+</a>
+<a class="flex items-center gap-3 h-10 px-3 text-on-surface-variant rounded-xl hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-nav-item">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="h-header-height w-[calc(100%-240px)] ml-[240px] fixed top-0 right-0 bg-surface-container-lowest border-b border-outline-variant flex justify-between items-center px-margin-page z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 font-body-md focus:ring-2 focus:ring-primary" placeholder="Search settings or devices..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<button class="hover:bg-surface-container-high rounded-full p-2 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+<div class="text-right">
+<p class="font-nav-item text-on-surface leading-none">Admin User</p>
+<p class="text-[11px] text-outline">System Architect</p>
+</div>
+<img alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-surface-container-high" data-alt="A close-up professional headshot of a mature administrative officer with a friendly yet professional expression. He is set against a soft-focus office background with cool, blueish lighting. The image maintains a high-key, clean aesthetic with sharp focus on the facial details, conveying reliability and expertise in a corporate setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0qEQSyD-Y-YzYBIB6PYOg4Y2NmDaR7G4piGAcxNfKLHBgddX5shIXnbUR3nFrQyLQJZ4Yabu9ie7Nq4IXzlklWYoZVgKL7PqTqkFAP4oeUqvi_pbDfoTbqZv3-6ygR0YYfzea1uM4SIWwUrnM0kucpv7QU_PXvoEAzjgMhMDCY0sQxLocReeSuTLJ2zdKjCqCf4vWvzOeJ7Ummk6M-TkF03oIMUc-Fams7eOsttBAq2c73d7Iqx8cLcmKd-Jy3a46KjB4CoWWD0k"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] mt-[64px] h-[calc(100vh-64px)] overflow-y-auto bg-surface p-margin-page custom-scrollbar">
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-2 mb-6 text-on-surface-variant font-body-md">
+<a class="hover:text-primary transition-colors" href="#">Settings</a>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-on-surface font-semibold">Receipt Printing</span>
+</nav>
+<div class="max-w-6xl mx-auto space-y-gutter">
+<!-- Bento Hero Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Primary Toggle Card -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant flex flex-col justify-between overflow-hidden relative group">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/5 rounded-full blur-3xl transition-all group-hover:bg-primary/10"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Coupon Printing System</h2>
+<p class="text-on-surface-variant max-w-md">Enable automatic generation and printing of entitlement coupons at authorized site terminals.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+<span class="ml-3 font-nav-item text-primary font-bold">ACTIVE</span>
+</label>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-surface-container p-4 rounded-lg">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono mb-1">Today's Prints</p>
+<p class="font-headline-md text-primary">1,284</p>
+</div>
+<div class="bg-surface-container p-4 rounded-lg">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono mb-1">Active Printers</p>
+<p class="font-headline-md text-on-surface">42 <span class="text-body-md text-outline font-normal">/ 45</span></p>
+</div>
+<div class="bg-surface-container p-4 rounded-lg">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono mb-1">Avg Latency</p>
+<p class="font-headline-md text-on-surface">120ms</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Printer Quick Action -->
+<div class="lg:col-span-4 bg-primary-container text-on-primary-container p-6 rounded-xl border border-primary flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-[48px] mb-4" data-icon="print_connect">print_connect</span>
+<h3 class="font-headline-md mb-2">New Device?</h3>
+<p class="text-on-primary-container/80 mb-6 text-body-md">Connect and configure a new receipt printer to the network.</p>
+<button class="w-full py-3 px-6 bg-white text-primary font-bold rounded-lg shadow-lg hover:bg-surface-container-lowest transition-all active:scale-95" onclick="document.getElementById('printer-modal').classList.remove('hidden')">
+                        Add Printer
+                    </button>
+</div>
+</div>
+<!-- Per-Site Settings Table -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low/50">
+<div>
+<h3 class="font-headline-md text-on-surface">Per-Site Printing Settings</h3>
+<p class="text-[11px] text-outline uppercase font-data-mono">Configuration &amp; Live Status Monitoring</p>
+</div>
+<button class="flex items-center gap-2 py-2 px-4 bg-primary text-white rounded-lg font-nav-item hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        Assign Printer
+                    </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-left">
+<th class="px-6 py-4 font-body-md font-semibold text-on-surface-variant">Site Name</th>
+<th class="px-6 py-4 font-body-md font-semibold text-on-surface-variant">Printing Status</th>
+<th class="px-6 py-4 font-body-md font-semibold text-on-surface-variant">Assigned Printer</th>
+<th class="px-6 py-4 font-body-md font-semibold text-on-surface-variant">Printer Status</th>
+<th class="px-6 py-4 font-body-md font-semibold text-on-surface-variant">Template</th>
+<th class="px-6 py-4 font-body-md font-semibold text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="px-6 py-4 font-nav-item text-on-surface">Central Cafeteria A</td>
+<td class="px-6 py-4">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="px-6 py-4 font-data-mono text-on-surface-variant">PRT-CENT-001</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-[12px] font-bold">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                        ONLINE
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-on-surface-variant">Standard V2</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container rounded-lg text-outline">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="px-6 py-4 font-nav-item text-on-surface">West Wing Bistro</td>
+<td class="px-6 py-4">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="px-6 py-4 font-data-mono text-on-surface-variant">PRT-WEST-042</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container text-error text-[12px] font-bold">
+<span class="w-1.5 h-1.5 bg-error rounded-full animate-pulse"></span>
+                                        PAPER OUT
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-on-surface-variant">Bistro-Compact</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container rounded-lg text-outline">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="px-6 py-4 font-nav-item text-on-surface">Executive Lounge</td>
+<td class="px-6 py-4">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="px-6 py-4 font-data-mono text-on-surface-variant">PRT-EXEC-009</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-[12px] font-bold">
+<span class="w-1.5 h-1.5 bg-outline rounded-full"></span>
+                                        OFFLINE
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-on-surface-variant">Premium-Gold</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container rounded-lg text-outline">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Connected Printers List -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="devices">devices</span>
+<h3 class="font-headline-md text-on-surface">Connected Printers</h3>
+</div>
+<div class="flex gap-2">
+<button class="py-2 px-4 border border-outline text-on-surface font-nav-item rounded-lg hover:bg-surface-container transition-all flex items-center gap-2" onclick="showToast()">
+<span class="material-symbols-outlined text-[18px]" data-icon="print">print</span>
+                            Test Print
+                        </button>
+</div>
+</div>
+<div class="divide-y divide-outline-variant">
+<!-- Printer Item 1 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container/10 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-low rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="lan">lan</span>
+</div>
+<div>
+<p class="font-nav-item text-on-surface">PRT-CENT-001 <span class="ml-2 text-[10px] bg-secondary-container/20 text-secondary px-1.5 py-0.5 rounded font-bold">NETWORK</span></p>
+<div class="flex gap-3 mt-1">
+<p class="text-[12px] text-outline font-data-mono">IP: 192.168.1.145</p>
+<p class="text-[12px] text-outline font-data-mono">Width: 80mm</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono">Status</p>
+<p class="text-green-600 font-bold text-[13px]">Active &amp; Ready</p>
+</div>
+<button class="material-symbols-outlined text-outline hover:text-error transition-colors" data-icon="delete">delete</button>
+</div>
+</div>
+<!-- Printer Item 2 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container/10 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-low rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="usb">usb</span>
+</div>
+<div>
+<p class="font-nav-item text-on-surface">PRT-LOCAL-DESK <span class="ml-2 text-[10px] bg-tertiary-fixed text-tertiary px-1.5 py-0.5 rounded font-bold">USB</span></p>
+<div class="flex gap-3 mt-1">
+<p class="text-[12px] text-outline font-data-mono">ID: BUS-002-DEV-01</p>
+<p class="text-[12px] text-outline font-data-mono">Width: 58mm</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-[11px] uppercase tracking-wider text-outline font-data-mono">Status</p>
+<p class="text-on-surface-variant font-bold text-[13px]">Idle</p>
+</div>
+<button class="material-symbols-outlined text-outline hover:text-error transition-colors" data-icon="delete">delete</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacer for FAB avoidance if needed -->
+<div class="h-12"></div>
+</main>
+<!-- Modal: Add Printer (Hidden by default) -->
+<div class="fixed inset-0 z-[100] hidden" id="printer-modal">
+<div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="this.parentElement.classList.add('hidden')"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-surface-container-lowest rounded-xl border border-outline-variant shadow-2xl p-8">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-lg text-on-surface">Add New Printer</h3>
+<button class="material-symbols-outlined hover:bg-surface-container rounded-full p-1" data-icon="close" onclick="document.getElementById('printer-modal').classList.add('hidden')">close</button>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-nav-item text-on-surface-variant mb-1.5">Printer Friendly Name</label>
+<input class="w-full border-outline border rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. Kitchen-East-01" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-nav-item text-on-surface-variant mb-1.5">Connection Type</label>
+<select class="w-full border-outline border rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none">
+<option>Network (Ethernet/WiFi)</option>
+<option>USB Local</option>
+</select>
+</div>
+<div>
+<label class="block text-nav-item text-on-surface-variant mb-1.5">Paper Width</label>
+<select class="w-full border-outline border rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none">
+<option>80mm (Standard)</option>
+<option>58mm (Narrow)</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-nav-item text-on-surface-variant mb-1.5">IP Address / Endpoint</label>
+<input class="w-full border-outline border rounded px-4 py-2 font-data-mono focus:ring-2 focus:ring-primary outline-none" placeholder="192.168.1.XXX" type="text"/>
+</div>
+<div class="pt-6 flex gap-3">
+<button class="flex-1 py-3 border border-outline text-on-surface rounded-lg font-bold hover:bg-surface-container transition-all" onclick="document.getElementById('printer-modal').classList.add('hidden')">Cancel</button>
+<button class="flex-1 py-3 bg-primary text-white rounded-lg font-bold shadow-md hover:bg-primary-container transition-all">Search &amp; Connect</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Confirmation Message (Toast) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] opacity-0 translate-y-10 transition-all duration-300 pointer-events-none" id="toast">
+<div class="bg-inverse-surface text-inverse-on-surface px-6 py-3 rounded-full flex items-center gap-3 shadow-2xl">
+<span class="material-symbols-outlined text-green-400" data-icon="check_circle">check_circle</span>
+<p class="font-nav-item">Test print command sent successfully to PRT-CENT-001.</p>
+</div>
+</div>
+<script>
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        // Simulating Micro-interactions for table status toggles
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const row = this.closest('tr');
+                if (row) {
+                    if (this.checked) {
+                        row.classList.remove('opacity-60');
+                    } else {
+                        row.classList.add('opacity-60');
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

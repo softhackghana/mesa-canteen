@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MESA POS - Offline Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#5f6f86", error: "#ba1a1a", "surface-dim": "#d6dade", "surface-bright": "#f6fafe", "on-background": "#171c1f", "inverse-surface": "#2c3134", "secondary-fixed": "#dbe1ff", "secondary-container": "#dbe1ff", "on-secondary-fixed": "#131b30", "on-surface-variant": "#444653", "primary-container": "#4f64d1", "on-secondary-container": "#5c647c", "on-tertiary-container": "#ebf2ff", "surface-container-highest": "#dfe3e7", "on-primary-fixed": "#00115a", "on-surface": "#171c1f", "inverse-on-surface": "#edf1f5", "surface-container-high": "#e4e9ed", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "outline-variant": "#c5c5d5", primary: "#344ab7", outline: "#757684", "tertiary-fixed-dim": "#b7c8e1", "primary-fixed": "#dee0ff", secondary: "#565e76", "on-secondary-fixed-variant": "#3f465d", "on-tertiary-fixed-variant": "#38485d", "error-container": "#ffdad6", "surface-container-low": "#f0f4f8", "on-primary-container": "#f0efff", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", surface: "#f6fafe", "on-tertiary-fixed": "#0b1c30", "on-error-container": "#93000a", "tertiary-fixed": "#d3e4fe", "surface-tint": "#3f54c1", "on-primary-fixed-variant": "#233aa8", "inverse-primary": "#bac3ff", "surface-variant": "#dfe3e7", "primary-fixed-dim": "#bac3ff", background: "#f6fafe", "on-error": "#ffffff", "surface-container": "#eaeef2", "secondary-fixed-dim": "#bec6e2", tertiary: "#47576c", warning: "#f59e0b", "on-warning": "#ffffff", "warning-container": "#fef3c7", "on-warning-container": "#92400e"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"stack-sm": "0.5rem", "sidebar-collapsed": "72px", "header-height": "64px", gutter: "16px", "stack-md": "1rem", "sidebar-expanded": "240px", "margin-page": "24px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"nav-item": ["Manrope"], "headline-md": ["Manrope"], "data-mono": ["JetBrains Mono"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "headline-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .data-mono { font-family: 'JetBrains Mono', monospace; }
+        .pulse-amber {
+            animation: pulse-ring-amber 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring-amber {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(245, 158, 11, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-screen flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant flex justify-between items-center h-header-height px-margin-page w-full flex-shrink-0 z-10">
+<div class="flex items-center gap-4">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">MESA POS</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 mr-4 bg-warning-container text-on-warning-container px-3 py-1 rounded-full border border-warning">
+<span class="material-symbols-outlined text-[18px]">wifi_off</span>
+<span class="font-body-md text-body-md font-semibold">OFFLINE MODE</span>
+</div>
+<button aria-label="Schedule" class="text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-DEFAULT">
+<span class="material-symbols-outlined">schedule</span>
+</button>
+<button aria-label="Person" class="text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-DEFAULT">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button aria-label="Location" class="text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-DEFAULT">
+<span class="material-symbols-outlined">location_on</span>
+</button>
+</div>
+</header>
+<!-- Offline Warning Banner -->
+<div class="bg-warning text-on-warning px-margin-page py-3 flex items-center justify-center gap-2 w-full flex-shrink-0 shadow-sm z-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-body-lg text-body-lg font-semibold">Network unavailable — operating from local cache. 34 transactions queued.</span>
+</div>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col items-center justify-center p-gutter relative overflow-hidden bg-surface-container-low">
+<!-- Central Scanning Area -->
+<div class="flex flex-col items-center justify-center mb-8 relative">
+<div class="w-64 h-64 rounded-full border-4 border-warning flex items-center justify-center bg-surface-container-lowest relative z-10 pulse-amber">
+<div class="flex flex-col items-center gap-2 text-warning">
+<span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+<span class="font-headline-md text-headline-md text-center mt-2">Ready to Scan<br/><span class="text-sm font-normal">(Offline)</span></span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-8 text-center max-w-md">
+                Present meal card or mobile pass to the scanner. Data will be synced automatically when network is restored.
+            </p>
+</div>
+<!-- Manual Entry Fallback -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl w-full max-w-md">
+<h3 class="font-headline-md text-headline-md text-on-background mb-4">Manual Entry</h3>
+<div class="flex gap-2">
+<input class="flex-grow bg-surface-container-lowest border border-outline rounded-DEFAULT px-4 py-2 font-data-mono text-data-mono focus:border-warning focus:outline-none focus:ring-1 focus:ring-warning" placeholder="Enter ID Number" type="text"/>
+<button class="bg-tertiary-container text-on-tertiary rounded-DEFAULT px-4 py-2 font-body-md text-body-md font-semibold hover:opacity-90 transition-opacity">Enter</button>
+</div>
+</div>
+</main>
+<!-- Footer / Shift Summary -->
+<footer class="bg-surface border-t border-outline-variant h-20 flex-shrink-0 w-full px-margin-page flex justify-between items-center z-10 hidden md:flex">
+<div class="flex items-center gap-6">
+<div>
+<span class="font-body-md text-body-md text-on-surface-variant block text-xs">Current Shift</span>
+<span class="font-data-mono text-data-mono text-on-background">Morning (06:00 - 14:00)</span>
+</div>
+<div class="w-px h-8 bg-outline-variant"></div>
+<div>
+<span class="font-body-md text-body-md text-on-surface-variant block text-xs">Meals Served</span>
+<span class="font-data-mono text-data-mono text-on-background">412</span>
+</div>
+<div class="w-px h-8 bg-outline-variant"></div>
+<div>
+<span class="font-body-md text-body-md text-on-surface-variant block text-xs">Queued (Offline)</span>
+<span class="font-data-mono text-data-mono text-warning font-bold">34</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="border border-outline text-on-surface rounded-DEFAULT px-4 py-2 font-body-md text-body-md hover:bg-surface-container-high transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+                Force Sync
+            </button>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-20 bg-surface border-t border-outline-variant px-gutter md:hidden">
+<button aria-label="Terminal" class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-2 min-w-[64px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+<span class="font-nav-item text-nav-item mt-1">Terminal</span>
+</button>
+<button aria-label="History" class="flex flex-col items-center justify-center text-on-surface-variant p-2 min-w-[64px] hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-nav-item text-nav-item mt-1">History</span>
+</button>
+<button aria-label="Summary" class="flex flex-col items-center justify-center text-on-surface-variant p-2 min-w-[64px] hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-nav-item text-nav-item mt-1">Summary</span>
+</button>
+<button aria-label="Support" class="flex flex-col items-center justify-center text-on-surface-variant p-2 min-w-[64px] hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">help</span>
+<span class="font-nav-item text-nav-item mt-1">Support</span>
+</button>
+</nav>
+</body></html>

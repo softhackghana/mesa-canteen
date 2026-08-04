@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register New Terminal - MESA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed": "#00115a", secondary: "#565e76", "on-primary": "#ffffff", "outline-variant": "#c5c5d5", "surface-container-high": "#e4e9ed", "primary-fixed-dim": "#bac3ff", "primary-fixed": "#dee0ff", "inverse-on-surface": "#edf1f5", "secondary-container": "#dbe1ff", "secondary-fixed": "#dbe1ff", "on-background": "#171c1f", "tertiary-fixed-dim": "#b7c8e1", background: "#f6fafe", "on-primary-container": "#f0efff", surface: "#f6fafe", "secondary-fixed-dim": "#bec6e2", "inverse-surface": "#2c3134", "inverse-primary": "#bac3ff", primary: "#344ab7", "on-tertiary": "#ffffff", "on-primary-fixed-variant": "#233aa8", "on-error-container": "#93000a", "surface-container-highest": "#dfe3e7", "on-surface-variant": "#444653", "surface-variant": "#dfe3e7", "surface-bright": "#f6fafe", "on-tertiary-container": "#ebf2ff", "primary-container": "#4f64d1", "error-container": "#ffdad6", tertiary: "#47576c", "surface-dim": "#d6dade", "on-secondary-fixed": "#131b30", "tertiary-fixed": "#d3e4fe", "on-secondary-container": "#5c647c", "tertiary-container": "#5f6f86", "surface-container-low": "#f0f4f8", error: "#ba1a1a", "on-tertiary-fixed": "#0b1c30", "surface-container": "#eaeef2", "on-tertiary-fixed-variant": "#38485d", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "surface-tint": "#3f54c1", outline: "#757684", "on-surface": "#171c1f", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#3f465d"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"header-height": "64px", "stack-md": "1rem", "margin-page": "24px", "sidebar-expanded": "240px", gutter: "16px", "stack-sm": "0.5rem", "sidebar-collapsed": "72px", "table-row-height": "56px", "unit-sm": "8px", "unit-xs": "4px", "sidebar-width-expanded": "240px", "unit-lg": "24px", "unit-xl": "32px", "unit-md": "16px", "sidebar-width-collapsed": "72px"}, fontFamily: {"headline-lg": ["Manrope"], "data-mono": ["JetBrains Mono"], "nav-item": ["Manrope"], "body-md": ["Manrope"], "headline-md": ["Manrope"], "body-lg": ["Manrope"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Manrope"]}, fontSize: {"headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "data-mono": ["13px", {lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "450"}], "nav-item": ["14px", {lineHeight: "20px", fontWeight: "500"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500"}], "headline-lg-mobile": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: rgba(23, 28, 31, 0.4); } /* Simulating backdrop for presentation */
+        .modal-shadow { box-shadow: 0 4px 20px rgba(23, 28, 31, 0.04); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+<!-- Modal Container -->
+<div class="bg-surface-container-lowest w-full max-w-[480px] rounded-xl border border-outline-variant modal-shadow flex flex-col overflow-hidden">
+<!-- Header -->
+<div class="px-6 py-5 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
+<h2 class="font-headline-md text-headline-md text-on-surface">Register New Terminal</h2>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Body -->
+<div class="p-6 overflow-y-auto max-h-[716px] bg-surface flex flex-col gap-stack-md">
+<!-- Terminal Name -->
+<div class="flex flex-col gap-2">
+<label class="font-nav-item text-nav-item text-on-surface-variant" for="terminal-name">Terminal Name</label>
+<input class="w-full bg-surface-container-lowest border border-outline rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="terminal-name" placeholder="e.g. POS-Cafeteria-01" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Site -->
+<div class="flex flex-col gap-2">
+<label class="font-nav-item text-nav-item text-on-surface-variant" for="site-select">Site</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-outline rounded-lg px-3 py-2 pr-10 font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="site-select">
+<option disabled="" selected="" value="">Select Site</option>
+<option value="hq">Headquarters</option>
+<option value="north">North Campus</option>
+<option value="south">South Facility</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Outlet -->
+<div class="flex flex-col gap-2">
+<label class="font-nav-item text-nav-item text-on-surface-variant" for="outlet-select">Outlet</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-outline rounded-lg px-3 py-2 pr-10 font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50 disabled:bg-surface-container" disabled="" id="outlet-select">
+<option disabled="" selected="" value="">Select Outlet</option>
+<!-- Options would populate based on site selection -->
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Expected IP Address -->
+<div class="flex flex-col gap-2">
+<label class="font-nav-item text-nav-item text-on-surface-variant" for="ip-address">Expected IP Address <span class="text-outline text-xs font-normal ml-1">(Optional)</span></label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="lan">lan</span>
+</div>
+<input class="w-full bg-surface-container-lowest border border-outline rounded-lg pl-10 pr-3 py-2 font-data-mono text-data-mono text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="ip-address" placeholder="192.168.1.100" type="text"/>
+</div>
+<p class="text-xs text-on-surface-variant mt-1">If provided, terminal can only connect from this IP.</p>
+</div>
+<div class="w-full h-px bg-outline-variant my-2"></div>
+<!-- Generate Secure Token Section -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-nav-item text-nav-item text-on-surface font-semibold">Device Authentication Token</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mt-1">Generate a one-time token to securely pair the terminal device.</p>
+</div>
+<span class="material-symbols-outlined text-primary bg-primary-container/10 p-2 rounded-full" data-icon="key">key</span>
+</div>
+<button class="bg-surface-container hover:bg-surface-container-high text-primary font-nav-item text-nav-item py-2 px-4 rounded-lg transition-colors border border-outline-variant flex items-center justify-center gap-2 self-start" id="generate-btn" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="cycle">cycle</span>
+                    Generate Secure Token
+                </button>
+<!-- Hidden token block, revealed by JS -->
+<div class="hidden flex flex-col gap-3" id="token-display">
+<div class="flex items-center justify-between bg-on-surface text-surface-container-lowest p-3 rounded-lg">
+<span class="font-data-mono text-data-mono tracking-widest text-[16px]">AB89-XYZ2-99KL-MESA</span>
+<button class="text-surface-variant hover:text-white transition-colors focus:outline-none flex items-center justify-center p-1" title="Copy to clipboard">
+<span class="material-symbols-outlined text-[20px]" data-icon="content_copy">content_copy</span>
+</button>
+</div>
+<div class="flex gap-2 items-start bg-primary-container/10 p-3 rounded-lg border border-primary-container/20">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5" data-icon="info">info</span>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm leading-snug">
+                            Enter this token on the POS terminal during first launch to register it securely. This token expires in 15 minutes.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="px-6 py-4 border-t border-outline-variant bg-surface-container-lowest flex justify-end gap-3">
+<button class="px-4 py-2 font-nav-item text-nav-item text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors focus:outline-none" type="button">
+                Cancel
+            </button>
+<button class="px-6 py-2 bg-primary hover:bg-primary/90 text-white font-nav-item text-nav-item rounded-lg transition-colors focus:outline-none shadow-sm flex items-center gap-2" type="button">
+                Register Terminal
+                <span class="material-symbols-outlined text-[18px]" data-icon="check_circle">check_circle</span>
+</button>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const generateBtn = document.getElementById('generate-btn');
+            const tokenDisplay = document.getElementById('token-display');
+            const siteSelect = document.getElementById('site-select');
+            const outletSelect = document.getElementById('outlet-select');
+
+            // Simulate site selection enabling outlet selection
+            siteSelect.addEventListener('change', (e) => {
+                if(e.target.value) {
+                    outletSelect.disabled = false;
+                    // Mock population
+                    outletSelect.innerHTML = '<option value="" disabled selected>Select Outlet</option><option value="cafe1">Main Cafeteria</option><option value="kiosk2">Grab & Go Kiosk</option>';
+                } else {
+                    outletSelect.disabled = true;
+                    outletSelect.innerHTML = '<option value="" disabled selected>Select Outlet</option>';
+                }
+            });
+
+            // Simulate token generation
+            generateBtn.addEventListener('click', () => {
+                generateBtn.classList.add('hidden');
+                tokenDisplay.classList.remove('hidden');
+                // Added a small fade-in effect
+                tokenDisplay.animate([
+                    { opacity: 0, transform: 'translateY(-10px)' },
+                    { opacity: 1, transform: 'translateY(0)' }
+                ], { duration: 300, easing: 'ease-out' });
+            });
+        });
+    </script>
+</body></html>
