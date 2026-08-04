@@ -184,14 +184,14 @@ export default function PeoplePage() {
         actions={
           <>
             <Button variant="secondary" onClick={() => setBulkOpen(true)}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>upload_file</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>upload_file</span>
               Bulk Import CSV
             </Button>
             <Button onClick={() => {
               setSelected(null);
               setProfileOpen(true);
             }}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>person_add</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>person_add</span>
               Add Employee
             </Button>
           </>
@@ -311,7 +311,7 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
         <>
           <Button variant="secondary" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button onClick={importRows} disabled={preview.length === 0}>
-            <span className="material-symbols-outlined text-[18px]" aria-hidden>upload</span>
+            <span className="material-symbols-outlined text-body-lg" aria-hidden>upload</span>
             Import {preview.length > 0 ? preview.length : ""} Rows
           </Button>
         </>
@@ -325,10 +325,10 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
             <input
               type="file"
               accept=".csv,text/csv"
-              className="block w-full text-sm text-on-surface-variant file:mr-3 file:rounded file:border file:border-outline-variant file:bg-surface-container file:px-3 file:py-1.5 file:font-body-md file:text-body-md file:text-on-surface"
+              className="block w-full font-body-md text-body-md text-on-surface-variant file:mr-3 file:rounded file:border file:border-outline-variant file:bg-surface-container file:px-3 file:py-1.5 file:font-body-md file:text-body-md file:text-on-surface"
               onChange={(e) => handleFile(e.target.files?.[0])}
             />
-            {fileName && <span className="shrink-0 font-data-mono text-[11px] text-on-surface-variant">{fileName}</span>}
+            {fileName && <span className="shrink-0 font-data-mono text-data-mono text-on-surface-variant">{fileName}</span>}
           </div>
           <textarea
             value={csv}
@@ -339,7 +339,7 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
           />
           <div className="flex justify-end">
             <Button variant="secondary" size="sm" onClick={runPreview}>
-              <span className="material-symbols-outlined text-[16px]" aria-hidden>preview</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>preview</span>
               Preview (First 5 Rows)
             </Button>
           </div>
@@ -356,8 +356,9 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
             ] as const
           ).map(([key, label]) => (
             <div key={key} className="flex flex-col gap-1">
-              <Label>{label}</Label>
+              <Label htmlFor={`map-${key}`}>{label}</Label>
               <SelectLike
+                id={`map-${key}`}
                 value={mapping[key]}
                 options={["Employee ID", "First Name", "Last Name", "Department", "Role"]}
                 onChange={(v) => setMapping((m) => ({ ...m, [key]: v }))}
@@ -373,7 +374,7 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
               <span className="font-nav-item text-nav-item text-on-surface">Preview (First 5 Rows)</span>
             </div>
             <table className="w-full text-left">
-              <thead className="bg-surface font-data-mono text-[11px] uppercase text-on-surface-variant">
+              <thead className="bg-surface font-data-mono text-data-mono uppercase text-on-surface-variant">
                 <tr className="border-b border-outline-variant">
                   <th className="px-3 py-2">Employee ID</th>
                   <th className="px-3 py-2">First Name</th>
@@ -400,7 +401,7 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
           </div>
         )}
 
-        <p className="font-data-mono text-[11px] text-on-surface-variant">
+        <p className="font-data-mono text-data-mono text-on-surface-variant">
           Employee IDs must be unique across active and inactive records (FR-PM-004).
         </p>
       </div>
@@ -408,12 +409,13 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
   );
 }
 
-function SelectLike({ value, options, onChange }: { value: string; options: string[]; onChange: (v: string) => void }) {
+function SelectLike({ id, value, options, onChange }: { id?: string; value: string; options: string[]; onChange: (v: string) => void }) {
   return (
     <select
+      id={id}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="h-10 w-full rounded border border-outline bg-surface-container-lowest px-3 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none"
+      className="h-10 w-full rounded border border-outline bg-surface-container-lowest px-3 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
     >
       {options.map((o) => (
         <option key={o}>{o}</option>
@@ -517,7 +519,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
             <dl className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-3">
               {details.map(([k, v]) => (
                 <div key={k} className="flex flex-col">
-                  <dt className="font-data-mono text-[10px] uppercase tracking-wider text-on-surface-variant">{k}</dt>
+                  <dt className="font-data-mono text-data-mono uppercase tracking-wider text-on-surface-variant">{k}</dt>
                   <dd className="font-body-md text-body-md text-on-surface">{v}</dd>
                 </div>
               ))}
@@ -532,7 +534,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
                 <div className="flex items-center justify-between rounded-lg border border-outline-variant p-3">
                   <div>
                     <p className="font-body-md text-body-md font-medium text-on-surface">Right Index Finger</p>
-                    <p className="font-data-mono text-[11px] text-on-surface-variant">
+                    <p className="font-data-mono text-data-mono text-on-surface-variant">
                       {p.biometricTemplates} template{p.biometricTemplates !== 1 ? "s" : ""} · Quality 96.4% · DigitalPersona
                     </p>
                   </div>
@@ -558,7 +560,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
             <div className="flex items-center justify-between rounded-lg border border-outline-variant p-3">
               <div>
                 <p className="font-body-md text-body-md font-medium text-on-surface">Secondary Credential</p>
-                <p className="font-data-mono text-[11px] text-on-surface-variant">
+                <p className="font-data-mono text-data-mono text-on-surface-variant">
                   {p.credential === "None" ? "No fallback credential issued" : `${p.credential} · ${p.credentialValue}`}
                 </p>
               </div>
@@ -569,7 +571,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
               )}
             </div>
             <Button variant="secondary" size="sm" className="self-start">
-              <span className="material-symbols-outlined text-[16px]" aria-hidden>add_card</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>add_card</span>
               Issue RFID / PIN
             </Button>
           </div>
@@ -585,9 +587,9 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
               <div key={h.at} className="flex justify-between gap-4 rounded-lg border border-outline-variant p-3">
                 <div>
                   <p className="font-body-md text-body-md font-medium text-on-surface">{h.what}</p>
-                  <p className="font-data-mono text-[11px] text-on-surface-variant">{h.detail}</p>
+                  <p className="font-data-mono text-data-mono text-on-surface-variant">{h.detail}</p>
                 </div>
-                <span className="shrink-0 font-data-mono text-[11px] text-on-surface-variant">{h.at}</span>
+                <span className="shrink-0 font-data-mono text-data-mono text-on-surface-variant">{h.at}</span>
               </div>
             ))}
           </div>

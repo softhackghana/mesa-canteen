@@ -9,7 +9,7 @@ export function Input({ className, icon, type, ...props }: InputProps) {
   if (icon) {
     return (
       <div className="relative w-full">
-        <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[20px] text-outline">
+        <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-headline-md text-outline">
           {icon}
         </span>
         <input

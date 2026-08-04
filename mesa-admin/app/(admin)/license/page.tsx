@@ -33,7 +33,7 @@ function UsageBar({ label, used, limit, unit }: { label: string; used: number; l
       <div className="h-2.5 w-full overflow-hidden rounded-full bg-surface-variant">
         <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: tone }} />
       </div>
-      <span className="font-data-mono text-[11px] text-on-surface-variant">
+      <span className="font-data-mono text-data-mono text-on-surface-variant">
         {Math.round(pct)}% of licensed capacity{used >= limit ? " — limit reached" : ""}
       </span>
     </div>
@@ -90,11 +90,11 @@ export default function LicensePage() {
         actions={
           <>
             <Button variant="secondary" onClick={() => license.deactivate()}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>link_off</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>link_off</span>
               Deactivate
             </Button>
             <Button onClick={() => setDialog("renew")}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>autorenew</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>autorenew</span>
               Renew
             </Button>
           </>
@@ -103,7 +103,7 @@ export default function LicensePage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Status card */}
-        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-5">
+        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-6">
           <div className="flex items-start justify-between">
             <div>
               <p className="font-body-lg text-body-lg font-semibold text-on-surface">{license.businessName ?? "Not activated"}</p>
@@ -119,41 +119,41 @@ export default function LicensePage() {
 
           <dl className="grid grid-cols-2 gap-3">
             <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-              <dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Expiry</dt>
+              <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Expiry</dt>
               <dd className="font-data-mono text-data-mono text-on-surface">
                 {license.expiry ? new Date(license.expiry).toLocaleDateString() : "—"}
               </dd>
               {license.expiry && status === "active" && (
-                <dd className="font-data-mono text-[11px] text-on-surface-variant">{daysUntil(license.expiry)} days remaining</dd>
+                <dd className="font-data-mono text-data-mono text-on-surface-variant">{daysUntil(license.expiry)} days remaining</dd>
               )}
             </div>
             <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-              <dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Offline Window</dt>
+              <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Offline Window</dt>
               <dd className="font-data-mono text-data-mono text-on-surface">{license.remainingOfflineHours}h</dd>
-              <dd className="font-data-mono text-[11px] text-on-surface-variant">since last validation</dd>
+              <dd className="font-data-mono text-data-mono text-on-surface-variant">since last validation</dd>
             </div>
           </dl>
 
           <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-            <dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">System ID</dt>
+            <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">System ID</dt>
             <dd className="font-data-mono text-data-mono text-on-surface">{usage.systemId}</dd>
-            <dt className="mt-2 font-data-mono text-[10px] uppercase text-on-surface-variant">Regional Node</dt>
+            <dt className="mt-2 font-data-mono text-data-mono uppercase text-on-surface-variant">Regional Node</dt>
             <dd className="font-body-md text-body-md text-on-surface">{usage.regionalNode}</dd>
           </div>
 
           {status === "unactivated" && (
             <Button onClick={() => setDialog("activate")}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>key</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>key</span>
               Activate License
             </Button>
           )}
         </div>
 
         {/* Usage */}
-        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-5 lg:col-span-2">
+        <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="font-headline-md text-headline-md text-on-surface">Capacity Usage</h2>
-            <span className="font-data-mono text-[11px] text-on-surface-variant">
+            <span className="font-data-mono text-data-mono text-on-surface-variant">
               Activated {new Date(usage.activationDate).toLocaleDateString()} · {usage.dataRetention} retention
             </span>
           </div>
@@ -161,19 +161,19 @@ export default function LicensePage() {
           <UsageBar label="Enrolled Identities" used={usage.identitiesUsed} limit={usage.identitiesLimit} unit="profiles" />
           <div className="grid grid-cols-2 gap-3 border-t border-outline-variant pt-4 sm:grid-cols-3">
             <div>
-              <p className="font-data-mono text-[10px] uppercase text-on-surface-variant">Max Sites</p>
+              <p className="font-data-mono text-data-mono uppercase text-on-surface-variant">Max Sites</p>
               <p className="font-body-md text-body-md text-on-surface">{usage.maxSites}</p>
             </div>
             <div>
-              <p className="font-data-mono text-[10px] uppercase text-on-surface-variant">Data Retention</p>
+              <p className="font-data-mono text-data-mono uppercase text-on-surface-variant">Data Retention</p>
               <p className="font-body-md text-body-md text-on-surface">{usage.dataRetention}</p>
             </div>
             <div>
-              <p className="font-data-mono text-[10px] uppercase text-on-surface-variant">Terminal Limit</p>
+              <p className="font-data-mono text-data-mono uppercase text-on-surface-variant">Terminal Limit</p>
               <p className="font-body-md text-body-md text-on-surface">{pct(usage.terminalsUsed, usage.terminalsLimit)}%</p>
             </div>
           </div>
-          <p className="font-data-mono text-[11px] text-on-surface-variant">
+          <p className="font-data-mono text-data-mono text-on-surface-variant">
             Usage figures mirror the licensing server report (FR-LIC-006). Values are demo fixtures.
           </p>
         </div>
@@ -203,7 +203,7 @@ export default function LicensePage() {
             <div className="flex flex-col gap-1">
               <Label>Business Name</Label>
               <Input value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder="Global Canteen Services" />
-              <p className="font-data-mono text-[11px] text-on-surface-variant">
+              <p className="font-data-mono text-data-mono text-on-surface-variant">
                 The certificate is bound to the normalised business name (FR-LIC-002).
               </p>
             </div>
@@ -217,7 +217,7 @@ export default function LicensePage() {
               className="font-data-mono text-data-mono"
             />
             {key && (
-              <p className={`font-data-mono text-[11px] ${isValidLicenseKey(key) ? "text-success" : "text-error"}`}>
+              <p className={`font-data-mono text-data-mono ${isValidLicenseKey(key) ? "text-success" : "text-error"}`}>
                 {isValidLicenseKey(key) ? "Key format looks valid." : "Invalid format — expected MESA-XXXXX-XXXXX-XXXXX-XXXXX."}
               </p>
             )}

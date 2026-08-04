@@ -63,7 +63,7 @@ export default function DevicesPage() {
       render: (d) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md font-medium text-on-surface">{d.name}</span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{d.site}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{d.site}</span>
         </span>
       ),
     },
@@ -86,7 +86,7 @@ export default function DevicesPage() {
       render: (d) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md text-on-surface">{d.scanner_vendor}</span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{d.scanner_model}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{d.scanner_model}</span>
         </span>
       ),
     },
@@ -100,7 +100,7 @@ export default function DevicesPage() {
             <span className={`h-1.5 w-1.5 rounded-full ${d.printer.status === "online" ? "bg-success" : "bg-error"}`} />
             <span className="font-data-mono text-data-mono text-on-surface">{d.printer.name}</span>
           </span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">
+          <span className="font-data-mono text-data-mono text-on-surface-variant">
             {d.printer.status === "online" ? "Online" : d.printer.status.replace("_", " ")} · {d.printer.width}
           </span>
         </span>
@@ -114,7 +114,7 @@ export default function DevicesPage() {
         <span className="flex flex-col items-start gap-1">
           <TerminalStatus status={d.status} />
           {d.syncBacklog > 0 && (
-            <span className="font-data-mono text-[11px] text-warning">{d.syncBacklog} queued</span>
+            <span className="font-data-mono text-data-mono text-warning">{d.syncBacklog} queued</span>
           )}
         </span>
       ),
@@ -127,11 +127,11 @@ export default function DevicesPage() {
       render: (d) => (
         <div className="flex items-center justify-end gap-1">
           <Button variant="ghost" size="sm" onClick={() => runCommand(d, "restart")}>
-            <span className="material-symbols-outlined text-[16px]" aria-hidden>restart_alt</span>
+            <span className="material-symbols-outlined text-body-lg" aria-hidden>restart_alt</span>
             Restart
           </Button>
           <Button variant="ghost" size="sm" onClick={() => runCommand(d, "logoff")}>
-            <span className="material-symbols-outlined text-[16px]" aria-hidden>logout</span>
+            <span className="material-symbols-outlined text-body-lg" aria-hidden>logout</span>
             Logoff
           </Button>
         </div>
@@ -155,7 +155,7 @@ export default function DevicesPage() {
         description="Centralised control over terminals, scanners, and printers."
         actions={
           <Button onClick={() => setRegisterOpen(true)}>
-            <span className="material-symbols-outlined text-[18px]" aria-hidden>add</span>
+            <span className="material-symbols-outlined text-body-lg" aria-hidden>add</span>
             Register Terminal
           </Button>
         }
@@ -168,7 +168,7 @@ export default function DevicesPage() {
         defaultSort={{ key: "name", direction: "asc" }}
         toolbar={
           <div className="flex flex-wrap items-center gap-3">
-            <span className="font-body-md text-[13px] text-on-surface-variant">
+            <span className="font-body-md text-body-md text-on-surface-variant">
               {devices.filter((d) => d.status === "online").length} online · {devices.filter((d) => d.status !== "online").length} degraded
             </span>
             <StatusPill status="Auto-refresh 30s" tone="neutral" icon="refresh" />
@@ -186,7 +186,7 @@ export default function DevicesPage() {
           <>
             <Button variant="secondary" onClick={() => setRegisterOpen(false)}>Cancel</Button>
             <Button onClick={register}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>check</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>check</span>
               Register Device
             </Button>
           </>
@@ -214,7 +214,7 @@ export default function DevicesPage() {
             <div className="flex flex-col gap-1">
               <Label>IP Address (optional)</Label>
               <Input placeholder="10.20.30.46" className="font-data-mono text-data-mono" />
-              <p className="font-data-mono text-[11px] text-on-surface-variant">
+              <p className="font-data-mono text-data-mono text-on-surface-variant">
                 If provided, terminal can only connect from this IP.
               </p>
             </div>
@@ -243,7 +243,7 @@ export default function DevicesPage() {
                 Copy
               </Button>
             </div>
-            <p className="mt-1 font-data-mono text-[11px] text-on-surface-variant">
+            <p className="mt-1 font-data-mono text-data-mono text-on-surface-variant">
               Present this token on the terminal during first-time pairing.
             </p>
           </div>

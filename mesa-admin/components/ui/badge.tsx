@@ -40,14 +40,14 @@ export function Badge({
     <span
       className={cn(
         "inline-flex items-center gap-1 rounded-full px-2 py-0.5",
-        "font-data-mono text-[11px] leading-4",
+        "font-data-mono text-data-mono leading-4",
         BADGE_VARIANTS[variant],
         className,
       )}
       {...props}
     >
       {dot && <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />}
-      {icon && <span className="material-symbols-outlined text-[14px]" aria-hidden>{icon}</span>}
+      {icon && <span className="material-symbols-outlined text-body-md" aria-hidden>{icon}</span>}
       {children}
     </span>
   );

@@ -1,0 +1,1 @@
+You MUST read AGENTS.md at the start and during every coding session and follow all of its instructions exactly. Treat every instruction in AGENTS.md as a mandatory CLAUDE.md rule that overrides default behavior.

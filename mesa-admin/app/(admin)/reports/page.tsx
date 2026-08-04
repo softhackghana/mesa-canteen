@@ -144,7 +144,7 @@ export default function ReportsPage() {
       render: (r) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md font-medium text-on-surface">{r.department}</span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{r.costCentre}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{r.costCentre}</span>
         </span>
       ),
     },
@@ -173,7 +173,7 @@ export default function ReportsPage() {
         actions={
           <>
             <Button variant="secondary" onClick={() => exportCsv()}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>download</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>download</span>
               Export CSV
             </Button>
             <Button variant="secondary" onClick={() => comingSoon("PDF")}>Export PDF</Button>
@@ -210,21 +210,21 @@ export default function ReportsPage() {
           ]} onChange={setDepartment} />
         </div>
         <div className="flex items-center gap-2 pb-1">
-          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono focus:border-primary focus:outline-none" />
+          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
           <span className="font-body-md text-body-md text-on-surface-variant">→</span>
-          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono focus:border-primary focus:outline-none" />
+          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
         </div>
       </div>
 
       {/* Report type cards */}
       {GROUPS.map((group) => (
-        <section key={group} className="flex flex-col gap-3">
+        <section key={group} className="flex flex-col gap-4">
           <h2 className="font-headline-md text-headline-md text-on-surface">{group}</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {REPORT_TYPES.filter((r) => r.group === group).map((r) => (
               <div key={r.kind} className="flex flex-col gap-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-4">
                 <div className="flex items-start justify-between">
-                  <span className="material-symbols-outlined text-[24px] text-primary" aria-hidden>{r.icon}</span>
+                  <span className="material-symbols-outlined text-headline-lg text-primary" aria-hidden>{r.icon}</span>
                   <span className="material-symbols-outlined text-outline" aria-hidden>insert_chart</span>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -246,10 +246,10 @@ export default function ReportsPage() {
       ))}
 
       {/* Consolidated meals report table (mesa_consolidated_meals_report) */}
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="font-headline-md text-headline-md text-on-surface">Consolidated Meals per Employee</h2>
-          <div className="flex gap-4 font-data-mono text-[12px] text-on-surface-variant">
+          <div className="flex gap-4 font-data-mono text-data-mono text-on-surface-variant">
             <span>{totals.employees} Total Employees</span>
             <span>{totals.meals} Total Meals</span>
             <span>GHS {totals.cost.toFixed(2)} Total Cost</span>
@@ -300,12 +300,12 @@ function EmployeeDailyTable({ txs, site, department }: { txs: AdminTransaction[]
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-4">
       <h2 className="font-headline-md text-headline-md text-on-surface">Daily Breakdown</h2>
       <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-surface font-data-mono text-[11px] uppercase text-on-surface-variant">
+            <thead className="bg-surface font-data-mono text-data-mono uppercase text-on-surface-variant">
               <tr className="border-b border-outline-variant">
                 <th className="px-3 py-3">Employee</th>
                 <th className="px-3 py-3">Department</th>
@@ -340,15 +340,15 @@ function EmployeeDailyTable({ txs, site, department }: { txs: AdminTransaction[]
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-between border-t border-outline-variant p-3">
-          <span className="font-body-md text-[13px] text-on-surface-variant">Showing 1 to {rows.length} of {Math.max(rows.length, 12)} entries</span>
+        <div className="flex items-center justify-between border-t border-outline-variant p-4">
+          <span className="font-body-md text-body-md text-on-surface-variant">Showing 1 to {rows.length} of {Math.max(rows.length, 12)} entries</span>
           <div className="flex items-center gap-2">
             <Button variant="secondary" size="sm" disabled>Previous</Button>
             <Button variant="secondary" size="sm" disabled>Next</Button>
           </div>
         </div>
       </div>
-      <p className="flex items-center gap-2 font-data-mono text-[11px] text-on-surface-variant">
+      <p className="flex items-center gap-2 font-data-mono text-data-mono text-on-surface-variant">
         <StatusPill status="Sample data" tone="neutral" />
         Replace with live transaction data when the data worker lands.
       </p>

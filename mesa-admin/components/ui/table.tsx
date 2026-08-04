@@ -99,7 +99,7 @@ export function TableCaption({ className, ...props }: React.HTMLAttributes<HTMLT
 export const TableEmpty = ({ colSpan, message = "No records found" }: { colSpan?: number; message?: string }) => (
   <tr>
     <td colSpan={colSpan} className="px-4 py-12 text-center">
-      <span className="material-symbols-outlined text-[32px] text-outline" aria-hidden>
+      <span className="material-symbols-outlined text-headline-lg text-outline" aria-hidden>
         inbox
       </span>
       <p className="mt-2 font-body-md text-body-md text-on-surface-variant">{message}</p>

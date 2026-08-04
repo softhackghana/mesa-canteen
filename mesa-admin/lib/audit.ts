@@ -83,7 +83,7 @@ export interface AuditEvent {
   metadata?: Record<string, unknown>;
 }
 
-let fallbackQueue: AuditEvent[] = [];
+const fallbackQueue: AuditEvent[] = [];
 
 export async function logAudit(
   event: Omit<AuditEvent, "occurredAt" | "terminalId"> & { occurredAt?: string },

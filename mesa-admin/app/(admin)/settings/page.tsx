@@ -35,10 +35,12 @@ export default function SettingsPage() {
   const [defaultTemplate, setDefaultTemplate] = useState("Standard V2");
   const [overrides, setOverrides] = useState<SitePrintOverride[]>(DEMO_SITE_PRINT_OVERRIDES);
   const [saved, setSaved] = useState(false);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const save = () => {
     setSaved(true);
+    setSavedAt(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
     toast({
       title: "Settings saved",
       description: "Site overrides pushed to terminals on next heartbeat.",
@@ -59,11 +61,11 @@ export default function SettingsPage() {
         actions={
           <>
             <Button variant="secondary" onClick={() => setConfirmOpen(true)}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>refresh</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>refresh</span>
               Push to Terminals
             </Button>
             <Button onClick={save}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>save</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>save</span>
               Save Changes
             </Button>
           </>
@@ -72,7 +74,7 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Print defaults */}
-        <section className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-5">
+        <section className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-6">
           <div>
             <h2 className="font-headline-md text-headline-md text-on-surface">Print Defaults</h2>
             <p className="font-body-md text-body-md text-on-surface-variant">Applies to receipts and reports.</p>
@@ -81,7 +83,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between rounded-lg border border-outline-variant p-3">
             <div>
               <p className="font-body-md text-body-md font-medium text-on-surface">Automatic Receipt Printing</p>
-              <p className="font-data-mono text-[11px] text-on-surface-variant">Print a thermal receipt after each transaction</p>
+              <p className="font-data-mono text-data-mono text-on-surface-variant">Print a thermal receipt after each transaction</p>
             </div>
             <Switch checked={printEnabled} onCheckedChange={setPrintEnabled} aria-label="Automatic receipt printing" />
           </div>
@@ -113,20 +115,20 @@ export default function SettingsPage() {
 
           <div className="flex items-center gap-2 rounded-lg border border-outline-variant p-3">
             <StatusPill status={saved ? "SAVED" : "UNSAVED CHANGES"} tone={saved ? "success" : "warning"} />
-            <span className="font-data-mono text-[11px] text-on-surface-variant">
-              Last saved {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            <span className="font-data-mono text-data-mono text-on-surface-variant">
+              {savedAt ? `Last saved ${savedAt}` : "Not saved yet"}
             </span>
           </div>
         </section>
 
         {/* Site overrides */}
-        <section className="flex flex-col gap-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-5 lg:col-span-2">
+        <section className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-headline-md text-headline-md text-on-surface">Site Print Overrides</h2>
               <p className="font-body-md text-body-md text-on-surface-variant">Per-site template and printer settings.</p>
             </div>
-            <span className="font-data-mono text-[11px] text-on-surface-variant">{overrides.length} sites configured</span>
+            <span className="font-data-mono text-data-mono text-on-surface-variant">{overrides.length} sites configured</span>
           </div>
 
           <div className="flex flex-col divide-y divide-outline-variant overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
@@ -138,7 +140,7 @@ export default function SettingsPage() {
                   />
                   <div className="min-w-0">
                     <p className="truncate font-body-md text-body-md font-medium text-on-surface">{o.site}</p>
-                    <p className="font-data-mono text-[11px] text-on-surface-variant">
+                    <p className="font-data-mono text-data-mono text-on-surface-variant">
                       {o.printer} · {o.template}
                     </p>
                   </div>

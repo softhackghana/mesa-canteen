@@ -1,3 +1,82 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this is
+
+MESA — Meal Entitlement, Service & Access Platform. A canteen management system for enterprise sites: biometric enrollment, meal entitlement rules, a POS kiosk that issues meals and prints coupons, reporting, and self-contained offline licensing.
+
+Two deliverables live in this repo:
+
+| Path | What |
+|---|---|
+| `mesa-admin/` | Next.js 16 app — **both** the admin portal (`app/(admin)/*`) and the POS kiosk (`app/pos/*`) |
+| `bridge/digitalpersona/` | Python WebSocket bridge (Windows only) owning the USB fingerprint reader |
+
+Source of truth for requirements: `docs/MESA_PRD_v1.3.md`. Flow/testing walkthrough: `docs/TESTING_GUIDE.md`. Design tokens: `docs/DESIGN.md` frontmatter. Feature-vs-PRD status: `docs/dev-tracer.html`.
+
+Code comments reference PRD requirement IDs (`FR-POS-002`, `FR-RCP-005`, `PRD 14.4`) — preserve them; they're the traceability link to the PRD.
+
+## Commands
+
+```bash
+cd mesa-admin
+npm run dev            # Next dev server (docs say :3111; package.json uses the default :3000)
+npm run build
+npm run lint           # eslint (flat config, eslint-config-next)
+npx tsc --noEmit       # typecheck — there is no npm script for this
+
+# Self-checks (assert-based, no test framework). tsx is NOT installed — add it or use another runner.
+npx tsx scripts/cn-check.ts
+npx tsx lib/license.selfcheck.ts
+npx tsx lib/meal-rules.selfcheck.ts
+```
+
+```bash
+cd bridge/digitalpersona
+python selfcheck.py    # protocol self-check, runs on any OS, no reader needed
+python bridge.py       # real bridge — Windows + HID DigitalPersona SDK only
+```
+
+Backend: a local InsForge instance on `http://localhost:7130` must be running. Schema in `mesa-admin/db/migrations/001_init.sql` (tables, RLS, immutability triggers) and `002_functions.sql` (RPCs incl. `append_audit_log`, `close_fiscal_period`, `enforce_meal_rule_before_insert`); demo rows in `db/seed.sql` (idempotent). Use the `insforge-cli` skill for migrations/SQL/RLS, the `insforge` skill for SDK code.
+
+Admin login for manual testing: `marcus.johnson@mesa.example` / `MesaAdmin123!`.
+
+## Architecture
+
+**Everything is client-side.** Pages are `"use client"`, state lives in Zustand stores (`stores/`), data access goes through the browser InsForge SDK singleton. There are no server components or route handlers doing business logic — the one route handler is a proxy.
+
+**The API proxy is load-bearing.** `app/api/[...path]/route.ts` proxies all `/api/*` to InsForge. It exists because the SDK's refresh cookie is `Secure; SameSite=None`, which the browser drops over plain-http cross-origin — sessions died on every reload. The proxy makes the cookie same-origin, strips `Secure`, relaxes `SameSite`, and purges stale duplicate refresh cookies (they broke the backend CSRF nonce check). `lib/insforge.ts` therefore points the browser client at `window.location.origin`, not the backend URL. Don't "simplify" either of these back to a direct connection.
+
+**Two data sources, mid-migration.** `lib/admin-data.ts` holds `DEMO_*` fixtures that mirror `db/seed.sql`; most admin pages still read those. People and meal rules are live via InsForge. When wiring a page to real data, replace the fixture read with `insforge.database.from(...)` — the fixture shapes already match `lib/types.ts`.
+
+**Hardware never breaks the UI.** Both device layers talk to local WebSocket bridges and degrade to explicit UI states rather than throwing:
+
+- Biometrics — `lib/biometrics/`, `ws://127.0.0.1:8765`. `autoDetectAdapter()` tries `DigitalPersonaAdapter` and falls back to `SimulatedBiometricAdapter` over `lib/demo-data.ts` identities (FR-IM-007). The simulator is how you test enrollment and POS scanning without hardware; POS keys `1`–`4` are seeded identities, `5` is no-match.
+- Printer — `lib/printer.ts`, `ws://127.0.0.1:8766`. No bridge daemon exists yet, so `print()` fails and the POS shows its Printer Error view + audit-logs `printer_error`. Keep the two ports distinct; they have drifted before.
+
+**Offline is a first-class path.** `lib/pos-db.ts` is a hand-rolled IndexedDB wrapper (queued transactions, audit events, template cache). `usePosStore` queues on offline and `forceSync()` drains. `toggleDevOffline` simulates network loss for testing.
+
+**Meal rules are enforced twice.** Client-side in `lib/meal-rules.ts` (`windowFor` / `countInWindow` / `evaluateMealRule`, incl. overnight windows) for immediate POS feedback, and again by the `enforce_meal_rule_before_insert` DB trigger. Change one, change the other.
+
+**Audit has two surfaces**, both in `lib/audit.ts`: `appendAuditLog` → the immutable `audit_logs` table via RPC (the DB grants SELECT+INSERT only and a trigger rejects UPDATE/DELETE, so there is deliberately no update path), and `logAudit`/`recentAudit` → IndexedDB for the offline kiosk.
+
+**Licensing is self-contained.** `lib/license.ts` — ECDSA P-256 keypair, ES256 JWT certificate, embedded public key, offline verification with 72h tolerance, business-name normalize+SHA-256 binding (PRD §13.4). No license server. `lib/license.selfcheck.ts` exercises the crypto end to end.
+
+## Conventions
+
+- Styling is Tailwind v4 with MESA design tokens declared via `@theme` in `app/globals.css`, generated from the `docs/DESIGN.md` frontmatter. Use token utilities (`bg-surface-container`, `text-headline-lg`, `font-body-md`) — not raw hex or arbitrary sizes.
+- `lib/cn.ts` is a hand-rolled class merger (no clsx/tailwind-merge dependency), last-wins per logical group. If you add a new token group, extend its `classify()` and add a case to `scripts/cn-check.ts`.
+- Import shared UI from the barrel: `import { Button, DataTable, AppShell } from "@/components"`. Stores likewise from `@/stores`.
+- Row types in `lib/types.ts` are write-shaped: nullable columns are `T | null`, not optional.
+- Non-trivial logic leaves one runnable assert-based self-check behind (see `lib/*.selfcheck.ts`, `scripts/cn-check.ts`, `bridge/digitalpersona/selfcheck.py`). No test framework, no fixtures.
+- `ponytail:` comments mark deliberate simplifications and name the upgrade path. Read them before "fixing" the thing they describe.
+- `mesa-admin/AGENTS.md` is regenerated by `next dev` (the "This is NOT the Next.js you know" block) — commit it with your work rather than reverting it. This is Next.js 16; check `node_modules/next/dist/docs/` before assuming an API.
+- The root `AGENTS.md` describes a **different project** (The Hidden Domus — property management, `app/(app)/admin`, InsForge project `d6nea662`). Its DOX child index and InsForge project ID do not apply to MESA. The generic guidance in it (ponytail mode, Fallow gate, MCP servers) does.
+
+## Known gaps
+
+PDF/Excel export stubbed (CSV works). Suprema/ZKTeco adapters simulated. SourceAFIS matching is interface-only. No ESC/POS bridge daemon. Enrollment UI runs on demo identities, not live `people` rows. Dashboard/reports/devices/audit pages read fixtures. HRIS APIs and email/SMS notifications not started. Month-end close has a DB function but no admin UI. Full list with PRD mapping: `docs/dev-tracer.html`.
 
 ## DOX Framework
 

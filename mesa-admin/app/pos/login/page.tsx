@@ -18,18 +18,6 @@ export default function PosLogin() {
   const [error, setError] = useState(false);
   const [fpActive, setFpActive] = useState(false);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (/^\d$/.test(e.key)) press(e.key);
-      else if (e.key === "Backspace") backspace();
-      else if (e.key === "Enter") submit();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pin]);
-
   const press = (d: string) => {
     setError(false);
     if (pin.length >= 6) return;
@@ -72,6 +60,20 @@ export default function PosLogin() {
     });
     router.push("/pos");
   };
+
+  // Declared after the handlers it calls, so the listener always closes over
+  // the current pin rather than the value from the render that attached it.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (/^\d$/.test(e.key)) press(e.key);
+      else if (e.key === "Backspace") backspace();
+      else if (e.key === "Enter") void submit();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pin]);
 
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-4 w-full z-10">

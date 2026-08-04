@@ -109,6 +109,13 @@ function issueTransaction(
   overrideBy?: string,
   synced = true,
 ): MealTransaction {
+  // Commit the claim against the identity of record. meetsEntitlement reads
+  // demoIdentities, so without this the duplicate-meal block never fires and
+  // the same person can claim indefinitely.
+  if (person.id !== "guest") {
+    person.mealsRemaining = Math.max(0, person.mealsRemaining - 1);
+    person.lastClaimedAt = nowIso();
+  }
   return {
     id: `TXN-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 1e3)}`,
     terminalId: DEMO_TERMINAL_ID,
@@ -194,7 +201,7 @@ function lookupPerson(identityId: string): DemoIdentity | undefined {
   return demoIdentities.find((p) => p.id === identityId || p.template === identityId);
 }
 
-function meetsEntitlement(person: DemoIdentity, now: Date): { ok: boolean; reason?: string } {
+function meetsEntitlement(person: DemoIdentity): { ok: boolean; reason?: string } {
   if (person.mealsRemaining <= 0) {
     const when = person.lastClaimedAt ? new Date(person.lastClaimedAt).toLocaleTimeString() : "today";
     return { ok: false, reason: `Meal already recorded at ${when} today` };
@@ -206,7 +213,10 @@ export const usePosStore = create<PosState>()((set, get) => ({
   terminalId: DEMO_TERMINAL_ID,
   siteName: DEMO_SITE.name,
   operator: DEMO_OPERATOR,
-  online: typeof navigator !== "undefined" ? navigator.onLine : true,
+  // Must be deterministic: the server and the browser's first render have to
+  // agree. Real connectivity is seeded on mount and kept fresh by the
+  // online/offline listeners in page.tsx.
+  online: true,
   devOffline: false,
   adapter: null,
   adapterNote: "",
@@ -304,8 +314,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
       return;
     }
 
-    const now = new Date();
-    const check = meetsEntitlement(person, now);
+    const check = meetsEntitlement(person);
     if (!check.ok) {
       set({
         screen: "denied",
@@ -325,7 +334,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
     const tx = issueTransaction(person, "biometric");
     set({
       screen: "approved",
-      lastPerson: { ...person, mealsRemaining: person.mealsRemaining - 1 },
+      lastPerson: { ...person },
       lastTransaction: tx,
       mealsServed: get().mealsServed + 1,
     });
@@ -351,7 +360,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
       set({ screen: "no_match", denyReason: null, lastPerson: null });
       return;
     }
-    const check = meetsEntitlement(person, new Date());
+    const check = meetsEntitlement(person);
     if (!check.ok) {
       set({ screen: "denied", lastPerson: person, denyReason: check.reason ?? "Meal already claimed." });
       return;
@@ -359,7 +368,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
     const tx = issueTransaction(person, method);
     set({
       screen: "approved",
-      lastPerson: { ...person, mealsRemaining: person.mealsRemaining - 1 },
+      lastPerson: { ...person },
       lastTransaction: tx,
       mealsServed: get().mealsServed + 1,
     });
@@ -435,7 +444,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
     const tx = issueTransaction(person, "override", DEMO_SUPERVISOR.name);
     set({
       screen: "approved",
-      lastPerson: { ...person, mealsRemaining: person.mealsRemaining - 1 },
+      lastPerson: { ...person },
       lastTransaction: tx,
       pendingIdentity: null,
       mealsServed: get().mealsServed + 1,
@@ -472,7 +481,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
       set({ manualId: "", screen: "no_match", denyReason: null, lastPerson: null });
       return;
     }
-    const check = meetsEntitlement(person, new Date());
+    const check = meetsEntitlement(person);
     if (!check.ok) {
       set({ screen: "denied", lastPerson: person, denyReason: check.reason ?? "Meal already claimed." });
       return;
@@ -480,7 +489,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
     const tx = issueTransaction(person, "pin");
     set({
       screen: "approved",
-      lastPerson: { ...person, mealsRemaining: person.mealsRemaining - 1 },
+      lastPerson: { ...person },
       lastTransaction: tx,
       manualId: "",
       mealsServed: get().mealsServed + 1,
@@ -579,7 +588,9 @@ export const usePosStore = create<PosState>()((set, get) => ({
 
   isOnline: () => {
     const s = get();
-    return !s.devOffline && (typeof navigator !== "undefined" ? navigator.onLine : true);
+    // `typeof navigator` is not an SSR guard — Node ships a global navigator
+    // without onLine. Use the store's own flag, seeded on mount.
+    return !s.devOffline && s.online;
   },
 }));
 

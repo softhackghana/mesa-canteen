@@ -24,6 +24,10 @@ export function OverrideModal() {
   const closeOverride = usePosStore((s) => s.closeOverride);
   const [reason, setReason] = useState<string>("");
 
+  // Stamped once per mount. Calling Date.now() during render instead would
+  // change the displayed audit ref on every keystroke.
+  const [auditRef] = useState(() => Date.now().toString(36).toUpperCase().slice(-6));
+
   const press = (d: string) => {
     if (pinEntry.length >= 6) return;
     setPin(pinEntry + d);
@@ -180,7 +184,7 @@ export function OverrideModal() {
           <div className="flex items-center justify-center gap-1.5 text-outline text-xs">
             <Icon name="policy" style={{ fontSize: 14 }} />
             <span className="font-mono uppercase tracking-wide">
-              This action is logged for audit purposes (AX-{Date.now().toString(36).toUpperCase().slice(-6)})
+              This action is logged for audit purposes (AX-{auditRef})
             </span>
           </div>
         </div>

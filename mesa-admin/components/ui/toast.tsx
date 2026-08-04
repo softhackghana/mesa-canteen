@@ -35,7 +35,7 @@ export function Toast({ id, title, description, variant = "neutral", onDismiss }
         classes,
       )}
     >
-      <span className="material-symbols-outlined mt-0.5 text-[20px]" aria-hidden>
+      <span className="material-symbols-outlined mt-0.5 text-headline-md" aria-hidden>
         {icon}
       </span>
       <div className="min-w-0 flex-1">
@@ -48,9 +48,9 @@ export function Toast({ id, title, description, variant = "neutral", onDismiss }
         type="button"
         aria-label="Dismiss"
         onClick={() => onDismiss?.(id)}
-        className="text-on-surface-variant transition-colors hover:text-on-surface"
+        className="text-on-surface-variant transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
       >
-        <span className="material-symbols-outlined text-[18px]">close</span>
+        <span className="material-symbols-outlined text-body-lg">close</span>
       </button>
     </div>
   );

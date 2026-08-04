@@ -24,7 +24,7 @@ export function StatCard({ label, value, icon, trend, extra, className }: StatCa
       <div className="flex items-start justify-between gap-2">
         <span className="font-nav-item text-nav-item text-on-surface-variant">{label}</span>
         {icon && (
-          <span className="material-symbols-outlined text-[20px] text-outline" aria-hidden>
+          <span className="material-symbols-outlined text-headline-md text-outline" aria-hidden>
             {icon}
           </span>
         )}
@@ -37,7 +37,7 @@ export function StatCard({ label, value, icon, trend, extra, className }: StatCa
           </span>
         )}
       </div>
-      {extra && <div className="mt-1">{extra}</div>}
+      {extra && <div className="mt-stack-sm">{extra}</div>}
     </div>
   );
 }

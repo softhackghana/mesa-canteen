@@ -69,7 +69,7 @@ function SortIndicator({ direction }: { direction: "asc" | "desc" | null }) {
   return (
     <span
       className={cn(
-        "material-symbols-outlined text-[14px] transition-opacity",
+        "material-symbols-outlined text-body-md transition-opacity",
         direction ? "text-primary" : "text-outline opacity-40",
       )}
       aria-hidden
@@ -159,7 +159,7 @@ export function DataTable<T>({
       )}
     >
       {toolbar && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant/40 p-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant/40 p-4">
           {toolbar}
         </div>
       )}
@@ -173,7 +173,7 @@ export function DataTable<T>({
                   <input
                     type="checkbox"
                     aria-label="Select all rows"
-                    className="h-4 w-4 rounded border-outline text-primary focus:ring-primary"
+                    className="h-4 w-4 rounded border-outline text-primary focus:ring-2 focus:ring-primary/40 focus:ring-offset-0"
                     checked={allSelected}
                     ref={(el) => {
                       if (el) el.indeterminate = someSelected && !allSelected;
@@ -229,7 +229,7 @@ export function DataTable<T>({
                     <TableRow className="h-56">
                       <TableCell colSpan={columns.length + (selection ? 1 : 0)} mono={false}>
                         <div className="flex flex-col items-center gap-2 text-center">
-                          <span className="material-symbols-outlined text-[32px] text-outline" aria-hidden>
+                          <span className="material-symbols-outlined text-headline-lg text-outline" aria-hidden>
                             inbox
                           </span>
                           <p className="font-body-md text-body-md text-on-surface-variant">No records found</p>
@@ -252,7 +252,7 @@ export function DataTable<T>({
                             <input
                               type="checkbox"
                               aria-label={`Select row ${id}`}
-                              className="h-4 w-4 rounded border-outline text-primary focus:ring-primary"
+                              className="h-4 w-4 rounded border-outline text-primary focus:ring-2 focus:ring-primary/40 focus:ring-offset-0"
                               checked={selected}
                               onChange={() => toggleRow(id)}
                               onClick={(e) => e.stopPropagation()}
@@ -277,8 +277,8 @@ export function DataTable<T>({
       </div>
 
       {pagination && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-outline-variant bg-surface-container-lowest p-3">
-          <div className="font-body-md text-[13px] text-on-surface-variant">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-outline-variant bg-surface-container-lowest p-4">
+          <div className="font-body-md text-body-md text-on-surface-variant">
             Showing{" "}
             <span className="font-medium text-on-surface">
               {pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.pageSize + 1}
@@ -294,7 +294,7 @@ export function DataTable<T>({
               aria-label="Rows per page"
               value={pagination.pageSize}
               onChange={(e) => pagination.onPageSizeChange?.(Number(e.target.value))}
-              className="h-8 rounded border border-outline-variant bg-surface-container-lowest px-2 font-body-md text-[13px] text-on-surface focus:border-primary focus:outline-none"
+              className="h-8 rounded border border-outline-variant bg-surface-container-lowest px-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none"
             >
               {PAGE_SIZES.map((size) => (
                 <option key={size} value={size}>
@@ -307,9 +307,9 @@ export function DataTable<T>({
               aria-label="Previous page"
               disabled={pagination.page <= 1}
               onClick={() => pagination.onPageChange?.(pagination.page - 1)}
-              className="flex h-8 w-8 items-center justify-center rounded border border-outline-variant text-on-surface transition-colors hover:bg-surface-container-high disabled:opacity-50"
+              className="flex h-8 w-8 items-center justify-center rounded border border-outline-variant text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>chevron_left</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>chevron_left</span>
             </button>
             <span className="min-w-12 text-center font-data-mono text-data-mono text-on-surface-variant">
               {pagination.page} / {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
@@ -319,9 +319,9 @@ export function DataTable<T>({
               aria-label="Next page"
               disabled={pagination.page >= Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
               onClick={() => pagination.onPageChange?.(pagination.page + 1)}
-              className="flex h-8 w-8 items-center justify-center rounded border border-outline-variant text-on-surface transition-colors hover:bg-surface-container-high disabled:opacity-50"
+              className="flex h-8 w-8 items-center justify-center rounded border border-outline-variant text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>chevron_right</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>chevron_right</span>
             </button>
           </div>
         </div>

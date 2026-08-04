@@ -84,7 +84,7 @@ function RuleForm({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <span className="rounded bg-surface-container px-2 py-1 font-data-mono text-[11px] text-on-surface-variant">
+        <span className="rounded bg-surface-container px-2 py-1 font-data-mono text-data-mono text-on-surface-variant">
           ID: {draft.id.toUpperCase()}
         </span>
         <div className="flex items-center gap-2">
@@ -149,7 +149,7 @@ function RuleForm({
 
       {/* Subsidy slider */}
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between font-data-mono text-[11px] text-on-surface-variant">
+        <div className="flex justify-between font-data-mono text-data-mono text-on-surface-variant">
           <span>Company-paid {draft.company_subsidy_pct}%</span>
           <span>Employee-paid {100 - draft.company_subsidy_pct}%</span>
         </div>
@@ -169,7 +169,7 @@ function RuleForm({
               key={label}
               type="button"
               onClick={() => toggle("active_days", i)}
-              className={`h-9 w-11 rounded-lg border font-data-mono text-[12px] transition-colors ${
+              className={`h-9 w-11 rounded-lg border font-data-mono text-data-mono transition-colors ${
                 draft.active_days.includes(i)
                   ? "border-primary bg-primary-container/15 text-primary"
                   : "border-outline-variant text-on-surface-variant hover:bg-surface-container"
@@ -190,7 +190,7 @@ function RuleForm({
               key={cc}
               type="button"
               onClick={() => toggle("cost_centres", cc)}
-              className={`rounded-lg border px-3 py-1.5 font-data-mono text-[12px] transition-colors ${
+              className={`rounded-lg border px-3 py-1.5 font-data-mono text-data-mono transition-colors ${
                 draft.cost_centres.includes(cc)
                   ? "border-primary bg-primary-container/15 text-primary"
                   : "border-outline-variant text-on-surface-variant hover:bg-surface-container"
@@ -216,10 +216,10 @@ function RuleForm({
         {draft.sites.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1.5">
             {draft.sites.map((s) => (
-              <span key={s} className="inline-flex items-center gap-1 rounded-full bg-info-container px-2 py-0.5 font-data-mono text-[11px] text-on-info-container">
+              <span key={s} className="inline-flex items-center gap-1 rounded-full bg-info-container px-2 py-0.5 font-data-mono text-data-mono text-on-info-container">
                 {s}
                 <button type="button" aria-label={`Remove ${s}`} onClick={() => toggle("sites", s)}>
-                  <span className="material-symbols-outlined text-[14px]" aria-hidden>close</span>
+                  <span className="material-symbols-outlined text-body-md" aria-hidden>close</span>
                 </button>
               </span>
             ))}
@@ -241,10 +241,10 @@ function RuleForm({
         {draft.departments.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1.5">
             {draft.departments.map((d) => (
-              <span key={d} className="inline-flex items-center gap-1 rounded-full bg-info-container px-2 py-0.5 font-data-mono text-[11px] text-on-info-container">
+              <span key={d} className="inline-flex items-center gap-1 rounded-full bg-info-container px-2 py-0.5 font-data-mono text-data-mono text-on-info-container">
                 {d}
                 <button type="button" aria-label={`Remove ${d}`} onClick={() => toggle("departments", d)}>
-                  <span className="material-symbols-outlined text-[14px]" aria-hidden>close</span>
+                  <span className="material-symbols-outlined text-body-md" aria-hidden>close</span>
                 </button>
               </span>
             ))}
@@ -311,7 +311,7 @@ export default function MealRulesPage() {
       render: (r) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md font-medium text-on-surface">{r.name}</span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">ID: {r.id.toUpperCase()}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">ID: {r.id.toUpperCase()}</span>
         </span>
       ),
     },
@@ -342,7 +342,7 @@ export default function MealRulesPage() {
           <span className="font-data-mono text-data-mono text-on-surface">
             {r.window_start} – {r.window_end}
           </span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{dayRange(r.active_days)}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{dayRange(r.active_days)}</span>
         </span>
       ),
     },
@@ -354,7 +354,7 @@ export default function MealRulesPage() {
       render: (r) => (
         <span className="flex flex-col">
           <span className="font-data-mono text-data-mono text-on-surface">{r.company_subsidy_pct}%</span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{100 - r.company_subsidy_pct}% employee</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{100 - r.company_subsidy_pct}% employee</span>
         </span>
       ),
     },
@@ -420,11 +420,11 @@ export default function MealRulesPage() {
                 toast({ title: "Rule duplicated", description: "A copy was created and opened for editing.", variant: "info" });
               }}
             >
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>content_copy</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>content_copy</span>
               Duplicate
             </Button>
             <Button onClick={() => openEditor()}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>add</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>add</span>
               Create Rule
             </Button>
           </>
@@ -437,7 +437,7 @@ export default function MealRulesPage() {
             key={s}
             type="button"
             onClick={() => setSiteFilter(s === "All Sites (Global)" ? "all" : s)}
-            className={`rounded-full border px-4 py-1.5 font-nav-item text-nav-item text-[13px] transition-colors ${
+            className={`rounded-full border px-4 py-1.5 font-nav-item text-nav-item text-body-md transition-colors ${
               siteFilter === (s === "All Sites (Global)" ? "all" : s)
                 ? "border-primary-container bg-primary-container text-on-primary-container"
                 : "border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high"

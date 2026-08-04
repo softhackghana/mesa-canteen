@@ -37,7 +37,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface-container-low">
         <div className="flex flex-col items-center gap-3">
-          <span className="material-symbols-outlined animate-pulse text-[32px] text-primary" aria-hidden>
+          <span className="material-symbols-outlined animate-pulse text-headline-lg text-primary" aria-hidden>
             fingerprint
           </span>
           <p className="font-body-md text-body-md text-on-surface-variant">Loading MESA…</p>

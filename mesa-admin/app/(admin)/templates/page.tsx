@@ -18,15 +18,15 @@ import {
 } from "@/lib/admin-data";
 
 const FIELD_STYLE: Record<TemplateField["size"], string> = {
-  small: "text-[9px]",
-  medium: "text-[11px]",
-  large: "text-[13px]",
+  small: "text-data-mono",
+  medium: "text-data-mono",
+  large: "text-body-md",
 };
 
 /** 80mm live preview of a receipt template (thermal paper look). */
 function ReceiptPreview({ tpl }: { tpl: ReceiptTemplate }) {
   return (
-    <div className="mx-auto w-[280px] rounded-sm bg-white p-4 font-mono text-neutral-900 shadow-lg ring-1 ring-black/10">
+    <div className="mx-auto w-[280px] rounded-sm bg-surface-container-lowest p-4 font-mono text-on-surface shadow-lg ring-1 ring-inverse-surface/10">
       {tpl.fields.map((f) => {
         const text =
           f.key === "business_name" ? "GLOBAL CANTEEN SERVICES"
@@ -55,7 +55,7 @@ function ReceiptPreview({ tpl }: { tpl: ReceiptTemplate }) {
         );
       })}
       {tpl.footerText && (
-        <div className="mt-2 border-t border-dashed border-neutral-300 pt-2 text-center text-[8px] tracking-[0.15em] text-neutral-600">
+        <div className="mt-2 border-t border-dashed border-outline-variant pt-2 text-center text-data-mono tracking-[0.15em] text-on-surface-variant">
           {tpl.footerText}
         </div>
       )}
@@ -125,11 +125,11 @@ export default function TemplatesPage() {
         actions={
           <>
             <Button variant="secondary" onClick={() => setPublishId(selected.id)}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>rocket_launch</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>rocket_launch</span>
               Publish
             </Button>
             <Button onClick={() => setCreateOpen(true)}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>add</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>add</span>
               New Template
             </Button>
           </>
@@ -140,7 +140,7 @@ export default function TemplatesPage() {
         {/* Template list (drag to reorder) */}
         <section className="flex flex-col gap-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-4">
           <h2 className="font-headline-md text-headline-md text-on-surface">Templates</h2>
-          <p className="font-data-mono text-[11px] text-on-surface-variant">Drag to set print priority</p>
+          <p className="font-data-mono text-data-mono text-on-surface-variant">Drag to set print priority</p>
           <ul className="flex flex-col gap-1.5">
             {templates.map((t, i) => (
               <li
@@ -161,7 +161,7 @@ export default function TemplatesPage() {
                   <span className="material-symbols-outlined text-on-surface-variant" aria-hidden>drag_indicator</span>
                   <span className="flex flex-col">
                     <span className="truncate font-nav-item text-nav-item text-on-surface">{t.name}</span>
-                    <span className="font-data-mono text-[10px] text-on-surface-variant">
+                    <span className="font-data-mono text-data-mono text-on-surface-variant">
                       {t.code} · v{t.version} · {t.siteAssignment}
                     </span>
                   </span>
@@ -175,7 +175,7 @@ export default function TemplatesPage() {
           </ul>
           <div className="mt-auto rounded-lg border border-outline-variant bg-surface-container-low p-3">
             <p className="font-nav-item text-nav-item text-on-surface">Print Priority</p>
-            <p className="mt-1 font-data-mono text-[11px] text-on-surface-variant">
+            <p className="mt-1 font-data-mono text-data-mono text-on-surface-variant">
               Highest template in the list wins when a site has no explicit assignment.
             </p>
           </div>
@@ -216,7 +216,7 @@ export default function TemplatesPage() {
 
           <div className="flex flex-col gap-2">
             <Label>Layout Fields</Label>
-            <p className="font-data-mono text-[11px] text-on-surface-variant">
+            <p className="font-data-mono text-data-mono text-on-surface-variant">
               Drag fields to reorder. Fields marked with ✦ are bold, ○ are regular.
             </p>
             <div className="flex flex-col gap-1.5">
@@ -225,7 +225,7 @@ export default function TemplatesPage() {
                   <span className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-on-surface-variant" aria-hidden>drag_indicator</span>
                     <span className="font-body-md text-body-md text-on-surface">{f.label}</span>
-                    <span className={`font-data-mono text-[10px] ${f.bold ? "text-primary" : "text-on-surface-variant"}`}>
+                    <span className={`font-data-mono text-data-mono ${f.bold ? "text-primary" : "text-on-surface-variant"}`}>
                       {f.bold ? "✦" : "○"}
                     </span>
                   </span>
@@ -242,7 +242,7 @@ export default function TemplatesPage() {
                           ),
                         );
                       }}
-                      className="h-8 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-[11px] text-on-surface focus:border-primary focus:outline-none"
+                      className="h-8 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono text-on-surface focus:border-primary focus:outline-none"
                     >
                       <option value="left">Left</option>
                       <option value="center">Center</option>
@@ -258,7 +258,7 @@ export default function TemplatesPage() {
                       }}
                       className="flex h-8 w-8 items-center justify-center rounded border border-outline text-on-surface-variant hover:bg-error-container hover:text-on-error-container"
                     >
-                      <span className="material-symbols-outlined text-[16px]" aria-hidden>close</span>
+                      <span className="material-symbols-outlined text-body-md" aria-hidden>close</span>
                     </button>
                   </div>
                 </div>
@@ -279,13 +279,13 @@ export default function TemplatesPage() {
                       prev.map((t) => (t.id === selected.id ? { ...t, fields: [...t.fields, { ...f }] } : t)),
                     );
                   }}
-                  className="rounded-full border border-outline-variant px-3 py-1 font-data-mono text-[11px] text-on-surface hover:border-primary hover:bg-primary-container/10 hover:text-primary"
+                  className="rounded-full border border-outline-variant px-3 py-1 font-data-mono text-data-mono text-on-surface hover:border-primary hover:bg-primary-container/10 hover:text-primary"
                 >
                   + {f.label}
                 </button>
               ))}
               {AVAILABLE_FIELDS.every((f) => selected.fields.some((x) => x.key === f.key)) && (
-                <span className="font-body-md text-[13px] text-on-surface-variant">All fields in layout</span>
+                <span className="font-body-md text-body-md text-on-surface-variant">All fields in layout</span>
               )}
             </div>
           </div>
@@ -293,10 +293,10 @@ export default function TemplatesPage() {
       </div>
 
       {/* Live preview */}
-      <section className="flex flex-col gap-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-5">
+      <section className="flex flex-col gap-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-6">
         <div className="flex items-center justify-between">
           <h2 className="font-headline-md text-headline-md text-on-surface">80mm Live Preview</h2>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">Rendered at 80mm width · thermal paper</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">Rendered at 80mm width · thermal paper</span>
         </div>
         <div className="rounded-lg bg-surface-bright p-6">
           <ReceiptPreview tpl={selected} />

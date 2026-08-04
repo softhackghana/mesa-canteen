@@ -30,7 +30,7 @@ export default function LoginPage() {
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-5"
         style={{
-          backgroundImage: "radial-gradient(circle at 2px 2px, #344AB7 1px, transparent 0)",
+          backgroundImage: "radial-gradient(circle at 2px 2px, var(--color-primary) 1px, transparent 0)",
           backgroundSize: "32px 32px",
         }}
         aria-hidden
@@ -49,7 +49,7 @@ export default function LoginPage() {
           title="SSO (SAML 2.0 / OAuth2) ships in Phase 3 — sign in with credentials below."
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 px-4 font-nav-item text-nav-item text-on-primary transition-colors duration-200 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <span className="material-symbols-outlined text-[20px]" aria-hidden>
+          <span className="material-symbols-outlined text-headline-md" aria-hidden>
             shield_person
           </span>
           Sign in with SSO
@@ -116,7 +116,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-8 text-center font-data-mono text-data-mono text-[11px] uppercase tracking-wider text-on-surface-variant">
+        <p className="mt-8 text-center font-data-mono text-data-mono uppercase tracking-wider text-on-surface-variant">
           MESA v1.0 — Secured by TLS 1.3
         </p>
       </div>

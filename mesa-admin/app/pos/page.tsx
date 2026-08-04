@@ -40,6 +40,7 @@ export default function PosKiosk() {
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
+    usePosStore.setState({ online: navigator.onLine });
     void start();
 
     const goOnline = () => {

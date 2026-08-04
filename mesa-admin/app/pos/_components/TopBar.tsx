@@ -1,8 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { usePosStore } from "../_store";
 import { Icon } from "./Icon";
+
+function subscribeToClock(onChange: () => void): () => void {
+  const t = setInterval(onChange, 1000);
+  return () => clearInterval(t);
+}
+
+function getTimeLabel(): string {
+  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
 
 /**
  * POS top bar — terminal ID, site, operator, live time, printer status and
@@ -20,14 +29,11 @@ export function TopBar() {
   const adapterNote = usePosStore((s) => s.adapterNote);
   const toggleDevOffline = usePosStore((s) => s.toggleDevOffline);
 
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
+  // The clock is external state: the server has no wall clock that matches the
+  // browser's, so SSR renders a placeholder and the client takes over on mount.
+  const timeLabel = useSyncExternalStore(subscribeToClock, getTimeLabel, () => "--:--");
 
   const offline = !online || devOffline;
-  const timeLabel = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
   return (
     <header className="bg-surface dark:bg-on-background flex justify-between items-center h-[64px] px-6 w-full border-b border-outline-variant flex-shrink-0 z-10">

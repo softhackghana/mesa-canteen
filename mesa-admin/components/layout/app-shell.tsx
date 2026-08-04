@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 
 export interface SidebarItem {
@@ -25,6 +26,7 @@ export interface AppShellProps {
   sections: SidebarSection[];
   footerItems?: SidebarItem[];
   /** Optional extra footer items below the main footer (e.g. Settings). */
+  /** Href to highlight, or "auto" to derive it from the current route. */
   activeHref?: string;
   collapsed?: boolean;
   defaultCollapsed?: boolean;
@@ -77,20 +79,18 @@ export function AppShell({
 
   const sidebarWidth = isCollapsed ? "w-sidebar-collapsed" : "w-sidebar-expanded";
 
+  // usePathname is SSR-safe and matches on both renders, unlike window.location.
+  const pathname = usePathname();
+  const currentHref = activeHref === undefined || activeHref === "auto" ? pathname : activeHref;
+
   const NavLink = ({ item, isFooter = false }: { item: SidebarItem; isFooter?: boolean }) => {
-    const isActive =
-      item.active ??
-      (activeHref !== undefined
-        ? item.href === activeHref
-        : item.href !== "/logout" && item.href !== "/support" && item.href !== "/guide" &&
-          typeof window !== "undefined" &&
-          window.location.pathname === item.href);
+    const isActive = item.active ?? item.href === currentHref;
 
     const content = (
       <>
         <span
           className={cn(
-            "material-symbols-outlined shrink-0 text-[22px]",
+            "material-symbols-outlined shrink-0 text-headline-md",
             item.fillWhenActive && isActive && "fill",
           )}
           aria-hidden
@@ -103,7 +103,7 @@ export function AppShell({
               {item.label}
             </span>
             {item.badge && (
-              <span className="rounded-full bg-error-container px-1.5 py-0.5 font-data-mono text-[10px] text-on-error-container">
+              <span className="rounded-full bg-error-container px-1.5 py-0.5 font-data-mono text-data-mono text-on-error-container">
                 {item.badge}
               </span>
             )}
@@ -130,17 +130,17 @@ export function AppShell({
   };
 
   return (
-    <div className={cn("min-h-screen bg-surface", className)}>
+    <div className={cn("flex min-h-screen bg-surface", className)}>
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-full flex-col overflow-y-auto border-r border-outline-variant",
+          "sticky top-0 z-50 flex h-screen flex-col overflow-y-auto border-r border-outline-variant",
           "bg-surface-container-lowest py-4 transition-[width] duration-200",
           sidebarWidth,
         )}
       >
         {/* Brand */}
-        <div className={cn("mb-8 flex items-center px-3", isCollapsed && "justify-center px-0")}>
+        <div className={cn("mb-stack-md flex items-center px-3", isCollapsed && "justify-center px-0")}>
           {brand ?? (
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary font-headline-md text-headline-md font-bold text-on-primary">
               M
@@ -151,7 +151,7 @@ export function AppShell({
               <div className="font-headline-md text-headline-md font-bold text-on-surface">
                 {brandLabel}
               </div>
-              <div className="font-data-mono text-[11px] uppercase tracking-wider text-on-surface-variant">
+              <div className="font-data-mono text-data-mono uppercase tracking-wider text-on-surface-variant">
                 {brandSub}
               </div>
             </div>
@@ -169,7 +169,7 @@ export function AppShell({
             isCollapsed ? "mx-auto" : "ml-3",
           )}
         >
-          <span className="material-symbols-outlined text-[18px]" aria-hidden>
+          <span className="material-symbols-outlined text-body-lg" aria-hidden>
             {isCollapsed ? "chevron_right" : "chevron_left"}
           </span>
         </button>
@@ -179,8 +179,8 @@ export function AppShell({
           {sections.map((section, index) => (
             <React.Fragment key={index}>
               {section.title && !isCollapsed && (
-                <div className="mb-1 mt-4 px-3">
-                  <span className="font-data-mono text-[11px] uppercase tracking-wider text-on-surface-variant">
+                <div className="mb-1 mt-stack-md px-3">
+                  <span className="font-data-mono text-data-mono uppercase tracking-wider text-on-surface-variant">
                     {section.title}
                   </span>
                 </div>
@@ -200,25 +200,20 @@ export function AppShell({
         </div>
       </aside>
 
-      {/* Topbar */}
-      {topbar && (
-        <div className="fixed left-0 right-0 top-0 z-40 ml-sidebar-expanded">
-          <div className="flex h-header-height items-center justify-between border-b border-outline-variant bg-surface-container-lowest px-margin-page">
+      {/* Content area */}
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Topbar */}
+        {topbar && (
+          <div className="sticky top-0 z-40 flex h-header-height items-center justify-between border-b border-outline-variant bg-surface-container-lowest px-4">
             {topbar}
           </div>
-        </div>
-      )}
-
-      {/* Main content */}
-      <main
-        className={cn(
-          "p-margin-page transition-[margin] duration-200",
-          isCollapsed ? "ml-sidebar-collapsed" : "ml-sidebar-expanded",
-          topbar ? "mt-header-height" : "mt-0",
         )}
-      >
-        {children}
-      </main>
+
+        {/* Main content */}
+        <main className="flex-1 p-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

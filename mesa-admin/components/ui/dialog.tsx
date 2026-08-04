@@ -60,7 +60,23 @@ export function Dialog({
 
   if (!isOpen) {
     return trigger ? (
-      <span onClick={() => (onOpenChange ? onOpenChange(true) : setInternalOpen(true))}>
+      <span
+        role="button"
+        tabIndex={0}
+        aria-haspopup="dialog"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            if (onOpenChange) onOpenChange(true);
+            else setInternalOpen(true);
+          }
+        }}
+        onClick={() => {
+          if (onOpenChange) onOpenChange(true);
+          else setInternalOpen(true);
+        }}
+        className="inline-flex cursor-pointer"
+      >
         {trigger}
       </span>
     ) : null;

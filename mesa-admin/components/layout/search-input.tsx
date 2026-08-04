@@ -23,11 +23,12 @@ export function SearchInput({
 
   return (
     <div className={cn("relative w-full", containerClassName)}>
-      <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[20px] text-outline" aria-hidden>
+      <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-headline-md text-outline" aria-hidden>
         search
       </span>
       <input
         type="search"
+        aria-label="Search"
         onChange={(e) => {
           if (timerRef.current) clearTimeout(timerRef.current);
           timerRef.current = setTimeout(() => onSearch?.(e.target.value), debounceMs);

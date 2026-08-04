@@ -79,7 +79,7 @@ export default function AuditPage() {
           <span className="font-data-mono text-data-mono text-on-surface">
             {new Date(e.timestamp).toLocaleString([], { dateStyle: "short", timeStyle: "short" })}
           </span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{e.timestamp.split("T")[1]?.slice(0, 8)} UTC</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{e.timestamp.split("T")[1]?.slice(0, 8)} UTC</span>
         </span>
       ),
     },
@@ -90,7 +90,7 @@ export default function AuditPage() {
       render: (e) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md text-on-surface">{e.actor}</span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{e.actorType} · {e.source}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{e.actorType} · {e.source}</span>
         </span>
       ),
     },
@@ -116,7 +116,7 @@ export default function AuditPage() {
       render: (e) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md text-on-surface">{e.entityType}</span>
-          <span className="font-data-mono text-[11px] text-on-surface-variant">{e.entityId}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{e.entityId}</span>
         </span>
       ),
     },
@@ -170,11 +170,11 @@ export default function AuditPage() {
         actions={
           <>
             <Button variant="secondary" onClick={() => toast({ title: "Hash chain verified", description: "All entry hashes validated against the previous entry (FR-AUD-003).", variant: "success" })}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>verified</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>verified</span>
               Verify Chain
             </Button>
             <Button variant="secondary" onClick={exportCsv}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>download</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>download</span>
               Export CSV
             </Button>
           </>
@@ -199,11 +199,11 @@ export default function AuditPage() {
           options={Object.entries(CATEGORY_LABELS).map(([value, label]) => ({ value, label }))}
           onChange={(v) => { setCategory(v as Category); setPage(1); }}
         />
-        <span className="font-data-mono text-[12px] text-on-surface-variant">
+        <span className="font-data-mono text-data-mono text-on-surface-variant">
           {filtered.length} events in view · retention 24 months
         </span>
-        <span className="ml-auto font-data-mono text-[11px] text-on-surface-variant">
-          <span className="material-symbols-outlined align-middle text-[14px]" aria-hidden>lock</span> SHA-256 hash-chained
+        <span className="ml-auto font-data-mono text-data-mono text-on-surface-variant">
+          <span className="material-symbols-outlined align-middle text-body-md" aria-hidden>lock</span> SHA-256 hash-chained
         </span>
       </div>
 
@@ -235,20 +235,20 @@ export default function AuditPage() {
                 ["Severity", severityFor(details)],
               ] as const).map(([k, v]) => (
                 <div key={k} className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-                  <dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">{k}</dt>
+                  <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">{k}</dt>
                   <dd className="mt-0.5 font-body-md text-body-md text-on-surface">{v}</dd>
                 </div>
               ))}
             </dl>
             <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-              <dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Delta / Notes</dt>
+              <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Delta / Notes</dt>
               <dd className="mt-0.5 break-words font-data-mono text-data-mono text-on-surface">{details.delta}</dd>
             </div>
             <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-              <dt className="font-data-mono text-[10px] uppercase text-on-surface-variant">Source IP</dt>
+              <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Source IP</dt>
               <dd className="mt-0.5 font-data-mono text-data-mono text-on-surface">{details.ip ?? "n/a (terminal/system)"}</dd>
             </div>
-            <p className="font-data-mono text-[11px] text-on-surface-variant">
+            <p className="font-data-mono text-data-mono text-on-surface-variant">
               Each entry hashes the previous entry&apos;s hash. Tampering breaks the chain and is flagged on the next verification.
             </p>
           </div>

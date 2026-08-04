@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import {
   Button,
@@ -18,6 +18,12 @@ import {
 import { useLicenseStore } from "@/stores/license-store";
 import { currentStatus } from "@/lib/license";
 
+/** Seconds since the device's last heartbeat; caps at 0 for missing stamps. */
+function heartbeatAgeSeconds(device: { last_heartbeat?: string }): number {
+  if (!device.last_heartbeat) return 0;
+  return (Date.now() - new Date(device.last_heartbeat).getTime()) / 1000;
+}
+
 interface Activity {
   id: string;
   icon: string;
@@ -33,19 +39,12 @@ export default function DashboardPage() {
   const txs = demoTransactions();
   const licenseCert = useLicenseStore((s) => s.certificate);
   const licenseStatus = useLicenseStore((s) => s.status);
+  const licenseDaysLeft = useLicenseStore((s) => s.daysLeft);
   const loadLicense = useLicenseStore((s) => s.load);
-  const [licenseDaysLeft, setLicenseDaysLeft] = useState<number | null>(null);
 
   useEffect(() => {
     loadLicense();
   }, [loadLicense]);
-
-  useEffect(() => {
-    const cert = licenseCert;
-    if (!cert) return;
-    const days = Math.ceil((new Date(cert.expiry).getTime() - Date.now()) / (24 * 60 * 60 * 1000));
-    setLicenseDaysLeft(days);
-  }, [licenseCert]);
 
   const status = licenseCert ? currentStatus(licenseCert) : licenseStatus;
 
@@ -68,11 +67,11 @@ export default function DashboardPage() {
         actions={
           <>
             <Button variant="secondary" onClick={() => toast({ title: "Report scheduled", description: "A copy will be emailed at 06:00 daily.", variant: "success" })}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>schedule_send</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>schedule_send</span>
               Schedule Report
             </Button>
             <Button onClick={() => toast({ title: "Dashboard refreshed", variant: "info" })}>
-              <span className="material-symbols-outlined text-[18px]" aria-hidden>refresh</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>refresh</span>
               Refresh
             </Button>
           </>
@@ -87,7 +86,7 @@ export default function DashboardPage() {
           icon="restaurant"
           trend={
             <>
-              <span className="material-symbols-outlined text-[16px]" aria-hidden>trending_up</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>trending_up</span>
               {metrics.mealsTrend}
             </>
           }
@@ -138,13 +137,13 @@ export default function DashboardPage() {
                 const isToday = d.day === "Fri";
                 return (
                   <div key={d.day} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
-                    <span className="font-data-mono text-[10px] text-on-surface-variant">{d.value}</span>
+                    <span className="font-data-mono text-data-mono text-on-surface-variant">{d.value}</span>
                     <div
                       className={isToday ? "w-full max-w-10 rounded-t bg-primary" : "w-full max-w-10 rounded-t bg-primary/35"}
                       style={{ height: `${h}%` }}
                       title={`${d.day}: ${d.value} meals`}
                     />
-                    <span className="pb-1 font-data-mono text-[10px] text-on-surface-variant">{d.day}</span>
+                    <span className="pb-1 font-data-mono text-data-mono text-on-surface-variant">{d.day}</span>
                   </div>
                 );
               })}
@@ -165,7 +164,7 @@ export default function DashboardPage() {
                   status={status === "active" ? "Active" : status === "grace" ? "Grace Period" : "Expired"}
                   tone={status === "active" ? "success" : "error"}
                 />
-                <span className="font-data-mono text-[11px] text-on-surface-variant">Tier: {licenseCert.tier}</span>
+                <span className="font-data-mono text-data-mono text-on-surface-variant">Tier: {licenseCert.tier}</span>
               </div>
               <dl className="mt-4 space-y-2 font-body-md text-body-md">
                 <div className="flex justify-between">
@@ -196,7 +195,7 @@ export default function DashboardPage() {
                   <p className="font-nav-item text-nav-item text-on-warning-container">
                     {licenseDaysLeft <= 0 ? "License expired" : `Renewal due in ${licenseDaysLeft} days`}
                   </p>
-                  <Link href="/license" className="mt-1 inline-block font-data-mono text-[11px] text-primary hover:underline">
+                  <Link href="/license" className="mt-1 inline-block font-data-mono text-data-mono text-primary hover:underline">
                     Renew now →
                   </Link>
                 </div>
@@ -219,7 +218,7 @@ export default function DashboardPage() {
         <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
           <div className="flex items-center justify-between border-b border-outline-variant bg-surface-bright p-4">
             <h2 className="font-nav-item text-nav-item text-on-surface">Terminal Health</h2>
-            <span className="font-data-mono text-[11px] text-on-surface-variant">Auto-refresh 30s</span>
+            <span className="font-data-mono text-data-mono text-on-surface-variant">Auto-refresh 30s</span>
           </div>
           <ul className="divide-y divide-outline-variant">
             {DEMO_DEVICES.slice(0, 6).map((d) => (
@@ -230,14 +229,14 @@ export default function DashboardPage() {
                 </span>
                 <span className={`font-data-mono text-data-mono ${d.status === "online" ? "text-on-surface-variant" : "text-error"}`}>
                   {d.status === "online"
-                    ? `${Math.max(1, Math.round((Date.now() - new Date(d.last_heartbeat!).getTime()) / 1000))}s ago`
+                    ? `${Math.max(1, Math.round(heartbeatAgeSeconds(d)))}s ago`
                     : d.status.toUpperCase()}
                 </span>
               </li>
             ))}
           </ul>
-          <div className="border-t border-outline-variant p-3">
-            <Link href="/devices" className="font-data-mono text-[11px] text-primary hover:underline">
+          <div className="border-t border-outline-variant p-4">
+            <Link href="/devices" className="font-data-mono text-data-mono text-primary hover:underline">
               View all terminals →
             </Link>
           </div>
@@ -245,12 +244,12 @@ export default function DashboardPage() {
 
         {/* Biometric exceptions */}
         <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
-          <div className="border-b border-outline-variant bg-surface-bright p-3">
+          <div className="border-b border-outline-variant bg-surface-bright p-4">
             <h3 className="font-nav-item text-nav-item text-on-surface">Biometric Exception Log</h3>
           </div>
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-outline-variant bg-surface font-data-mono text-[11px] uppercase text-on-surface-variant">
+              <tr className="border-b border-outline-variant bg-surface font-data-mono text-data-mono uppercase text-on-surface-variant">
                 <th className="px-3 py-2">Time</th>
                 <th className="px-3 py-2">Terminal</th>
                 <th className="px-3 py-2">Issue</th>
@@ -274,23 +273,23 @@ export default function DashboardPage() {
 
         {/* Recent activity feed */}
         <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
-          <div className="flex items-center justify-between border-b border-outline-variant bg-surface-bright p-3">
+          <div className="flex items-center justify-between border-b border-outline-variant bg-surface-bright p-4">
             <h3 className="font-nav-item text-nav-item text-on-surface">Recent Activity</h3>
-            <Link href="/audit" className="font-data-mono text-[11px] text-primary hover:underline">
+            <Link href="/audit" className="font-data-mono text-data-mono text-primary hover:underline">
               View All
             </Link>
           </div>
           <ul className="divide-y divide-outline-variant">
             {activity.map((a) => (
               <li key={a.id} className="flex items-center gap-3 p-3">
-                <span className="material-symbols-outlined text-[20px] text-outline" aria-hidden>
+                <span className="material-symbols-outlined text-headline-md text-outline" aria-hidden>
                   {a.icon}
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-body-md text-body-md font-medium text-on-surface">{a.text}</p>
-                  <p className="truncate font-data-mono text-[11px] text-on-surface-variant">{a.sub}</p>
+                  <p className="truncate font-data-mono text-data-mono text-on-surface-variant">{a.sub}</p>
                 </div>
-                <span className="font-data-mono text-[11px] text-on-surface-variant">{a.time}</span>
+                <span className="font-data-mono text-data-mono text-on-surface-variant">{a.time}</span>
               </li>
             ))}
           </ul>

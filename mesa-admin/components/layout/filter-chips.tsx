@@ -42,16 +42,17 @@ export function FilterChips({
               onValueChange?.(chip.value);
             }}
             className={cn(
-              "rounded-full border px-4 py-1.5 font-nav-item text-nav-item text-[13px]",
+              "rounded-full border px-4 py-1.5 font-nav-item text-nav-item text-body-md",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
               "transition-colors duration-150",
               active
-                ? "border-primary-container bg-primary-container text-on-primary-container hover:bg-primary hover:text-white"
+                ? "border-primary-container bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary"
                 : "border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high",
             )}
           >
             {chip.label}
             {chip.count !== undefined && (
-              <span className={cn("ml-1.5 font-data-mono text-[11px]", active ? "text-inherit" : "text-on-surface-variant")}>
+              <span className={cn("ml-1.5 font-data-mono text-data-mono", active ? "text-inherit" : "text-on-surface-variant")}>
                 {chip.count}
               </span>
             )}

@@ -55,7 +55,22 @@ export function DropdownMenu({
 
   return (
     <div ref={rootRef} className={cn("relative inline-block", className)}>
-      <span onClick={() => setOpen((v) => !v)}>{trigger}</span>
+      <span
+        role="button"
+        tabIndex={0}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((v) => !v);
+          }
+        }}
+        className="inline-flex cursor-pointer"
+      >
+        {trigger}
+      </span>
       {open && (
         <div
           role="menu"
@@ -87,7 +102,7 @@ export function DropdownMenu({
                 )}
               >
                 {item.icon && (
-                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant" aria-hidden>
+                  <span className="material-symbols-outlined text-body-lg text-on-surface-variant" aria-hidden>
                     {item.icon}
                   </span>
                 )}

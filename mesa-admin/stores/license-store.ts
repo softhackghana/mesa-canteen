@@ -19,6 +19,7 @@ interface LicenseState {
   tier: string | null;
   limits: { terminals: number; identities: number } | null;
   remainingOfflineHours: number;
+  daysLeft: number | null;
   loading: boolean;
   error: string | null;
   activate: (key: string, businessName: string) => Promise<boolean>;
@@ -37,6 +38,7 @@ function derive(cert: LicenseCertificate | null) {
     tier: cert?.tier ?? null,
     limits: cert?.limits ?? null,
     remainingOfflineHours: remainingOfflineHours(cert),
+    daysLeft: cert ? Math.ceil((new Date(cert.expiry).getTime() - Date.now()) / (24 * 60 * 60 * 1000)) : null,
   };
 }
 

@@ -37,7 +37,7 @@ export function Topbar({
     <div className={cn("flex w-full items-center justify-between gap-6", className)}>
       <div className="flex min-w-0 items-center gap-6">
         {breadcrumb && (
-          <nav aria-label="Breadcrumb" className="hidden font-data-mono text-[11px] uppercase tracking-wider text-on-surface-variant lg:block">
+          <nav aria-label="Breadcrumb" className="hidden font-data-mono text-data-mono uppercase tracking-wider text-on-surface-variant lg:block">
             {breadcrumb}
           </nav>
         )}
@@ -57,7 +57,7 @@ export function Topbar({
           aria-label="Notifications"
           className="relative flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
         >
-          <span className="material-symbols-outlined text-[22px]" aria-hidden>
+          <span className="material-symbols-outlined text-headline-md" aria-hidden>
             notifications
           </span>
           {(notificationsCount ?? 0) > 0 && (

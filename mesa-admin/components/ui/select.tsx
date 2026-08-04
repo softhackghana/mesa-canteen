@@ -60,7 +60,7 @@ export function Select({
             </option>
           ))}
         </select>
-        <span className="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[18px] text-outline">
+        <span className="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-body-lg text-outline">
           expand_more
         </span>
       </div>
