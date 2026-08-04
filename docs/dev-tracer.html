@@ -67,7 +67,7 @@
 
 <h2>2 · Phase Completion</h2>
 <div class="grid">
-  <div class="card"><div class="label">MVP — Phase 1</div><div class="big">~90%</div><div class="bar"><span style="width:90%;background:var(--ok)"></span></div><div class="num">core platform delivered · hardware bridge shipped</div></div>
+  <div class="card"><div class="label">MVP — Phase 1</div><div class="big">~85%</div><div class="bar"><span style="width:85%;background:var(--warn)"></span></div><div class="num">core platform verified E2E · admin CRUD pages still fixture-driven</div></div>
   <div class="card"><div class="label">Phase 2 — Admin automation</div><div class="big">~30%</div><div class="bar"><span style="width:30%;background:var(--warn)"></span></div><div class="num">month-end DB engine yes · UI + HRIS no</div></div>
   <div class="card"><div class="label">Phase 3 — Future</div><div class="big">~5%</div><div class="bar"><span style="width:5%;background:var(--bad)"></span></div><div class="num">intentionally deferred</div></div>
 </div>
@@ -215,7 +215,7 @@
 </ul>
 <h3>Hardening &amp; verification</h3>
 <ul>
-  <li><b>Browser-test remaining flows</b> — people CRUD + bulk import, meal rules UI, POS kiosk end-to-end (scan → approve → print → reprint), license activation dialog, override flow.</li>
+  <li><b>Browser-verified (docs/e2e/)</b> — enrollment, POS scan/deny/no-match, manual entry, license activation, meal rules create, reports, audit, devices. <b>Known gap:</b> admin CRUD (people, meal rules, devices) and audit trail pages render fixture data — stores exist but are unwired; supervisor guest override fixed (was dead path).</li>
   <li><b>Fallow audit gate</b> — 111 dead-code findings are barrel false positives (<code>stores/index.ts</code> chain); decide <code>fallow-ignore-file</code> vs. restructure.</li>
   <li><b>DB cleanup</b> — remove stray <code>TEST-DEPT</code> department row.</li>
   <li><b>Enrollment live path</b> — enroll page auto-detects the bridge (hardware) or falls back to the simulator; real template persistence to the server still lands with the data worker.</li>

@@ -383,6 +383,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
     });
   },
 
+  // fallow-ignore-next-line complexity
   authorizeOverride: async (pin, reason) => {
     const s = get();
     if (pin !== DEMO_SUPERVISOR.pin) {
@@ -391,8 +392,45 @@ export const usePosStore = create<PosState>()((set, get) => ({
     }
     const person = s.pendingIdentity;
     if (!person) {
-      set({ screen: "idle", pendingIdentity: null });
-      return false;
+      // Guest override (PRD 14.4): the supervisor authorises a manual meal
+      // for an unmatched employee / visitor. No identity on file, so issue
+      // under a synthetic guest record (lunch window default).
+      const guest: DemoIdentity = {
+        id: "guest",
+        employeeId: "GUEST",
+        name: "Guest",
+        department: "—",
+        costCentre: "—",
+        category: "guest",
+        entitlement: "lunch",
+        mealsRemaining: 0,
+        mealsAllowed: 0,
+        template: "",
+      };
+      const tx = issueTransaction(guest, "override", DEMO_SUPERVISOR.name);
+      set({
+        screen: "approved",
+        lastPerson: { ...guest, mealsRemaining: 0 },
+        lastTransaction: tx,
+        pendingIdentity: null,
+        mealsServed: get().mealsServed + 1,
+      });
+      await logAudit({
+        kind: "override",
+        actorId: DEMO_SUPERVISOR.id,
+        actorName: DEMO_SUPERVISOR.name,
+        detail: `Override authorised for guest (no identity matched) via PIN${reason ? ` — reason: ${reason}` : ""}`,
+        metadata: { transactionId: tx.id, method: s.pendingMethod, reason },
+      });
+      await logAudit({
+        kind: "meal_issued",
+        actorId: get().operator.id,
+        actorName: get().operator.name,
+        detail: "Guest meal issued via supervisor override",
+        metadata: { transactionId: tx.id },
+      });
+      await dispatchCoupon(tx, guest, false);
+      return true;
     }
     const tx = issueTransaction(person, "override", DEMO_SUPERVISOR.name);
     set({
