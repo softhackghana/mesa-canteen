@@ -20,6 +20,7 @@ export { usePosStore } from './pos-store';
 export { useNotificationsStore } from './notifications-store';
 export { useDevicesStore } from './devices-store';
 export { useSettingsStore } from './settings-store';
+export { useTemplatesStore } from './templates-store';
 
 export type { Notification, NotificationCategory, NotificationSeverity } from './notifications-store';
 export type { PeopleFilters, PeoplePagination } from './people-store';

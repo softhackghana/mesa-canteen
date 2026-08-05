@@ -23,4 +23,5 @@ export type {
   Device,
   PosTransaction,
   Settings,
+  Site,
 } from './types';

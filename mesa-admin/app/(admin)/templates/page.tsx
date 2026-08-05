@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,12 +10,8 @@ import {
   StatusPill,
   useToast,
 } from "@/components";
-import {
-  AVAILABLE_FIELDS,
-  DEMO_TEMPLATES,
-  type ReceiptTemplate,
-  type TemplateField,
-} from "@/lib/admin-data";
+import { useTemplatesStore, type ReceiptTemplate, type TemplateField } from "@/stores/templates-store";
+import { AVAILABLE_FIELDS } from "@/lib/admin-data";
 
 const FIELD_STYLE: Record<TemplateField["size"], string> = {
   small: "text-data-mono",
@@ -65,22 +61,47 @@ function ReceiptPreview({ tpl }: { tpl: ReceiptTemplate }) {
 
 export default function TemplatesPage() {
   const { toast } = useToast();
-  const [templates, setTemplates] = useState<ReceiptTemplate[]>(DEMO_TEMPLATES);
+  const templates = useTemplatesStore((s) => s.items);
+  const sites = useTemplatesStore((s) => s.sites);
+  const loading = useTemplatesStore((s) => s.loading);
+  const fetchTemplates = useTemplatesStore((s) => s.fetch);
+  const saveTemplate = useTemplatesStore((s) => s.save);
+  const setDefaultTemplate = useTemplatesStore((s) => s.setDefault);
+  const createTemplate = useTemplatesStore((s) => s.create);
+
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
-  const [selectedId, setSelectedId] = useState<string>(DEMO_TEMPLATES[0].id);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [publishId, setPublishId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
 
-  const selected = useMemo(() => templates.find((t) => t.id === selectedId) ?? templates[0], [templates, selectedId]);
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
+
+  useEffect(() => {
+    if (!selectedId && templates.length > 0) setSelectedId(templates[0].id);
+  }, [templates, selectedId]);
+
+  const selected = useMemo(
+    () => templates.find((t) => t.id === selectedId) ?? templates[0],
+    [templates, selectedId],
+  );
+
+  const patchSelected = (patch: Partial<ReceiptTemplate>) => {
+    if (!selected) return;
+    useTemplatesStore.setState({
+      items: templates.map((t) => (t.id === selected.id ? { ...t, ...patch } : t)),
+    });
+  };
 
   const move = (from: number, to: number) => {
     if (from === to || from < 0 || to < 0) return;
-    setTemplates((prev) => {
-      const next = [...prev];
+    useTemplatesStore.setState((prev) => {
+      const next = [...prev.items];
       const [item] = next.splice(from, 1);
       next.splice(to, 0, item);
-      return next;
+      return { items: next };
     });
   };
 
@@ -93,29 +114,41 @@ export default function TemplatesPage() {
     setOverIndex(null);
   };
 
-  const setDefault = (id: string) => {
-    setTemplates((prev) => prev.map((t) => ({ ...t, isDefault: t.id === id })));
-    toast({ title: "Default template updated", description: "New receipts will use the updated default.", variant: "success" });
+  const setDefault = async (id: string) => {
+    const ok = await setDefaultTemplate(id);
+    toast(ok
+      ? { title: "Default template updated", description: "New receipts will use the updated default.", variant: "success" }
+      : { title: "Could not update default", description: useTemplatesStore.getState().error ?? undefined, variant: "error" });
   };
 
-  const createTemplate = () => {
+  const create = () => {
     const name = `Untitled Template ${templates.length + 1}`;
-    const tpl: ReceiptTemplate = {
-      id: `tpl-${Date.now()}`,
-      name,
-      code: `TPL-${name.toUpperCase().replace(/\s+/g, "-")}`,
-      isDefault: false,
-      version: 1,
-      fields: AVAILABLE_FIELDS.slice(0, 8).map((f) => ({ ...f })),
-      footerText: "THANK YOU · MESA SYSTEMS",
-      siteAssignment: "Global",
-      isActive: true,
-    };
-    setTemplates((prev) => [...prev, tpl]);
+    const tpl = createTemplate(name);
+    useTemplatesStore.setState((prev) => ({ items: [...prev.items, tpl] }));
     setSelectedId(tpl.id);
     setCreateOpen(false);
-    toast({ title: "Template created", description: "Add fields from the palette to build the layout.", variant: "success" });
+    toast({ title: "Template created", description: "Add fields from the palette, then publish to persist.", variant: "success" });
   };
+
+  const publish = async () => {
+    if (!selected) return;
+    const ok = await saveTemplate(selected);
+    setPublishId(null);
+    toast(ok
+      ? { title: "Template published", description: "Saved to the server; terminals fetch it on next heartbeat.", variant: "success" }
+      : { title: "Publish failed", description: useTemplatesStore.getState().error ?? undefined, variant: "error" });
+  };
+
+  if (!selected) {
+    return (
+      <div className="flex flex-col gap-4">
+        <PageHeader title="Receipt Templates" description="Design and publish 80mm thermal receipt layouts per site." />
+        <p className="font-body-md text-body-md text-on-surface-variant">
+          {loading ? "Loading templates…" : "No templates yet. Create one to get started."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -192,7 +225,13 @@ export default function TemplatesPage() {
               <Button variant="secondary" size="sm" onClick={() => setDefault(selected.id)} disabled={selected.isDefault}>
                 Set as Default
               </Button>
-              <Button variant="secondary" size="sm" onClick={() => toast({ title: "Draft saved", description: "Changes are versioned and audit-logged.", variant: "success" })}>
+              <Button variant="secondary" size="sm" onClick={async () => {
+                if (!selected) return;
+                const ok = await saveTemplate(selected);
+                toast(ok
+                  ? { title: "Draft saved", description: "Changes are versioned and audit-logged.", variant: "success" }
+                  : { title: "Save failed", description: useTemplatesStore.getState().error ?? undefined, variant: "error" });
+              }}>
                 Save Draft
               </Button>
             </div>
@@ -204,13 +243,9 @@ export default function TemplatesPage() {
               value={selected.siteAssignment}
               options={[
                 { value: "Global", label: "Global (all sites)" },
-                { value: "HQ Campus", label: "HQ Campus" },
-                { value: "Central Cafeteria A", label: "Central Cafeteria A" },
-                { value: "West Wing Bistro", label: "West Wing Bistro" },
+                ...sites.map((s) => ({ value: s.name, label: s.name })),
               ]}
-              onChange={(v) => {
-                setTemplates((prev) => prev.map((t) => (t.id === selected.id ? { ...t, siteAssignment: v } : t)));
-              }}
+              onChange={(v) => patchSelected({ siteAssignment: v })}
             />
           </div>
 
@@ -234,13 +269,7 @@ export default function TemplatesPage() {
                       value={f.align}
                       onChange={(e) => {
                         const align = e.target.value as TemplateField["align"];
-                        setTemplates((prev) =>
-                          prev.map((t) =>
-                            t.id === selected.id
-                              ? { ...t, fields: t.fields.map((x, xi) => (xi === i ? { ...x, align } : x)) }
-                              : t,
-                          ),
-                        );
+                        patchSelected({ fields: selected.fields.map((x, xi) => (xi === i ? { ...x, align } : x)) });
                       }}
                       className="h-8 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono text-on-surface focus:border-primary focus:outline-none"
                     >
@@ -252,9 +281,7 @@ export default function TemplatesPage() {
                       type="button"
                       aria-label={`Remove ${f.label}`}
                       onClick={() => {
-                        setTemplates((prev) =>
-                          prev.map((t) => (t.id === selected.id ? { ...t, fields: t.fields.filter((_, xi) => xi !== i) } : t)),
-                        );
+                        patchSelected({ fields: selected.fields.filter((_, xi) => xi !== i) });
                       }}
                       className="flex h-8 w-8 items-center justify-center rounded border border-outline text-on-surface-variant hover:bg-error-container hover:text-on-error-container"
                     >
@@ -275,9 +302,7 @@ export default function TemplatesPage() {
                   key={f.key}
                   type="button"
                   onClick={() => {
-                    setTemplates((prev) =>
-                      prev.map((t) => (t.id === selected.id ? { ...t, fields: [...t.fields, { ...f }] } : t)),
-                    );
+                    patchSelected({ fields: [...selected.fields, { ...f }] });
                   }}
                   className="rounded-full border border-outline-variant px-3 py-1 font-data-mono text-data-mono text-on-surface hover:border-primary hover:bg-primary-container/10 hover:text-primary"
                 >
@@ -313,10 +338,7 @@ export default function TemplatesPage() {
           <>
             <Button variant="secondary" onClick={() => setPublishId(null)}>Cancel</Button>
             <Button
-              onClick={() => {
-                setPublishId(null);
-                toast({ title: "Template published", description: "Terminals will fetch the new layout on next heartbeat.", variant: "success" });
-              }}
+              onClick={publish}
             >
               Publish
             </Button>
@@ -336,7 +358,7 @@ export default function TemplatesPage() {
         footer={
           <>
             <Button variant="secondary" onClick={() => setCreateOpen(false)}>Cancel</Button>
-            <Button onClick={createTemplate}>Create</Button>
+            <Button onClick={create}>Create</Button>
           </>
         }
       >
