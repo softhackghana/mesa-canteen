@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Button,
@@ -9,19 +9,14 @@ import {
   StatusPill,
   useToast,
 } from "@/components";
-import {
-  demoDashboardMetrics,
-  DEMO_DEVICES,
-  demoTransactions,
-  WEEK_MEALS,
-} from "@/lib/admin-data";
+import { insforge } from "@/lib/insforge";
 import { useLicenseStore } from "@/stores/license-store";
 import { currentStatus } from "@/lib/license";
 
 /** Seconds since the device's last heartbeat; caps at 0 for missing stamps. */
-function heartbeatAgeSeconds(device: { last_heartbeat?: string }): number {
-  if (!device.last_heartbeat) return 0;
-  return (Date.now() - new Date(device.last_heartbeat).getTime()) / 1000;
+function heartbeatAgeSeconds(device: { last_heartbeat_at?: string | null }): number {
+  if (!device.last_heartbeat_at) return 0;
+  return (Date.now() - new Date(device.last_heartbeat_at).getTime()) / 1000;
 }
 
 interface Activity {
@@ -33,20 +28,95 @@ interface Activity {
   tone: "success" | "warning" | "error" | "info" | "neutral";
 }
 
+interface TxRow {
+  id: string;
+  occurred_at: string;
+  status: string;
+  meal_period: string;
+  gross_amount: number;
+  person_name: string;
+  employee_id: string;
+  terminal: string;
+}
+
+interface TerminalRow {
+  id: string;
+  name: string;
+  status: string;
+  last_heartbeat_at: string | null;
+}
+
 export default function DashboardPage() {
   const { toast } = useToast();
-  const metrics = demoDashboardMetrics();
-  const txs = demoTransactions();
+  const [txs, setTxs] = useState<TxRow[]>([]);
+  const [terminals, setTerminals] = useState<TerminalRow[]>([]);
   const licenseCert = useLicenseStore((s) => s.certificate);
   const licenseStatus = useLicenseStore((s) => s.status);
   const licenseDaysLeft = useLicenseStore((s) => s.daysLeft);
   const loadLicense = useLicenseStore((s) => s.load);
+  const loadUsage = useLicenseStore((s) => s.loadUsage);
+  const usage = useLicenseStore((s) => s.usage);
 
   useEffect(() => {
     loadLicense();
-  }, [loadLicense]);
+    loadUsage();
+  }, [loadLicense, loadUsage]);
 
-  const status = licenseCert ? currentStatus(licenseCert) : licenseStatus;
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const [{ data: txData }, { data: termData }] = await Promise.all([
+          insforge.database
+            .from("transactions")
+            .select("id,occurred_at,status,meal_period,gross_amount,person:person_id(first_name,last_name,employee_id),terminal:terminal_id(name)")
+            .order("occurred_at", { ascending: false })
+            .limit(100),
+          insforge.database.from("terminals").select("id,name,status,last_heartbeat_at"),
+        ]);
+        if (!alive) return;
+        setTxs(
+          ((txData as any[]) ?? []).map((t) => ({
+            id: t.id,
+            occurred_at: t.occurred_at,
+            status: t.status,
+            meal_period: t.meal_period,
+            gross_amount: Number(t.gross_amount ?? 0),
+            person_name: t.person?.first_name && t.person?.last_name ? `${t.person.first_name} ${t.person.last_name}` : t.person?.first_name ?? "—",
+            employee_id: t.person?.employee_id ?? "—",
+            terminal: t.terminal?.name ?? "—",
+          })),
+        );
+        setTerminals(((termData as any[]) ?? []).map((d) => ({ id: d.id, name: d.name, status: d.status, last_heartbeat_at: d.last_heartbeat_at ?? null })));
+      } catch (e) {
+        if (alive) {
+          toast({ title: "Could not load dashboard data", description: e instanceof Error ? e.message : "Live data unavailable", variant: "error" });
+        }
+      }
+    })();
+    return () => { alive = false; };
+  }, [toast]);
+
+  const metrics = useMemo(() => {
+    const now = new Date();
+    const today = txs.filter((t) => {
+      const d = new Date(t.occurred_at);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+    });
+    const approved = today.filter((t) => t.status === "approved");
+    const totalDailyCost = approved.reduce((s, t) => s + t.gross_amount, 0);
+    const online = terminals.filter((d) => d.status === "online" || (d.last_heartbeat_at && heartbeatAgeSeconds(d) < 3600));
+    const offlineCount = terminals.length - online.length;
+    return {
+      mealsToday: approved.length,
+      mealsTrend: approved.length > 0 ? `+${approved.length} today` : "0 today",
+      biometricSuccessRate: today.length === 0 ? 100 : Math.round((approved.length / today.length) * 100),
+      activeTerminals: online.length,
+      totalTerminals: terminals.length,
+      offlineCount,
+      totalDailyCost,
+    };
+  }, [txs, terminals]);
 
   const recentTxs = [...txs].sort((a, b) => b.occurred_at.localeCompare(a.occurred_at)).slice(0, 5);
 
@@ -59,6 +129,37 @@ export default function DashboardPage() {
     tone: "success" as const,
   }));
 
+  const weekMeals = useMemo(() => {
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const buckets = new Map<string, number>();
+    for (const t of txs) {
+      const d = new Date(t.occurred_at);
+      const label = days[(d.getDay() + 6) % 7]; // ISO week: Mon first
+      buckets.set(label, (buckets.get(label) ?? 0) + 1);
+    }
+    const now = new Date();
+    return days.map((day, i) => ({
+      day,
+      value: buckets.get(day) ?? 0,
+      isToday: i === (now.getDay() + 6) % 7 && now.getDay() !== 0,
+    }));
+  }, [txs]);
+
+  const biometricEvents = useMemo(
+    () =>
+      txs
+        .filter((t) => t.status !== "approved")
+        .slice(0, 6)
+        .map((t) => ({
+          time: new Date(t.occurred_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+          term: t.terminal,
+          issue: t.status === "denied" ? "Meal Rule Blocked" : t.status.toUpperCase(),
+        })),
+    [txs],
+  );
+
+  const status = licenseCert ? currentStatus(licenseCert) : licenseStatus;
+
   return (
     <div className="flex flex-col gap-4">
       <PageHeader
@@ -70,7 +171,7 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined text-body-lg" aria-hidden>schedule_send</span>
               Schedule Report
             </Button>
-            <Button onClick={() => toast({ title: "Dashboard refreshed", variant: "info" })}>
+            <Button onClick={() => { loadUsage(); toast({ title: "Dashboard refreshed", variant: "info" }); }}>
               <span className="material-symbols-outlined text-body-lg" aria-hidden>refresh</span>
               Refresh
             </Button>
@@ -115,7 +216,9 @@ export default function DashboardPage() {
           icon="payments"
           extra={
             <span className="font-body-md text-body-md text-on-surface-variant">
-              GHS {metrics.totalDailyCost.toLocaleString()} · 12.00 avg / meal
+              {metrics.totalDailyCost > 0 && metrics.mealsToday > 0
+                ? `GHS ${(metrics.totalDailyCost / metrics.mealsToday).toFixed(2)} avg / meal`
+                : "No meals recorded today"}
             </span>
           }
         />
@@ -131,10 +234,10 @@ export default function DashboardPage() {
           </div>
           <div className="relative min-h-[240px] flex-1 p-4">
             <div className="flex h-52 items-end justify-between gap-3 border-b border-l border-outline-variant px-2 pt-4">
-              {WEEK_MEALS.map((d) => {
-                const max = Math.max(...WEEK_MEALS.map((x) => x.value));
+              {weekMeals.map((d) => {
+                const max = Math.max(...weekMeals.map((x) => x.value)) || 1;
                 const h = Math.round((d.value / max) * 100);
-                const isToday = d.day === "Fri";
+                const isToday = d.isToday;
                 return (
                   <div key={d.day} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
                     <span className="font-data-mono text-data-mono text-on-surface-variant">{d.value}</span>
@@ -186,7 +289,7 @@ export default function DashboardPage() {
                 <div className="flex justify-between">
                   <dt className="text-on-surface-variant">Identities</dt>
                   <dd className="font-data-mono text-data-mono text-on-surface">
-                    847 / {licenseCert.limits.identities.toLocaleString()} used
+                    {(usage?.identitiesUsed ?? 0)} / {licenseCert.limits.identities.toLocaleString()} used
                   </dd>
                 </div>
               </dl>
@@ -221,7 +324,7 @@ export default function DashboardPage() {
             <span className="font-data-mono text-data-mono text-on-surface-variant">Auto-refresh 30s</span>
           </div>
           <ul className="divide-y divide-outline-variant">
-            {DEMO_DEVICES.slice(0, 6).map((d) => (
+            {terminals.slice(0, 6).map((d) => (
               <li key={d.id} className="flex items-center justify-between p-3">
                 <span className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
                   <span className={`h-2 w-2 rounded-full ${d.status === "online" ? "bg-success" : "bg-error"}`} />
@@ -256,11 +359,7 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody className="font-data-mono text-data-mono text-on-surface">
-              {[
-                { time: "11:42:05", term: "TERM-CA-01", issue: "Low Qual" },
-                { time: "11:38:12", term: "TERM-NY-02", issue: "No Match" },
-                { time: "11:15:55", term: "TERM-CA-01", issue: "Timeout" },
-              ].map((r) => (
+              {(biometricEvents.length ? biometricEvents : [{ time: "—", term: "—", issue: "No exceptions" }]).map((r) => (
                 <tr key={r.time} className="border-b border-outline-variant hover:bg-surface">
                   <td className="px-3 py-2">{r.time}</td>
                   <td className="px-3 py-2">{r.term}</td>

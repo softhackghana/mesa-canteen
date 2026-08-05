@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   DataTable,
@@ -12,7 +12,8 @@ import {
   useToast,
   type DataTableColumn,
 } from "@/components";
-import { demoAudit, type AdminAuditEntry } from "@/lib/admin-data";
+import { insforge } from "@/lib/insforge";
+import type { AdminAuditEntry } from "@/lib/admin-data";
 
 type Severity = "all" | "info" | "warning" | "error";
 type Category = "all" | "auth" | "enrollment" | "config" | "license" | "data" | "device" | "finance";
@@ -30,14 +31,14 @@ const CATEGORY_LABELS: Record<Category, string> = {
 
 const SEVERITY_TONE = { info: "info", warning: "warning", error: "error" } as const;
 
-/** Derive severity from the audited event (fixture has no severity column). */
+/** Derive severity from the audited event (audit_logs has no severity column). */
 function severityFor(e: { action: string; actorType: string; source: string }): Exclude<Severity, "all"> {
   if (e.action.includes("heartbeat_timeout") || e.action.includes("override")) return "error";
   if (e.action.includes("retry") || e.action.includes("validate")) return "warning";
   return "info";
 }
 
-/** Derive category from the audited entity type (fixture has no category column). */
+/** Derive category from the audited entity type (audit_logs has no category column). */
 function categoryFor(e: { entityType: string; action: string }): Exclude<Category, "all"> {
   const t = e.entityType;
   if (t === "person" || t === "enrollment" || t === "biometric") return "enrollment";
@@ -49,15 +50,56 @@ function categoryFor(e: { entityType: string; action: string }): Exclude<Categor
   return "config";
 }
 
+/** Map an audit_logs row to the UI shape. */
+function toEntry(row: any): AdminAuditEntry {
+  const delta = row.delta == null ? "—" : typeof row.delta === "string" ? row.delta : JSON.stringify(row.delta);
+  return {
+    id: row.id,
+    timestamp: row.occurred_at,
+    actor: row.actor_type === "system" ? "System" : row.actor_type === "terminal" ? row.actor_id ?? "Terminal" : "User",
+    actorType: (row.actor_type ?? "system") as AdminAuditEntry["actorType"],
+    entityType: row.entity_type,
+    entityId: row.entity_id,
+    action: row.action,
+    delta,
+    source: (row.actor_type === "terminal" ? "terminal" : row.actor_type === "system" ? "system" : "portal") as AdminAuditEntry["source"],
+    ip: row.ip_address ?? undefined,
+  };
+}
+
 export default function AuditPage() {
   const { toast } = useToast();
   const [severity, setSeverity] = useState<Severity>("all");
   const [category, setCategory] = useState<Category>("all");
   const [page, setPage] = useState(1);
   const [details, setDetails] = useState<AdminAuditEntry | null>(null);
+  const [entries, setEntries] = useState<AdminAuditEntry[]>([]);
+  const [loading, setLoading] = useState(true);
   const pageSize = 12;
 
-  const entries = useMemo(() => demoAudit(), []);
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await insforge.database
+          .from("audit_logs")
+          .select("id,actor_id,actor_type,entity_type,entity_id,action,delta,ip_address,occurred_at")
+          .order("occurred_at", { ascending: false })
+          .limit(200);
+        if (error) throw error;
+        if (alive) setEntries(((data as any[]) ?? []).map(toEntry));
+      } catch (e) {
+        if (alive) {
+          toast({ title: "Could not load audit log", description: e instanceof Error ? e.message : "Live data unavailable", variant: "error" });
+          setEntries([]);
+        }
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, [toast]);
 
   const filtered = useMemo(() => {
     return entries.filter((e) => {
@@ -211,6 +253,7 @@ export default function AuditPage() {
         columns={columns}
         data={paged}
         rowKey={(e) => e.id}
+        loading={loading}
         defaultSort={{ key: "occurred_at", direction: "desc" }}
         pagination={{ page, pageSize, total: filtered.length, onPageChange: setPage }}
       />

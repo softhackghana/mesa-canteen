@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   DataTable,
@@ -10,8 +10,31 @@ import {
   useToast,
   type DataTableColumn,
 } from "@/components";
-import { demoTransactions, type AdminTransaction } from "@/lib/admin-data";
+import { insforge } from "@/lib/insforge";
+import type { AdminTransaction } from "@/lib/admin-data";
 import { buildSpreadsheetML, downloadXls } from "@/lib/spreadsheetml";
+
+/** Map a transactions row (with person/terminal joins) to the UI shape. */
+function toTx(row: any): AdminTransaction {
+  const person = row.person ?? {};
+  return {
+    id: row.id,
+    transaction_ref: row.transaction_ref,
+    person_name: person.first_name && person.last_name ? `${person.first_name} ${person.last_name}` : person.first_name ?? "—",
+    employee_id: person.employee_id ?? "—",
+    department: person.department?.name ?? "—",
+    cost_centre: person.cost_centre?.name ?? "—",
+    site: row.site?.name ?? row.terminal?.site?.name ?? "—",
+    meal_period: (row.meal_period ?? "lunch") as AdminTransaction["meal_period"],
+    status: (row.status ?? "approved") as AdminTransaction["status"],
+    auth_method: (row.auth_method ?? "biometric") as AdminTransaction["auth_method"],
+    subsidy_amount: Number(row.subsidy_amount ?? 0),
+    employee_amount: Number(row.employee_amount ?? 0),
+    gross_amount: Number(row.gross_amount ?? 0),
+    occurred_at: row.occurred_at,
+    terminal: row.terminal?.name ?? "—",
+  };
+}
 
 type ReportKind =
   | "consolidated"
@@ -70,7 +93,28 @@ export default function ReportsPage() {
   const [department, setDepartment] = useState("all");
   const [running, setRunning] = useState<ReportKind | null>(null);
 
-  const txs = useMemo(() => demoTransactions(), []);
+  const [txs, setTxs] = useState<AdminTransaction[]>([]);
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const { data, error } = await insforge.database
+          .from("transactions")
+          .select(
+            "id,transaction_ref,occurred_at,status,meal_period,auth_method,subsidy_amount,employee_amount,gross_amount,person:person_id(first_name,last_name,employee_id,department:department_id(name),cost_centre:cost_centre_id(name)),site:site_id(name),terminal:terminal_id(name)",
+          )
+          .order("occurred_at", { ascending: false });
+        if (error) throw error;
+        if (alive) setTxs(((data as any[]) ?? []).map(toTx));
+      } catch (e) {
+        if (alive) {
+          toast({ title: "Could not load transactions", description: e instanceof Error ? e.message : "Live data unavailable", variant: "error" });
+          setTxs([]);
+        }
+      }
+    })();
+    return () => { alive = false; };
+  }, [toast]);
   const consolidated = useMemo(() => {
     const filtered = txs.filter((t) => {
       if (site !== "all" && t.site !== site) return false;
@@ -413,7 +457,7 @@ function EmployeeDailyTable({ txs, site, department }: { txs: AdminTransaction[]
           </table>
         </div>
         <div className="flex items-center justify-between border-t border-outline-variant p-4">
-          <span className="font-body-md text-body-md text-on-surface-variant">Showing 1 to {rows.length} of {Math.max(rows.length, 12)} entries</span>
+          <span className="font-body-md text-body-md text-on-surface-variant">Showing 1 to {rows.length} of {rows.length} entries</span>
           <div className="flex items-center gap-2">
             <Button variant="secondary" size="sm" disabled>Previous</Button>
             <Button variant="secondary" size="sm" disabled>Next</Button>
@@ -421,8 +465,8 @@ function EmployeeDailyTable({ txs, site, department }: { txs: AdminTransaction[]
         </div>
       </div>
       <p className="flex items-center gap-2 font-data-mono text-data-mono text-on-surface-variant">
-        <StatusPill status="Sample data" tone="neutral" />
-        Replace with live transaction data when the data worker lands.
+        <StatusPill status="Live data" tone="success" />
+        Figures drawn from the transactions ledger in the selected date range.
       </p>
     </section>
   );
