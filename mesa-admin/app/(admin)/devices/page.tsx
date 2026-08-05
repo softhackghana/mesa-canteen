@@ -26,6 +26,11 @@ interface LiveTerminal extends Device {
   outlet: string;
 }
 
+function relativeTimeSeconds(iso: string | undefined): number {
+  if (!iso) return Infinity;
+  return Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 1000));
+}
+
 function relativeTime(iso: string | undefined): string {
   if (!iso) return "never";
   const s = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 1000));
@@ -33,12 +38,6 @@ function relativeTime(iso: string | undefined): string {
   if (s < 3600) return `${Math.floor(s / 60)}m ago`;
   if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
   return `${Math.floor(s / 86400)}d ago`;
-}
-
-function TerminalStatus({ status }: { status: LiveTerminal["status"] }) {
-  if (status === "online") return <StatusPill status="Online" tone="success" />;
-  if (status === "offline") return <StatusPill status="Offline" tone="error" />;
-  return <StatusPill status="Error" tone="warning" />;
 }
 
 export default function DevicesPage() {
@@ -157,7 +156,11 @@ export default function DevicesPage() {
       key: "heartbeat",
       header: "Last Heartbeat",
       sortable: true,
-      render: (d) => <span className="font-data-mono text-data-mono text-on-surface-variant">{relativeTime(d.last_heartbeat)}</span>,
+      render: (d) => {
+        const age = d.last_heartbeat ? relativeTimeSeconds(d.last_heartbeat) : Infinity;
+        const isRecent = age < 300;
+        return <span className={`font-body-md text-body-md ${isRecent ? "text-on-surface-variant" : "text-error"}`}>{relativeTime(d.last_heartbeat)}</span>;
+      },
     },
     {
       key: "scanner",
@@ -190,14 +193,18 @@ export default function DevicesPage() {
       key: "status",
       header: "Status",
       sortable: true,
-      render: (d) => (
-        <span className="flex flex-col items-start gap-1">
-          <TerminalStatus status={d.status} />
-          {d.syncBacklog > 0 && (
-            <span className="font-data-mono text-data-mono text-warning">{d.syncBacklog} queued</span>
-          )}
-        </span>
-      ),
+      render: (d) => {
+        const age = d.last_heartbeat ? relativeTimeSeconds(d.last_heartbeat) : Infinity;
+        const live = age < 300;
+        return (
+          <span className="flex flex-col items-start gap-1">
+            <StatusPill status={live ? "Online" : "Offline"} tone={live ? "success" : "error"} />
+            {d.syncBacklog > 0 && (
+              <span className="font-body-md text-body-md text-warning">{d.syncBacklog} queued</span>
+            )}
+          </span>
+        );
+      },
     },
     {
       key: "actions",
@@ -277,7 +284,7 @@ export default function DevicesPage() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1">
               <Label>Terminal Name</Label>
-              <Input placeholder="e.g. TERM-CA-03" className="font-data-mono text-data-mono" />
+              <Input placeholder="e.g. TERM-CA-03" />
             </div>
             <div className="flex flex-col gap-1">
               <Label>Select Outlet</Label>
@@ -294,8 +301,8 @@ export default function DevicesPage() {
             </div>
             <div className="flex flex-col gap-1">
               <Label>IP Address (optional)</Label>
-              <Input placeholder="10.20.30.46" className="font-data-mono text-data-mono" />
-              <p className="font-data-mono text-data-mono text-on-surface-variant">
+              <Input placeholder="10.20.30.46" />
+              <p className="font-body-md text-body-md text-on-surface-variant">
                 If provided, terminal can only connect from this IP.
               </p>
             </div>
@@ -316,7 +323,7 @@ export default function DevicesPage() {
           <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
             <Label>Device Authentication Token</Label>
             <div className="mt-1 flex items-center gap-2">
-              <Input readOnly value="AB89-XYZ2-99KL-MESA" className="font-data-mono text-data-mono" />
+              <Input readOnly value="AB89-XYZ2-99KL-MESA" />
               <Button
                 variant="secondary" size="sm"
                 onClick={() => toast({ title: "Token copied to clipboard", variant: "info" })}
@@ -324,7 +331,7 @@ export default function DevicesPage() {
                 Copy
               </Button>
             </div>
-            <p className="mt-1 font-data-mono text-data-mono text-on-surface-variant">
+            <p className="mt-1 font-body-md text-body-md text-on-surface-variant">
               Present this token on the terminal during first-time pairing.
             </p>
           </div>

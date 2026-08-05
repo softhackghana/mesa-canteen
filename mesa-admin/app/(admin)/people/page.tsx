@@ -47,7 +47,9 @@ function countFor(f: Filter): number {
 }
 
 function initials(p: AdminPerson): string {
-  return `${p.first_name[0]}${p.last_name[0]}`.toUpperCase();
+  const first = p.first_name?.[0] ?? "";
+  const last = p.last_name?.[0] ?? "";
+  return `${first}${last}`.toUpperCase();
 }
 
 export default function PeoplePage() {
@@ -144,7 +146,7 @@ export default function PeoplePage() {
       align: "right",
       mono: false,
       render: (p) => (
-        <div className="flex items-center justify-end gap-1">
+        <div className="flex items-center justify-end gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -328,14 +330,14 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
               className="block w-full font-body-md text-body-md text-on-surface-variant file:mr-3 file:rounded file:border file:border-outline-variant file:bg-surface-container file:px-3 file:py-1.5 file:font-body-md file:text-body-md file:text-on-surface"
               onChange={(e) => handleFile(e.target.files?.[0])}
             />
-            {fileName && <span className="shrink-0 font-data-mono text-data-mono text-on-surface-variant">{fileName}</span>}
+            {fileName && <span className="shrink-0 font-body-md text-body-md text-on-surface-variant">{fileName}</span>}
           </div>
           <textarea
             value={csv}
             onChange={(e) => setCsv(e.target.value)}
             rows={5}
             placeholder="Employee ID,First Name,Last Name,Department,Role&#10;E1001,Alice,Smith,Engineering,Cashier&#10;E1001,Bob,Johnson,Operations,Supervisor&#10;E1003,Charlie,Brown,Logistics,Cashier"
-            className="w-full rounded border border-outline bg-surface-container-lowest px-3 py-2 font-data-mono text-data-mono text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full rounded border border-outline bg-surface-container-lowest px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <div className="flex justify-end">
             <Button variant="secondary" size="sm" onClick={runPreview}>
@@ -374,7 +376,7 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
               <span className="font-nav-item text-nav-item text-on-surface">Preview (First 5 Rows)</span>
             </div>
             <table className="w-full text-left">
-              <thead className="bg-surface font-data-mono text-data-mono uppercase text-on-surface-variant">
+              <thead className="bg-surface font-label-md text-label-md uppercase text-on-surface-variant">
                 <tr className="border-b border-outline-variant">
                   <th className="px-3 py-2">Employee ID</th>
                   <th className="px-3 py-2">First Name</th>
@@ -382,7 +384,7 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
                   <th className="px-3 py-2">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-outline-variant font-data-mono text-data-mono text-on-surface">
+              <tbody className="divide-y divide-outline-variant font-body-md text-body-md text-on-surface">
                 {preview.map((r, i) => (
                   <tr key={i} className={r.status === "Duplicate ID" ? "bg-error-container/30" : ""}>
                     <td className="px-3 py-2">{r.employeeId}</td>
@@ -401,7 +403,7 @@ function BulkImportDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
           </div>
         )}
 
-        <p className="font-data-mono text-data-mono text-on-surface-variant">
+        <p className="font-body-md text-body-md text-on-surface-variant">
           Employee IDs must be unique across active and inactive records (FR-PM-004).
         </p>
       </div>
@@ -519,7 +521,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
             <dl className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-3">
               {details.map(([k, v]) => (
                 <div key={k} className="flex flex-col">
-                  <dt className="font-data-mono text-data-mono uppercase tracking-wider text-on-surface-variant">{k}</dt>
+                  <dt className="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">{k}</dt>
                   <dd className="font-body-md text-body-md text-on-surface">{v}</dd>
                 </div>
               ))}
@@ -560,7 +562,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
             <div className="flex items-center justify-between rounded-lg border border-outline-variant p-3">
               <div>
                 <p className="font-body-md text-body-md font-medium text-on-surface">Secondary Credential</p>
-                <p className="font-data-mono text-data-mono text-on-surface-variant">
+                <p className="font-body-md text-body-md text-on-surface-variant">
                   {p.credential === "None" ? "No fallback credential issued" : `${p.credential} · ${p.credentialValue}`}
                 </p>
               </div>
@@ -587,7 +589,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
               <div key={h.at} className="flex justify-between gap-4 rounded-lg border border-outline-variant p-3">
                 <div>
                   <p className="font-body-md text-body-md font-medium text-on-surface">{h.what}</p>
-                  <p className="font-data-mono text-data-mono text-on-surface-variant">{h.detail}</p>
+                  <p className="font-body-md text-body-md text-on-surface-variant">{h.detail}</p>
                 </div>
                 <span className="shrink-0 font-data-mono text-data-mono text-on-surface-variant">{h.at}</span>
               </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PosPrimaryAction } from "../_components/PosActions";
 import { Icon } from "../_components/Icon";
 import { DEMO_OPERATOR, DEMO_SUPERVISOR } from "@/lib/demo-data";
 import { logAudit } from "@/lib/audit";
@@ -77,10 +78,10 @@ export default function PosLogin() {
 
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-4 w-full z-10">
-      <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 flex flex-col items-center shadow-[0_4px_20px_rgba(23,28,31,0.04)] w-full max-w-[420px]">
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 flex flex-col items-center shadow-overlay w-full max-w-[420px]">
         <div className="mb-8 flex flex-col items-center text-center gap-2">
-          <div className="text-[24px] leading-6 font-bold text-primary tracking-tight">MESA</div>
-          <h1 className="text-[28px] leading-8 text-on-surface">Operator Sign-In</h1>
+          <div className="text-display-md font-display-md text-primary tracking-tight">MESA</div>
+          <h1 className="text-display-md font-display-md text-on-surface">Operator Sign-In</h1>
         </div>
 
         {/* PIN dots */}
@@ -117,7 +118,7 @@ export default function PosLogin() {
               <button
                 key={i}
                 onClick={() => press(k)}
-                className="h-[72px] bg-surface-container rounded-lg text-[24px] leading-6 text-on-surface hover:bg-surface-container-high hover:border-outline-variant border border-transparent transition-all active:scale-95 flex items-center justify-center"
+                className="h-[72px] bg-surface-container rounded-lg text-display-md font-display-md text-on-surface hover:bg-surface-container-high hover:border-outline-variant border border-transparent transition-all active:scale-95 flex items-center justify-center"
               >
                 {k}
               </button>
@@ -126,25 +127,19 @@ export default function PosLogin() {
         </div>
 
         {/* Fingerprint login */}
-        <div className="flex flex-col items-center justify-center cursor-pointer group" onClick={fpLogin}>
-          <div
-            className={cn(
-              "w-16 h-16 rounded-full bg-primary-container flex items-center justify-center mb-3 group-hover:bg-primary transition-colors duration-300",
-              fpActive && "animate-pulse bg-primary",
-            )}
-          >
-            <Icon
-              name="fingerprint"
-              className="text-on-primary-container group-hover:text-on-primary transition-colors duration-300"
-              style={{ fontSize: 32 }}
-            />
-          </div>
-          <span className="text-sm text-on-surface-variant group-hover:text-primary transition-colors">
-            {fpActive ? "Verifying…" : "Scan Fingerprint to Login"}
-          </span>
-        </div>
+        <PosPrimaryAction
+          onClick={fpLogin}
+          loading={fpActive}
+          disabled={fpActive}
+          icon="fingerprint"
+          className="w-full"
+        >
+          {fpActive ? "Verifying…" : "Scan Fingerprint to Login"}
+        </PosPrimaryAction>
 
-        <p className="font-mono text-[11px] text-on-surface-variant mt-6">Demo PINs: 1234 (operator) · 4829 (supervisor)</p>
+        <p className="text-center text-kiosk-label font-kiosk-label text-on-surface-variant mt-6">
+          Demo PINs: 1234 (operator) · 4829 (supervisor)
+        </p>
       </div>
     </main>
   );

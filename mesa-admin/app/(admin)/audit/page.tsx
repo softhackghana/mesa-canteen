@@ -5,6 +5,7 @@ import {
   Button,
   DataTable,
   Dialog,
+  EmptyState,
   FilterChips,
   PageHeader,
   Select,
@@ -119,10 +120,10 @@ export default function AuditPage() {
       sortable: true,
       render: (e) => (
         <span className="flex flex-col">
-          <span className="font-data-mono text-data-mono text-on-surface">
+          <span className="font-body-md text-body-md text-on-surface">
             {new Date(e.timestamp).toLocaleString([], { dateStyle: "short", timeStyle: "short" })}
           </span>
-          <span className="font-data-mono text-data-mono text-on-surface-variant">{e.timestamp.split("T")[1]?.slice(0, 8)} UTC</span>
+          <span className="font-body-md text-body-md text-on-surface-variant">{e.timestamp.split("T")[1]?.slice(0, 8)} UTC</span>
         </span>
       ),
     },
@@ -133,7 +134,7 @@ export default function AuditPage() {
       render: (e) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md text-on-surface">{e.actor}</span>
-          <span className="font-data-mono text-data-mono text-on-surface-variant">{e.actorType} · {e.source}</span>
+          <span className="font-body-md text-body-md text-on-surface-variant">{e.actorType} · {e.source}</span>
         </span>
       ),
     },
@@ -150,7 +151,7 @@ export default function AuditPage() {
       header: "Action",
       mono: true,
       sortable: true,
-      render: (e) => <span className="font-data-mono text-data-mono text-on-surface">{e.action}</span>,
+      render: (e) => <span className="font-body-md text-body-md text-on-surface">{e.action}</span>,
     },
     {
       key: "target",
@@ -242,10 +243,10 @@ export default function AuditPage() {
           options={Object.entries(CATEGORY_LABELS).map(([value, label]) => ({ value, label }))}
           onChange={(v) => { setCategory(v as Category); setPage(1); }}
         />
-        <span className="font-data-mono text-data-mono text-on-surface-variant">
+        <span className="font-body-md text-body-md text-on-surface-variant">
           {filtered.length} events in view · retention 24 months
         </span>
-        <span className="ml-auto font-data-mono text-data-mono text-on-surface-variant">
+        <span className="ml-auto font-body-md text-body-md text-on-surface-variant">
           <span className="material-symbols-outlined align-middle text-body-md" aria-hidden>lock</span> SHA-256 hash-chained
         </span>
       </div>
@@ -257,6 +258,13 @@ export default function AuditPage() {
         loading={loading}
         defaultSort={{ key: "occurred_at", direction: "desc" }}
         pagination={{ page, pageSize, total: filtered.length, onPageChange: setPage }}
+        emptyState={
+          <EmptyState
+            title="No audit events"
+            description="Try relaxing the severity or category filters."
+            icon="history"
+          />
+        }
       />
 
       <Dialog
@@ -279,20 +287,20 @@ export default function AuditPage() {
                 ["Severity", severityFor(details)],
               ] as const).map(([k, v]) => (
                 <div key={k} className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-                  <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">{k}</dt>
+                  <dt className="font-label-md text-label-md uppercase text-on-surface-variant">{k}</dt>
                   <dd className="mt-0.5 font-body-md text-body-md text-on-surface">{v}</dd>
                 </div>
               ))}
             </dl>
             <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-              <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Delta / Notes</dt>
-              <dd className="mt-0.5 break-words font-data-mono text-data-mono text-on-surface">{details.delta}</dd>
+              <dt className="font-label-md text-label-md uppercase text-on-surface-variant">Delta / Notes</dt>
+              <dd className="mt-0.5 break-words font-body-md text-body-md text-on-surface">{details.delta}</dd>
             </div>
             <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-              <dt className="font-data-mono text-data-mono uppercase text-on-surface-variant">Source IP</dt>
-              <dd className="mt-0.5 font-data-mono text-data-mono text-on-surface">{details.ip ?? "n/a (terminal/system)"}</dd>
+              <dt className="font-label-md text-label-md uppercase text-on-surface-variant">Source IP</dt>
+              <dd className="mt-0.5 font-body-md text-body-md text-on-surface">{details.ip ?? "n/a (terminal/system)"}</dd>
             </div>
-            <p className="font-data-mono text-data-mono text-on-surface-variant">
+            <p className="font-body-md text-body-md text-on-surface-variant">
               Each entry hashes the previous entry&apos;s hash. Tampering breaks the chain and is flagged on the next verification.
             </p>
           </div>

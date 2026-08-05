@@ -43,7 +43,7 @@ export {
   type DropdownMenuProps,
   type DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-export { Skeleton } from "@/components/ui/skeleton";
+export { RadioGroup } from "@/components/ui/radio-group";
 export {
   Toast,
   ToastProvider,

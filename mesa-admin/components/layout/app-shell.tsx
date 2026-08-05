@@ -210,7 +210,7 @@ export function AppShell({
         )}
 
         {/* Main content */}
-        <main className="flex-1 p-6">
+        <main className="page-container flex-1 p-6">
           {children}
         </main>
       </div>

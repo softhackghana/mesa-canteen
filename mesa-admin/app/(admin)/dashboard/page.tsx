@@ -107,7 +107,7 @@ export default function DashboardPage() {
     });
     const approved = today.filter((t) => t.status === "approved");
     const totalDailyCost = approved.reduce((s, t) => s + t.gross_amount, 0);
-    const online = terminals.filter((d) => d.status === "online" || (d.last_heartbeat_at && heartbeatAgeSeconds(d) < 3600));
+    const online = terminals.filter((d) => d.last_heartbeat_at && heartbeatAgeSeconds({ last_heartbeat_at: d.last_heartbeat_at }) < 300);
     const offlineCount = terminals.length - online.length;
     return {
       mealsToday: approved.length,
@@ -243,13 +243,13 @@ export default function DashboardPage() {
                 const isToday = d.isToday;
                 return (
                   <div key={d.day} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
-                    <span className="font-data-mono text-data-mono text-on-surface-variant">{d.value}</span>
+                    <span className="font-body-md text-body-md text-on-surface-variant">{d.value}</span>
                     <div
                       className={isToday ? "w-full max-w-10 rounded-t bg-primary" : "w-full max-w-10 rounded-t bg-primary/35"}
                       style={{ height: `${h}%` }}
                       title={`${d.day}: ${d.value} meals`}
                     />
-                    <span className="pb-1 font-data-mono text-data-mono text-on-surface-variant">{d.day}</span>
+                    <span className="pb-1 font-body-md text-body-md text-on-surface-variant">{d.day}</span>
                   </div>
                 );
               })}
@@ -270,7 +270,7 @@ export default function DashboardPage() {
                   status={status === "active" ? "Active" : status === "grace" ? "Grace Period" : "Expired"}
                   tone={status === "active" ? "success" : "error"}
                 />
-                <span className="font-data-mono text-data-mono text-on-surface-variant">Tier: {licenseCert.tier}</span>
+                <span className="font-body-md text-body-md text-on-surface-variant">Tier: {licenseCert.tier}</span>
               </div>
               <dl className="mt-4 space-y-2 font-body-md text-body-md">
                 <div className="flex justify-between">
@@ -301,7 +301,7 @@ export default function DashboardPage() {
                   <p className="font-nav-item text-nav-item text-on-warning-container">
                     {licenseDaysLeft <= 0 ? "License expired" : `Renewal due in ${licenseDaysLeft} days`}
                   </p>
-                  <Link href="/license" className="mt-1 inline-block font-data-mono text-data-mono text-primary hover:underline">
+                  <Link href="/license" className="mt-1 inline-block font-body-md text-body-md text-primary hover:underline">
                     Renew now →
                   </Link>
                 </div>
@@ -324,25 +324,27 @@ export default function DashboardPage() {
         <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
           <div className="flex items-center justify-between border-b border-outline-variant bg-surface-bright p-4">
             <h2 className="font-nav-item text-nav-item text-on-surface">Terminal Health</h2>
-            <span className="font-data-mono text-data-mono text-on-surface-variant">Auto-refresh 30s</span>
+            <span className="font-body-md text-body-md text-on-surface-variant">Auto-refresh 30s</span>
           </div>
           <ul className="divide-y divide-outline-variant">
-            {terminals.slice(0, 6).map((d) => (
-              <li key={d.id} className="flex items-center justify-between p-3">
-                <span className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
-                  <span className={`h-2 w-2 rounded-full ${d.status === "online" ? "bg-success" : "bg-error"}`} />
-                  {d.name}
-                </span>
-                <span className={`font-data-mono text-data-mono ${d.status === "online" ? "text-on-surface-variant" : "text-error"}`}>
-                  {d.status === "online"
-                    ? `${Math.max(1, Math.round(heartbeatAgeSeconds(d)))}s ago`
-                    : d.status.toUpperCase()}
-                </span>
-              </li>
-            ))}
+            {terminals.slice(0, 6).map((d) => {
+              const age = d.last_heartbeat_at ? heartbeatAgeSeconds({ last_heartbeat_at: d.last_heartbeat_at }) : Infinity;
+              const isOnline = age < 300;
+              return (
+                <li key={d.id} className="flex items-center justify-between p-3">
+                  <span className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
+                    <span className={`h-2 w-2 rounded-full ${isOnline ? "bg-success" : "bg-error"}`} />
+                    {d.name}
+                  </span>
+                  <span className={`font-body-md text-body-md ${isOnline ? "text-on-surface-variant" : "text-error"}`}>
+                    {isOnline ? `${Math.max(1, Math.round(age))}s ago` : "OFFLINE"}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
           <div className="border-t border-outline-variant p-4">
-            <Link href="/devices" className="font-data-mono text-data-mono text-primary hover:underline">
+            <Link href="/devices" className="font-body-md text-body-md text-primary hover:underline">
               View all terminals →
             </Link>
           </div>
@@ -355,13 +357,13 @@ export default function DashboardPage() {
           </div>
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-outline-variant bg-surface font-data-mono text-data-mono uppercase text-on-surface-variant">
+              <tr className="border-b border-outline-variant bg-surface font-body-md text-body-md uppercase text-on-surface-variant">
                 <th className="px-3 py-2">Time</th>
                 <th className="px-3 py-2">Terminal</th>
                 <th className="px-3 py-2">Issue</th>
               </tr>
             </thead>
-            <tbody className="font-data-mono text-data-mono text-on-surface">
+            <tbody className="font-body-md text-body-md text-on-surface">
               {(biometricEvents.length ? biometricEvents : [{ time: "—", term: "—", issue: "No exceptions" }]).map((r) => (
                 <tr key={r.time} className="border-b border-outline-variant hover:bg-surface">
                   <td className="px-3 py-2">{r.time}</td>
@@ -377,7 +379,7 @@ export default function DashboardPage() {
         <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
           <div className="flex items-center justify-between border-b border-outline-variant bg-surface-bright p-4">
             <h3 className="font-nav-item text-nav-item text-on-surface">Recent Activity</h3>
-            <Link href="/audit" className="font-data-mono text-data-mono text-primary hover:underline">
+            <Link href="/audit" className="font-body-md text-body-md text-primary hover:underline">
               View All
             </Link>
           </div>
@@ -389,7 +391,7 @@ export default function DashboardPage() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-body-md text-body-md font-medium text-on-surface">{a.text}</p>
-                  <p className="truncate font-data-mono text-data-mono text-on-surface-variant">{a.sub}</p>
+                  <p className="truncate font-body-md text-body-md text-on-surface-variant">{a.sub}</p>
                 </div>
                 <span className="font-data-mono text-data-mono text-on-surface-variant">{a.time}</span>
               </li>

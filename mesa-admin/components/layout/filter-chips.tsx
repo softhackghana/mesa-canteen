@@ -52,7 +52,7 @@ export function FilterChips({
           >
             {chip.label}
             {chip.count !== undefined && (
-              <span className={cn("ml-1.5 font-data-mono text-data-mono", active ? "text-inherit" : "text-on-surface-variant")}>
+              <span className={cn("ml-1.5 font-body-md text-body-md", active ? "text-inherit" : "text-on-surface-variant")}>
                 {chip.count}
               </span>
             )}

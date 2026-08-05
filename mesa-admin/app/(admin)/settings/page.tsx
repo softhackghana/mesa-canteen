@@ -7,6 +7,7 @@ import {
   Input,
   Label,
   PageHeader,
+  RadioGroup,
   Select,
   StatusPill,
   Switch,
@@ -37,6 +38,7 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [paperSize, setPaperSize] = useState("80mm");
 
   const save = () => {
     setSaved(true);
@@ -83,7 +85,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between rounded-lg border border-outline-variant p-3">
             <div>
               <p className="font-body-md text-body-md font-medium text-on-surface">Automatic Receipt Printing</p>
-              <p className="font-data-mono text-data-mono text-on-surface-variant">Print a thermal receipt after each transaction</p>
+              <p className="font-body-md text-body-md text-on-surface-variant">Print a thermal receipt after each transaction</p>
             </div>
             <Switch checked={printEnabled} onCheckedChange={setPrintEnabled} aria-label="Automatic receipt printing" />
           </div>
@@ -102,20 +104,21 @@ export default function SettingsPage() {
           </div>
 
           <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-            <p className="font-nav-item text-nav-item text-on-surface">Paper Size</p>
-            <div className="mt-2 flex flex-col gap-2">
-              {["80mm (default)", "58mm (compact)"].map((size) => (
-                <label key={size} className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
-                  <input type="radio" name="paper" defaultChecked={size === "80mm (default)"} className="accent-[var(--color-primary)]" />
-                  {size}
-                </label>
-              ))}
-            </div>
+            <p className="font-nav-item text-nav-item text-on-surface mb-2">Paper Size</p>
+            <RadioGroup
+              name="paper-size"
+              value={paperSize}
+              options={[
+                { value: "80mm", label: "80mm (default)" },
+                { value: "58mm", label: "58mm (compact)" },
+              ]}
+              onChange={setPaperSize}
+            />
           </div>
 
           <div className="flex items-center gap-2 rounded-lg border border-outline-variant p-3">
             <StatusPill status={saved ? "SAVED" : "UNSAVED CHANGES"} tone={saved ? "success" : "warning"} />
-            <span className="font-data-mono text-data-mono text-on-surface-variant">
+            <span className="font-body-md text-body-md text-on-surface-variant">
               {savedAt ? `Last saved ${savedAt}` : "Not saved yet"}
             </span>
           </div>
@@ -128,7 +131,7 @@ export default function SettingsPage() {
               <h2 className="font-headline-md text-headline-md text-on-surface">Site Print Overrides</h2>
               <p className="font-body-md text-body-md text-on-surface-variant">Per-site template and printer settings.</p>
             </div>
-            <span className="font-data-mono text-data-mono text-on-surface-variant">{overrides.length} sites configured</span>
+            <span className="font-body-md text-body-md text-on-surface-variant">{overrides.length} sites configured</span>
           </div>
 
           <div className="flex flex-col divide-y divide-outline-variant overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
@@ -140,7 +143,7 @@ export default function SettingsPage() {
                   />
                   <div className="min-w-0">
                     <p className="truncate font-body-md text-body-md font-medium text-on-surface">{o.site}</p>
-                    <p className="font-data-mono text-data-mono text-on-surface-variant">
+                    <p className="font-body-md text-body-md text-on-surface-variant">
                       {o.printer} · {o.template}
                     </p>
                   </div>

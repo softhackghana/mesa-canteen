@@ -17,6 +17,7 @@ export default function LoginPage() {
   const error = useAuthStore((s) => s.error);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +55,9 @@ export default function LoginPage() {
           </span>
           Sign in with SSO
         </button>
+        <p className="text-center font-body-md text-body-md text-on-surface-variant">
+          SSO integration is planned for Phase 3. Use credentials below.
+        </p>
 
         <div className="my-8 flex items-center">
           <div className="flex-grow border-t border-outline-variant" />
@@ -94,11 +98,18 @@ export default function LoginPage() {
               id="password"
               name="password"
               required
-              type="password"
+              type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="mt-1 self-end font-body-md text-body-md text-primary hover:underline"
+            >
+              {showPassword ? "Hide password" : "Show password"}
+            </button>
           </div>
 
           {error && (
@@ -116,7 +127,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-8 text-center font-data-mono text-data-mono uppercase tracking-wider text-on-surface-variant">
+        <p className="mt-8 text-center font-body-md text-body-md text-on-surface-variant">
           MESA v1.0 — Secured by TLS 1.3
         </p>
       </div>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   DataTable,
+  Label,
   PageHeader,
   Select,
   StatusPill,
@@ -328,9 +329,15 @@ ${consolidated
           ]} onChange={setDepartment} />
         </div>
         <div className="flex items-center gap-2 pb-1">
-          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
-          <span className="font-body-md text-body-md text-on-surface-variant">→</span>
-          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="report-from">From</Label>
+            <input id="report-from" type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-body-md text-body-md focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
+          </div>
+          <span className="font-body-md text-body-md text-on-surface-variant pt-6">→</span>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="report-to">To</Label>
+            <input id="report-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} className="h-10 rounded border border-outline bg-surface-container-lowest px-2 font-body-md text-body-md focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
+          </div>
         </div>
       </div>
 
@@ -367,7 +374,7 @@ ${consolidated
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="font-headline-md text-headline-md text-on-surface">Consolidated Meals per Employee</h2>
-          <div className="flex gap-4 font-data-mono text-data-mono text-on-surface-variant">
+          <div className="flex gap-4 font-body-md text-body-md text-on-surface-variant">
             <span>{totals.employees} Total Employees</span>
             <span>{totals.meals} Total Meals</span>
             <span>GHS {totals.cost.toFixed(2)} Total Cost</span>
@@ -383,22 +390,34 @@ ${consolidated
       </section>
 
       {/* Daily per-employee table */}
-      <EmployeeDailyTable txs={txs} site={site} department={department} />
+      <EmployeeDailyTable txs={txs} site={site} department={department} loading={txs.length === 0} />
     </div>
   );
 }
 
-function EmployeeDailyTable({ txs, site, department }: { txs: AdminTransaction[]; site: string; department: string }) {
+type DailyRow = {
+  key: string;
+  name: string;
+  emp: string;
+  dept: string;
+  cc: string;
+  days: number[];
+  total: number;
+  amount: number;
+};
+
+function EmployeeDailyTable({ txs, site, department, loading }: { txs: AdminTransaction[]; site: string; department: string; loading?: boolean }) {
   const rows = useMemo(() => {
     const filtered = txs.filter((t) => {
       if (site !== "all" && t.site !== site) return false;
       if (department !== "all" && t.department !== department) return false;
       return true;
     });
-    const byEmp = new Map<string, { name: string; emp: string; dept: string; cc: string; days: number[]; total: number; amount: number }>();
+    const byEmp = new Map<string, DailyRow>();
     for (const t of filtered) {
       const day = new Date(t.occurred_at).getUTCDay();
       const row = byEmp.get(t.employee_id) ?? {
+        key: t.employee_id,
         name: t.person_name,
         emp: t.employee_id,
         dept: t.department,
@@ -417,56 +436,42 @@ function EmployeeDailyTable({ txs, site, department }: { txs: AdminTransaction[]
 
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  const columns: DataTableColumn<DailyRow>[] = [
+    {
+      key: "employee",
+      header: "Employee",
+      mono: false,
+      render: (r) => (
+        <span className="flex flex-col">
+          <span className="font-body-md text-body-md font-medium text-on-surface">{r.name}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{r.emp}</span>
+        </span>
+      ),
+    },
+    { key: "dept", header: "Department", mono: false },
+    { key: "cc", header: "Cost Centre", mono: true },
+    ...dayNames.map((d, i) => ({
+      key: `day-${i}`,
+      header: d,
+      align: "center" as const,
+      render: (r: DailyRow) =>
+        r.days[i] ? <span className="font-body-md text-body-md text-on-surface">{r.days[i]}</span> : <span className="text-on-surface-variant/40">·</span>,
+    })),
+    { key: "total", header: "Total Meals", align: "right", render: (r) => r.total },
+    { key: "amount", header: "Total Amount", align: "right", render: (r) => `GHS ${r.amount.toFixed(2)}` },
+  ];
+
   return (
     <section className="flex flex-col gap-4">
       <h2 className="font-headline-md text-headline-md text-on-surface">Daily Breakdown</h2>
-      <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-lowest">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-surface font-data-mono text-data-mono uppercase text-on-surface-variant">
-              <tr className="border-b border-outline-variant">
-                <th className="px-3 py-3">Employee</th>
-                <th className="px-3 py-3">Department</th>
-                <th className="px-3 py-3">Cost Centre</th>
-                {dayNames.map((d) => (
-                  <th key={d} className="px-2 py-3 text-center">{d}</th>
-                ))}
-                <th className="px-3 py-3 text-right">Total Meals</th>
-                <th className="px-3 py-3 text-right">Total Amount</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-outline-variant">
-              {rows.map((r) => (
-                <tr key={r.emp} className="hover:bg-surface-bright">
-                  <td className="px-3 py-3">
-                    <span className="flex flex-col">
-                      <span className="font-body-md text-body-md font-medium text-on-surface">{r.name}</span>
-                      <span className="font-data-mono text-data-mono text-on-surface-variant">{r.emp}</span>
-                    </span>
-                  </td>
-                  <td className="px-3 py-3 font-body-md text-body-md text-on-surface">{r.dept}</td>
-                  <td className="px-3 py-3 font-data-mono text-data-mono text-on-surface">{r.cc}</td>
-                  {r.days.map((d, i) => (
-                    <td key={i} className="px-2 py-3 text-center font-data-mono text-data-mono text-on-surface-variant">
-                      {d || <span className="text-on-surface-variant/40">·</span>}
-                    </td>
-                  ))}
-                  <td className="px-3 py-3 text-right font-data-mono text-data-mono text-on-surface">{r.total}</td>
-                  <td className="px-3 py-3 text-right font-data-mono text-data-mono text-on-surface">GHS {r.amount.toFixed(2)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="flex items-center justify-between border-t border-outline-variant p-4">
-          <span className="font-body-md text-body-md text-on-surface-variant">Showing 1 to {rows.length} of {rows.length} entries</span>
-          <div className="flex items-center gap-2">
-            <Button variant="secondary" size="sm" disabled>Previous</Button>
-            <Button variant="secondary" size="sm" disabled>Next</Button>
-          </div>
-        </div>
-      </div>
-      <p className="flex items-center gap-2 font-data-mono text-data-mono text-on-surface-variant">
+      <DataTable
+        columns={columns}
+        data={rows}
+        rowKey={(r) => r.key}
+        defaultSort={{ key: "total", direction: "desc" }}
+        loading={loading}
+      />
+      <p className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant">
         <StatusPill status="Live data" tone="success" />
         Figures drawn from the transactions ledger in the selected date range.
       </p>

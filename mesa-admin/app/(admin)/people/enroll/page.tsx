@@ -49,7 +49,7 @@ function QualityRing({ value }: { value: number }) {
         strokeDasharray={c} strokeDashoffset={offset}
         transform="rotate(-90 32 32)"
       />
-      <text x="32" y="37" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--color-on-surface)" fontFamily="Manrope, sans-serif">
+      <text x="32" y="37" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--color-on-surface)" className="font-body-md">
         {Math.round(value)}%
       </text>
     </svg>
@@ -272,7 +272,7 @@ export default function EnrollPage() {
                         >
                           <span>{f.label}</span>
                           {imp.length > 0 && (
-                            <span className={`font-data-mono text-data-mono ${imp.every((i) => i.accepted) ? "text-success" : "text-error"}`}>
+                            <span className={`font-body-md text-body-md ${imp.every((i) => i.accepted) ? "text-success" : "text-error"}`}>
                               {imp.length}/3
                             </span>
                           )}
@@ -322,7 +322,7 @@ export default function EnrollPage() {
                     </p>
                   )}
                   {adapterNote && (
-                    <p className="font-data-mono text-data-mono text-center text-on-surface-variant">
+                    <p className="font-body-md text-body-md text-center text-on-surface-variant">
                       {adapterNote}
                     </p>
                   )}
@@ -361,7 +361,7 @@ export default function EnrollPage() {
                   </div>
                 ))}
               </div>
-              <p className="font-data-mono text-data-mono text-on-surface-variant">
+              <p className="font-body-md text-body-md text-on-surface-variant">
                 Templates are stored as SourceAFIS minutiae (never raw images) and encrypted at rest.
               </p>
             </div>
@@ -422,7 +422,7 @@ export default function EnrollPage() {
                 style={{ width: `${(impressions.length / 3) * 100}%` }}
               />
             </div>
-            <p className="mt-1 font-data-mono text-data-mono text-on-surface-variant">
+            <p className="mt-1 font-body-md text-body-md text-on-surface-variant">
               {impressions.length} / 3 templates captured
             </p>
           </div>

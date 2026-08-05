@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePosStore } from "../_store";
 import { Icon } from "./Icon";
 
@@ -10,19 +11,25 @@ import { Icon } from "./Icon";
  */
 export function OfflineBanner({ queued }: { queued: number }) {
   const forceSync = usePosStore((s) => s.forceSync);
+  const [syncBusy, setSyncBusy] = useState(false);
 
   return (
-    <div className="bg-[#f59e0b] text-white px-6 py-3 flex items-center justify-center gap-3 w-full flex-shrink-0 shadow-sm z-10">
+    <div className="bg-warning text-on-warning px-6 py-3 flex items-center justify-center gap-3 w-full flex-shrink-0 shadow-sm z-10">
       <Icon name="warning" fill style={{ fontSize: 20 }} />
-      <span className="text-lg font-semibold">
+      <span className="text-kiosk-body font-kiosk-body font-semibold">
         Network unavailable — operating from local cache. {queued} transaction{queued === 1 ? "" : "s"} queued.
       </span>
       <button
-        onClick={() => void forceSync()}
-        className="flex items-center gap-2 bg-white/20 hover:bg-white/30 rounded px-3 py-1 text-sm font-medium transition-colors"
+        onClick={() => {
+          setSyncBusy(true);
+          void forceSync().finally(() => setSyncBusy(false));
+        }}
+        disabled={syncBusy}
+        aria-busy={syncBusy}
+        className="flex items-center gap-2 min-h-9 bg-white/20 hover:bg-white/30 disabled:hover:bg-white/20 rounded px-3 py-1.5 text-kiosk-label font-kiosk-label font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-warning/40"
       >
-        <Icon name="sync" style={{ fontSize: 16 }} />
-        Force Sync
+        <Icon name={syncBusy ? "sync" : "sync"} style={{ fontSize: 16 }} className={syncBusy ? "animate-spin" : ""} />
+        {syncBusy ? "Syncing…" : "Force Sync"}
       </button>
     </div>
   );

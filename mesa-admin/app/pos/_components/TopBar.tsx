@@ -36,59 +36,59 @@ export function TopBar() {
   const offline = !online || devOffline;
 
   return (
-    <header className="bg-surface dark:bg-on-background flex justify-between items-center h-[64px] px-6 w-full border-b border-outline-variant flex-shrink-0 z-10">
+    <header className="bg-surface flex justify-between items-center h-header-height px-6 w-full border-b border-outline-variant flex-shrink-0 z-10">
       <div className="flex items-center gap-4">
-        <h1 className="text-[28px] leading-8 font-bold text-primary tracking-tight">MESA POS</h1>
-        <span className="font-mono text-xs text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">
+        <h1 className="text-display-md font-display-md text-primary tracking-tight">MESA POS</h1>
+        <span className="text-kiosk-label font-kiosk-label text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">
           {terminalId}
         </span>
         <span
-          className="font-mono text-[10px] uppercase tracking-wider text-on-surface-variant bg-surface-container px-2 py-1 rounded max-w-[220px] truncate"
+          className="text-kiosk-label font-kiosk-label uppercase tracking-wider text-on-surface-variant bg-surface-container px-2 py-1 rounded max-w-[220px] truncate"
           title={adapterNote}
         >
           {adapterNote || "Adapter: detecting…"}
         </span>
       </div>
 
-      <div className="flex items-center gap-6 text-sm text-on-surface-variant">
+      <div className="flex items-center gap-6 text-kiosk-label font-kiosk-label text-on-surface-variant">
         <div className="flex items-center gap-2">
-          <Icon name="location_on" className="text-outline text-[20px]" />
+          <Icon name="location_on" className="text-outline text-body-lg" />
           <span>Site: {siteName}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Icon name="person" className="text-outline text-[20px]" />
+          <Icon name="person" className="text-outline text-body-lg" />
           <span>Operator: {operator.name}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Icon name="schedule" className="text-outline text-[20px]" />
+          <Icon name="schedule" className="text-outline text-body-lg" />
           <span>Time: {timeLabel}</span>
         </div>
 
         {printerStatus !== "online" && printerStatus !== "offline" && (
           <div
-            className="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full bg-warning-container text-on-warning-container border border-warning"
+            className="flex items-center gap-1.5 text-kiosk-label font-kiosk-label uppercase px-2 py-1 rounded-full bg-warning-container text-on-warning-container border border-warning"
             title={`Printer: ${printerStatus.replace("_", " ")}`}
           >
-            <Icon name="print_disabled" className="text-[16px]" />
-            <span className="uppercase">{printerStatus.replace("_", " ")}</span>
+            <Icon name="print_disabled" style={{ fontSize: 16 }} />
+            <span>{printerStatus.replace("_", " ")}</span>
           </div>
         )}
 
         <div className="flex items-center gap-2 relative">
           <Icon
             name={offline ? "wifi_off" : "wifi"}
-            className={offline ? "text-warning text-[20px]" : "text-outline text-[20px]"}
+            className={offline ? "text-warning text-body-lg" : "text-outline text-body-lg"}
           />
           <span
             className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-surface ${
-              offline ? "bg-warning" : "bg-green-500"
+              offline ? "bg-warning" : "bg-success"
             }`}
           />
         </div>
 
         <button
           onClick={toggleDevOffline}
-          className={`px-2 py-1 rounded text-xs font-semibold border transition-colors ${
+          className={`min-h-9 px-3 py-1.5 rounded text-kiosk-label font-kiosk-label font-semibold border transition-colors ${
             offline
               ? "bg-warning-container text-on-warning-container border-warning"
               : "bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container"

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePosStore } from "./_store";
 import { TopBar } from "./_components/TopBar";
+import { PosSecondaryAction } from "./_components/PosActions";
 import { ScanRing } from "./_components/ScanRing";
 import { Icon } from "./_components/Icon";
 import { OfflineBanner } from "./_components/OfflineBanner";
@@ -105,8 +106,8 @@ export default function PosKiosk() {
       <div className="h-screen w-screen bg-background text-on-surface flex flex-col">
         <TopBar />
         <main className="flex-1 flex flex-col items-center justify-center gap-6">
-          <div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-          <p className="font-mono text-sm text-on-surface-variant">Detecting biometric hardware…</p>
+          <div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin" aria-hidden="true" />
+          <p className="font-body-md text-body-md text-on-surface-variant">Detecting biometric hardware…</p>
         </main>
       </div>
     );
@@ -122,10 +123,10 @@ export default function PosKiosk() {
           <div className="flex flex-col items-center justify-center space-y-8 flex-1">
             <ScanRing state="idle" offline={offline} onClick={handleScanClick} />
             <div className="text-center space-y-2">
-              <h2 className="text-[28px] leading-8 text-on-surface font-semibold tracking-tight">
+              <h2 className="text-display-md font-display-md text-on-surface tracking-tight">
                 Ready to Scan
               </h2>
-              <p className="text-lg text-on-surface-variant max-w-md">
+              <p className="text-kiosk-body font-kiosk-body text-on-surface-variant max-w-md">
                 {scanBusy
                   ? "Processing fingerprint…"
                   : offline
@@ -137,36 +138,33 @@ export default function PosKiosk() {
 
           <div className="w-full max-w-2xl mt-auto space-y-6">
             <div className="flex justify-center gap-4">
-              <button
+              <PosSecondaryAction
+                icon="keyboard"
                 onClick={() => usePosStore.setState({ screen: "manual" })}
-                className="font-medium text-primary px-6 py-3 rounded hover:bg-surface-container-high transition-colors flex items-center gap-2 text-base"
               >
-                <Icon name="keyboard" style={{ fontSize: 20 }} />
                 Manual Entry
-              </button>
-              <button
+              </PosSecondaryAction>
+              <PosSecondaryAction
+                icon="admin_panel_settings"
                 onClick={() => openOverride(null, "override")}
-                className="font-medium text-on-surface border border-outline px-6 py-3 rounded hover:bg-surface-container-low transition-colors flex items-center gap-2 text-base"
               >
-                <Icon name="admin_panel_settings" style={{ fontSize: 20 }} />
                 Supervisor Override
-              </button>
-              <button
+              </PosSecondaryAction>
+              <PosSecondaryAction
+                icon="leaderboard"
                 onClick={openShiftSummary}
-                className="font-medium text-on-surface-variant border border-outline-variant px-6 py-3 rounded hover:bg-surface-container transition-colors flex items-center gap-2 text-base"
               >
-                <Icon name="leaderboard" style={{ fontSize: 20 }} />
                 Shift Summary
-              </button>
+              </PosSecondaryAction>
             </div>
             <div className="text-center pb-4">
-              <span className="font-mono text-sm text-on-surface-variant bg-surface-container-lowest px-4 py-2 rounded-full border border-outline-variant inline-flex items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-surface-container-lowest px-4 py-2 text-kiosk-label font-kiosk-label text-on-surface-variant">
                 <Icon name="restaurant" fill className="text-primary" style={{ fontSize: 16 }} />
                 Meals served this shift: {mealsServed}
                 {lastTransaction && !offline ? " · Last coupon printed" : ""}
               </span>
             </div>
-            <p className="text-center font-mono text-[11px] text-on-surface-variant/60">
+            <p className="text-center text-kiosk-label font-kiosk-label text-on-surface-variant/60">
               Demo keys 1–4 scan seeded identities · 5 = no match
             </p>
           </div>
@@ -176,7 +174,7 @@ export default function PosKiosk() {
       {screen === "scanning" && (
         <main className="flex-1 flex flex-col items-center justify-center p-6">
           <ScanRing state="scanning" offline={offline} />
-          <h2 className="text-[28px] leading-8 font-semibold tracking-tight mt-8">Scanning…</h2>
+          <h2 className="text-display-md font-display-md text-on-surface tracking-tight mt-8">Scanning…</h2>
         </main>
       )}
 

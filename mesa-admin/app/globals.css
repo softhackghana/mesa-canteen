@@ -82,6 +82,10 @@
   --font-body-lg: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-body-md: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-nav-item: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display-lg: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display-md: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-kiosk-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-kiosk-label: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-label-md: "JetBrains Mono", ui-monospace, monospace;
   --font-data-mono: "JetBrains Mono", ui-monospace, monospace;
 
@@ -111,6 +115,19 @@
   --text-data-mono: 12px;
   --text-data-mono--line-height: 16px;
   --text-data-mono--letter-spacing: -0.01em;
+  /* Kiosk display scale (POS only, ui-audit 1.2) --------------------- */
+  --text-display-lg: 32px;
+  --text-display-lg--line-height: 40px;
+  --text-display-lg--font-weight: 700;
+  --text-display-md: 28px;
+  --text-display-md--line-height: 36px;
+  --text-display-md--font-weight: 700;
+  --text-kiosk-body: 18px;
+  --text-kiosk-body--line-height: 26px;
+  --text-kiosk-body--font-weight: 500;
+  --text-kiosk-label: 14px;
+  --text-kiosk-label--line-height: 20px;
+  --text-kiosk-label--font-weight: 500;
   --text-table-header: 11px;
   --text-table-header--line-height: 16px;
   --text-table-header--letter-spacing: 0.05em;
@@ -142,6 +159,11 @@
   /* Elevation ------------------------------------------------------ */
   /* Only floating elements (modals, dropdowns, toasts) use a shadow. */
   --shadow-overlay: 0 4px 20px rgba(23, 28, 31, 0.04);
+}
+
+/* Content wrapper for admin pages — prevents ultra-wide tables from stretching indefinitely. */
+.page-container {
+  @apply mx-auto w-full max-w-[1600px];
 }
 
 body {
@@ -214,5 +236,17 @@ body {
   }
   to {
     width: 0%;
+  }
+}
+
+/* Respect reduced-motion preference for all continuous POS/admin animations. */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring,
+  .pulse-amber,
+  .progress-bar-fill,
+  .animate-bounce,
+  .animate-pulse,
+  .animate-spin {
+    animation: none !important;
   }
 }

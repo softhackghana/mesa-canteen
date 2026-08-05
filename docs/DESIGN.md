@@ -80,6 +80,26 @@ typography:
     fontSize: 14px
     fontWeight: '500'
     lineHeight: 20px
+  display-lg:
+    fontFamily: Manrope
+    fontSize: 32px
+    fontWeight: '700'
+    lineHeight: 40px
+  display-md:
+    fontFamily: Manrope
+    fontSize: 28px
+    fontWeight: '700'
+    lineHeight: 36px
+  kiosk-body:
+    fontFamily: Manrope
+    fontSize: 18px
+    fontWeight: '500'
+    lineHeight: 26px
+  kiosk-label:
+    fontFamily: Manrope
+    fontSize: 14px
+    fontWeight: '500'
+    lineHeight: 20px
   headline-lg-mobile:
     fontFamily: Manrope
     fontSize: 20px
@@ -165,6 +185,16 @@ Tables are the core of the canteen management system.
 - **Header:** Light gray background (`neutral_color_hex`) with uppercase, mono-spaced labels.
 - **Rows:** 56px height for touch-friendliness. 1px bottom border.
 - **Alignment:** Numbers (quantities/prices) are right-aligned; text (food items/names) are left-aligned.
+
+### Reduced Motion
+All continuous animations (pulse rings, progress bars, loading spins) respect `prefers-reduced-motion: reduce` by falling back to a static state.
+
+### Kiosk Typography
+The POS kiosk uses an enlarged scale for arm's-length reading:
+- `display-lg` 32px/700 for primary result headings.
+- `display-md` 28px/700 for secondary headings.
+- `kiosk-body` 18px/500 for body copy.
+- `kiosk-label` 14px/500 for metadata and captions.
 
 ### Navigation Elements
 - **Sidebar Items:** Use a 24px icon paired with a 14px label. The active state includes a subtle blue vertical bar on the leading edge and a light blue background fill.

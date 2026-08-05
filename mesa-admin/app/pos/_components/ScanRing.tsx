@@ -42,7 +42,7 @@ export function ScanRing({
       />
       <div
         className={cn(
-          "relative z-10 w-32 h-32 rounded-full bg-surface-container-lowest shadow-[0_4px_20px_rgba(23,28,31,0.04)] flex items-center justify-center border border-outline-variant",
+          "relative z-10 w-32 h-32 rounded-full bg-surface-container-lowest shadow-overlay flex items-center justify-center border border-outline-variant",
           offline && "w-64 h-64 border-4 border-warning",
         )}
       >

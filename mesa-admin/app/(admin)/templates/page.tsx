@@ -14,15 +14,15 @@ import { useTemplatesStore, type ReceiptTemplate, type TemplateField } from "@/s
 import { AVAILABLE_FIELDS } from "@/lib/admin-data";
 
 const FIELD_STYLE: Record<TemplateField["size"], string> = {
-  small: "text-data-mono",
-  medium: "text-data-mono",
-  large: "text-body-md",
+  small: "font-data-mono text-data-mono",
+  medium: "font-data-mono text-data-mono",
+  large: "font-body-md text-body-md",
 };
 
 /** 80mm live preview of a receipt template (thermal paper look). */
 function ReceiptPreview({ tpl }: { tpl: ReceiptTemplate }) {
   return (
-    <div className="mx-auto w-[280px] rounded-sm bg-surface-container-lowest p-4 font-mono text-on-surface shadow-lg ring-1 ring-inverse-surface/10">
+    <div className="mx-auto w-[320px] rounded-sm bg-surface-container-lowest p-4 font-data-mono text-data-mono text-on-surface shadow-overlay ring-1 ring-inverse-surface/10">
       {tpl.fields.map((f) => {
         const text =
           f.key === "business_name" ? "GLOBAL CANTEEN SERVICES"
@@ -174,42 +174,47 @@ export default function TemplatesPage() {
         {/* Template list (drag to reorder) */}
         <section className="flex flex-col gap-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-4">
           <h2 className="font-headline-md text-headline-md text-on-surface">Templates</h2>
-          <p className="font-data-mono text-data-mono text-on-surface-variant">Drag to set print priority</p>
+          <p className="font-body-md text-body-md text-on-surface-variant">Drag to set print priority</p>
           <ul className="flex flex-col gap-1.5">
             {templates.map((t, i) => (
               <li
                 key={t.id}
-                draggable
-                onDragStart={() => setDragIndex(i)}
-                onDragEnter={() => setOverIndex(i)}
-                onDragOver={(e) => e.preventDefault()}
-                onDragEnd={drop}
-                onClick={() => setSelectedId(t.id)}
-                className={`flex cursor-grab items-center justify-between rounded-lg border px-3 py-2.5 transition-colors active:cursor-grabbing ${
-                  selectedId === t.id
-                    ? "border-primary bg-primary-container/10"
-                    : "border-outline-variant bg-surface-container-low hover:bg-surface-container-high"
-                }`}
+                role="listitem"
               >
-                <span className="flex min-w-0 items-center gap-2">
-                  <span className="material-symbols-outlined text-on-surface-variant" aria-hidden>drag_indicator</span>
-                  <span className="flex flex-col">
-                    <span className="truncate font-nav-item text-nav-item text-on-surface">{t.name}</span>
-                    <span className="font-data-mono text-data-mono text-on-surface-variant">
-                      {t.code} · v{t.version} · {t.siteAssignment}
+                <button
+                  type="button"
+                  draggable
+                  onDragStart={() => setDragIndex(i)}
+                  onDragEnter={() => setOverIndex(i)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDragEnd={drop}
+                  onClick={() => setSelectedId(t.id)}
+                  className={`flex w-full cursor-grab items-center justify-between rounded-lg border px-3 py-2.5 transition-colors active:cursor-grabbing ${
+                    selectedId === t.id
+                      ? "border-primary bg-primary-container/10"
+                      : "border-outline-variant bg-surface-container-low hover:bg-surface-container-high"
+                  }`}
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="material-symbols-outlined text-on-surface-variant" aria-hidden>drag_indicator</span>
+                    <span className="flex flex-col text-left">
+                      <span className="truncate font-nav-item text-nav-item text-on-surface">{t.name}</span>
+                      <span className="font-data-mono text-data-mono text-on-surface-variant">
+                        {t.code} · v{t.version} · {t.siteAssignment}
+                      </span>
                     </span>
                   </span>
-                </span>
-                <span className="flex shrink-0 items-center gap-1.5">
-                  {t.isDefault && <StatusPill status="DEFAULT" tone="info" />}
-                  {!t.isActive && <StatusPill status="DRAFT" tone="neutral" />}
-                </span>
+                  <span className="flex shrink-0 items-center gap-1.5">
+                    {t.isDefault && <StatusPill status="DEFAULT" tone="info" />}
+                    {!t.isActive && <StatusPill status="DRAFT" tone="neutral" />}
+                  </span>
+                </button>
               </li>
             ))}
           </ul>
           <div className="mt-auto rounded-lg border border-outline-variant bg-surface-container-low p-3">
             <p className="font-nav-item text-nav-item text-on-surface">Print Priority</p>
-            <p className="mt-1 font-data-mono text-data-mono text-on-surface-variant">
+            <p className="mt-1 font-body-md text-body-md text-on-surface-variant">
               Highest template in the list wins when a site has no explicit assignment.
             </p>
           </div>
@@ -252,7 +257,7 @@ export default function TemplatesPage() {
 
           <div className="flex flex-col gap-2">
             <Label>Layout Fields</Label>
-            <p className="font-data-mono text-data-mono text-on-surface-variant">
+            <p className="font-body-md text-body-md text-on-surface-variant">
               Drag fields to reorder. Fields marked with ✦ are bold, ○ are regular.
             </p>
             <div className="flex flex-col gap-1.5">
@@ -261,7 +266,7 @@ export default function TemplatesPage() {
                   <span className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-on-surface-variant" aria-hidden>drag_indicator</span>
                     <span className="font-body-md text-body-md text-on-surface">{f.label}</span>
-                    <span className={`font-data-mono text-data-mono ${f.bold ? "text-primary" : "text-on-surface-variant"}`}>
+                    <span className={`font-body-md text-body-md ${f.bold ? "text-primary" : "text-on-surface-variant"}`}>
                       {f.bold ? "✦" : "○"}
                     </span>
                   </span>
@@ -272,7 +277,7 @@ export default function TemplatesPage() {
                         const align = e.target.value as TemplateField["align"];
                         patchSelected({ fields: selected.fields.map((x, xi) => (xi === i ? { ...x, align } : x)) });
                       }}
-                      className="h-8 rounded border border-outline bg-surface-container-lowest px-2 font-data-mono text-data-mono text-on-surface focus:border-primary focus:outline-none"
+                      className="h-8 rounded border border-outline bg-surface-container-lowest px-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none"
                     >
                       <option value="left">Left</option>
                       <option value="center">Center</option>
@@ -322,7 +327,7 @@ export default function TemplatesPage() {
       <section className="flex flex-col gap-3 rounded-lg border border-outline-variant bg-surface-container-lowest p-6">
         <div className="flex items-center justify-between">
           <h2 className="font-headline-md text-headline-md text-on-surface">80mm Live Preview</h2>
-          <span className="font-data-mono text-data-mono text-on-surface-variant">Rendered at 80mm width · thermal paper</span>
+          <span className="font-body-md text-body-md text-on-surface-variant">Rendered at 80mm width · thermal paper</span>
         </div>
         <div className="rounded-lg bg-surface-bright p-6">
           <ReceiptPreview tpl={selected} />

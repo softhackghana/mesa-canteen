@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePosStore } from "../_store";
 import { Icon } from "./Icon";
+import { PosPrimaryAction, PosSecondaryAction } from "./PosActions";
 
 /**
  * Supervisor override modal (PRD 14.4 steps 29-30, pos_supervisor_override
@@ -23,6 +24,7 @@ export function OverrideModal() {
   const authorizeOverride = usePosStore((s) => s.authorizeOverride);
   const closeOverride = usePosStore((s) => s.closeOverride);
   const [reason, setReason] = useState<string>("");
+  const [authBusy, setAuthBusy] = useState(false);
 
   // Stamped once per mount. Calling Date.now() during render instead would
   // change the displayed audit ref on every keystroke.
@@ -40,7 +42,7 @@ export function OverrideModal() {
         aria-labelledby="override-title"
         aria-modal="true"
         role="dialog"
-        className="bg-surface-container-lowest w-full max-w-[600px] rounded-xl border border-outline-variant flex flex-col overflow-hidden shadow-[0_4px_20px_rgba(23,28,31,0.04)]"
+        className="bg-surface-container-lowest w-full max-w-[600px] rounded-xl border border-outline-variant flex flex-col overflow-hidden shadow-overlay"
       >
         {/* Header */}
         <div className="p-6 border-b border-outline-variant flex items-start gap-4">
@@ -48,7 +50,7 @@ export function OverrideModal() {
             <Icon name="admin_panel_settings" fill />
           </div>
           <div className="flex-1">
-            <h2 className="text-[20px] leading-6 text-on-surface mb-2 font-semibold" id="override-title">
+            <h2 className="text-headline-md font-headline-md text-on-surface mb-2" id="override-title">
               Supervisor Authorization Required
             </h2>
             <div className="inline-flex items-center bg-surface-container-high rounded-full pl-1 pr-3 py-1 gap-2 border border-outline-variant">
@@ -62,11 +64,11 @@ export function OverrideModal() {
                       .toUpperCase()
                   : "NA"}
               </div>
-              <span className="text-sm text-on-surface-variant flex items-center gap-1">
+              <span className="text-body-md font-body-md text-on-surface-variant flex items-center gap-1">
                 {pendingIdentity
                   ? `${pendingIdentity.name} — override entry`
                   : "Manual override — no employee matched"}
-                <span className="text-error font-medium flex items-center gap-1 ml-1 text-xs">
+                <span className="text-error font-medium flex items-center gap-1 ml-1 text-kiosk-label font-kiosk-label">
                   <Icon name="fingerprint" style={{ fontSize: 14 }} /> Biometric failure
                 </span>
               </span>
@@ -84,11 +86,11 @@ export function OverrideModal() {
                 readOnly
                 value={pinEntry ? "•".repeat(pinEntry.length) : ""}
                 placeholder="••••"
-                className="w-full bg-surface-container-lowest border-b-2 border-primary text-center text-[20px] py-2 tracking-[0.5em] text-on-surface focus:outline-none placeholder:text-outline"
+                className="w-full bg-surface-container-lowest border-b-2 border-primary text-center text-headline-md font-headline-md py-2 tracking-[0.5em] text-on-surface placeholder:text-outline focus:outline-none focus-visible:border-primary"
               />
               <button
                 onClick={backspace}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-outline cursor-pointer hover:text-on-surface transition-colors"
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
                 aria-label="Backspace"
               >
                 <Icon name="backspace" />
@@ -102,7 +104,7 @@ export function OverrideModal() {
                   <button
                     key={i}
                     onClick={backspace}
-                    className="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center justify-center"
+                    className="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                     aria-label="Delete"
                   >
                     <Icon name="backspace" style={{ fontSize: 20 }} />
@@ -111,24 +113,24 @@ export function OverrideModal() {
                   <button
                     key={i}
                     onClick={() => press(k)}
-                    className="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant text-[20px] text-on-surface hover:bg-surface-container-high transition-colors active:scale-95"
+                    className="h-14 rounded-lg bg-surface-container-lowest border border-outline-variant text-headline-md font-headline-md text-on-surface hover:bg-surface-container-high transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   >
                     {k}
                   </button>
                 ),
               )}
             </div>
-            <p className="font-mono text-[11px] text-on-surface-variant mt-3">Demo supervisor PIN: 4829</p>
+            <p className="text-kiosk-label font-kiosk-label text-on-surface-variant mt-3">Demo supervisor PIN: 4829</p>
           </div>
 
           {/* Reason */}
           <div className="flex flex-col justify-center">
-            <label className="text-sm text-on-surface-variant font-medium mb-2 block" htmlFor="override-reason">
+            <label className="text-kiosk-label font-kiosk-label text-on-surface-variant font-medium mb-2 block" htmlFor="override-reason">
               Override Reason
             </label>
             <div className="relative mb-6">
               <select
-                className="w-full appearance-none bg-surface-container-lowest border border-outline rounded-lg px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer"
+                className="w-full appearance-none bg-surface-container-lowest border border-outline rounded-lg px-4 py-3 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer"
                 id="override-reason"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
@@ -142,14 +144,14 @@ export function OverrideModal() {
                   </option>
                 ))}
               </select>
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-[20px]">
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-body-lg">
                 arrow_drop_down
               </span>
             </div>
             <div className="bg-surface-container p-4 rounded-lg border border-outline-variant/50">
               <div className="flex items-start gap-3">
                 <Icon name="info" className="text-primary mt-0.5" style={{ fontSize: 18 }} />
-                <p className="text-sm text-on-surface-variant">
+                <p className="text-body-md font-body-md text-on-surface-variant">
                   {pendingIdentity
                     ? `${pendingIdentity.name} (${pendingIdentity.employeeId}) will be issued ${pendingIdentity.entitlement} under override.`
                     : "Authorise a manual override for a guest or unmatched employee. This action is audited against the supervisor identity."}
@@ -162,28 +164,22 @@ export function OverrideModal() {
         {/* Footer */}
         <div className="p-6 border-t border-outline-variant bg-surface-container-lowest flex flex-col gap-4">
           <div className="flex justify-end gap-3 w-full">
-            <button
-              onClick={closeOverride}
-              className="px-6 py-2.5 rounded border border-outline text-on-surface text-sm font-medium hover:bg-surface-container transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => void authorizeOverride(pinEntry, reason)}
+            <PosSecondaryAction onClick={closeOverride}>Cancel</PosSecondaryAction>
+            <PosPrimaryAction
+              loading={authBusy}
               disabled={pinEntry.length === 0}
-              className={`px-6 py-2.5 rounded text-sm font-medium flex items-center gap-2 transition-colors ${
-                pinEntry.length === 0
-                  ? "bg-surface-container-highest text-outline cursor-not-allowed"
-                  : "bg-primary text-on-primary hover:opacity-90"
-              }`}
+              icon="lock"
+              onClick={() => {
+                setAuthBusy(true);
+                void authorizeOverride(pinEntry, reason).finally(() => setAuthBusy(false));
+              }}
             >
-              <Icon name="lock" style={{ fontSize: 18 }} />
               Authorise Override
-            </button>
+            </PosPrimaryAction>
           </div>
-          <div className="flex items-center justify-center gap-1.5 text-outline text-xs">
+          <div className="flex items-center justify-center gap-1.5 text-outline text-kiosk-label font-kiosk-label">
             <Icon name="policy" style={{ fontSize: 14 }} />
-            <span className="font-mono uppercase tracking-wide">
+            <span className="font-data-mono text-data-mono uppercase tracking-wide">
               This action is logged for audit purposes (AX-{auditRef})
             </span>
           </div>
