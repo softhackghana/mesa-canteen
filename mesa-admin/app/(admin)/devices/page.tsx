@@ -236,7 +236,7 @@ export default function DevicesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <PageHeader
         title="POS Terminal Management"
         description="Centralised control over terminals, scanners, and printers."

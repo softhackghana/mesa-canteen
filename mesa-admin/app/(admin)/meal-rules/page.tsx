@@ -404,7 +404,7 @@ export default function MealRulesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <PageHeader
         title="Meal Rules"
         description="Manage entitlement logic, subsidies, and meal windows."

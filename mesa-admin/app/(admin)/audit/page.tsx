@@ -208,7 +208,7 @@ export default function AuditPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <PageHeader
         title="Audit Trail"
         description="Immutable, tamper-evident log of all administrative actions."

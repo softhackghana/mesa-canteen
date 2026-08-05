@@ -7,7 +7,6 @@ import {
   DataTable,
   Dialog,
   FilterChips,
-  FilterToolbar,
   Input,
   Label,
   PageHeader,
@@ -31,21 +30,6 @@ const FILTERS: { label: string; value: Filter }[] = [
   { label: "Enrolled", value: "enrolled" },
   { label: "Pending Enrollment", value: "pending" },
 ];
-
-function countFor(f: Filter): number {
-  switch (f) {
-    case "all":
-      return DEMO_PEOPLE.length;
-    case "active":
-      return DEMO_PEOPLE.filter((p) => p.status === "active").length;
-    case "inactive":
-      return DEMO_PEOPLE.filter((p) => p.status !== "active").length;
-    case "enrolled":
-      return DEMO_PEOPLE.filter((p) => p.biometricStatus === "enrolled").length;
-    case "pending":
-      return DEMO_PEOPLE.filter((p) => p.biometricStatus === "pending").length;
-  }
-}
 
 function initials(p: AdminPerson): string {
   const first = p.first_name?.[0] ?? "";
@@ -180,49 +164,44 @@ export default function PeoplePage() {
   ];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <PageHeader
-        title="People Master"
+        title="Employee List"
         description="Manage personnel, credentials, and biometrics."
         actions={
           <>
+            <SearchInput
+              containerClassName="w-full sm:w-[300px]"
+              placeholder="Search by name, ID, or department..."
+              value={query}
+              onSearch={(v) => {
+                setQuery(v);
+                setPage(1);
+              }}
+            />
             <Button variant="secondary" onClick={() => setBulkOpen(true)}>
-              <span className="material-symbols-outlined text-body-lg" aria-hidden>upload_file</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>upload</span>
               Bulk Import CSV
             </Button>
             <Button onClick={() => {
               setSelected(null);
               setProfileOpen(true);
             }}>
-              <span className="material-symbols-outlined text-body-lg" aria-hidden>person_add</span>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>add</span>
               Add Employee
             </Button>
           </>
         }
       />
 
-      <FilterToolbar
-        right={
-          <SearchInput
-            containerClassName="w-full sm:w-[300px]"
-            placeholder="Search name, EMP ID, department, site..."
-            value={query}
-            onSearch={(v) => {
-              setQuery(v);
-              setPage(1);
-            }}
-          />
-        }
-      >
-        <FilterChips
-          options={FILTERS.map((f) => ({ ...f, count: countFor(f.value) }))}
-          value={filter}
-          onValueChange={(v) => {
-            setFilter(v as Filter);
-            setPage(1);
-          }}
-        />
-      </FilterToolbar>
+      <FilterChips
+        options={FILTERS}
+        value={filter}
+        onValueChange={(v) => {
+          setFilter(v as Filter);
+          setPage(1);
+        }}
+      />
 
       <DataTable
         columns={columns}

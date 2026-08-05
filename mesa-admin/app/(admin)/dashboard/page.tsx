@@ -164,7 +164,7 @@ export default function DashboardPage() {
   const status = licenseCert ? currentStatus(licenseCert) : licenseStatus;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <PageHeader
         title="Executive Dashboard"
         description="Live operational overview across all sites."

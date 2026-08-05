@@ -34,7 +34,7 @@ export function SearchInput({
           timerRef.current = setTimeout(() => onSearch?.(e.target.value), debounceMs);
         }}
         className={cn(
-          "h-10 w-full rounded border border-outline bg-surface-container-lowest pl-10 pr-3",
+          "h-10 w-full rounded border border-outline bg-surface-container-lowest pl-10 pr-4",
           "font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant",
           "transition-colors duration-150",
           "focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary",
