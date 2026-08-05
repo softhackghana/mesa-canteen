@@ -1,2 +1,6 @@
 # Harness-injected session files (managed outside the repo)
 CLAUDE.md
+
+# Browser test artifacts
+cookies.txt
+*.pem
