@@ -1,3 +1,4 @@
+// fallow-ignore-file unused-file
 // Throwaway diagnostics: verify MESA InsForge backend data for the admin pages.
 // Not part of the app; kept so future devs can re-check live rows quickly.
 const BASE = 'http://localhost:7130';
