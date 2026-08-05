@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Button,
   DataTable,
@@ -13,7 +13,18 @@ import {
   useToast,
   type DataTableColumn,
 } from "@/components";
-import { DEMO_DEVICES, type AdminDevice } from "@/lib/admin-data";
+import { insforge, type Device } from "@/lib/insforge";
+
+/** Shape of a live terminal row joined to its site + latest heartbeat. */
+interface LiveTerminal extends Device {
+  printer: {
+    name: string | null;
+    status: "online" | "paper_out" | "cover_open" | "error" | "offline";
+    detail: string;
+  };
+  syncBacklog: number;
+  outlet: string;
+}
 
 function relativeTime(iso: string | undefined): string {
   if (!iso) return "never";
@@ -24,7 +35,7 @@ function relativeTime(iso: string | undefined): string {
   return `${Math.floor(s / 86400)}d ago`;
 }
 
-function TerminalStatus({ status }: { status: AdminDevice["status"] }) {
+function TerminalStatus({ status }: { status: LiveTerminal["status"] }) {
   if (status === "online") return <StatusPill status="Online" tone="success" />;
   if (status === "offline") return <StatusPill status="Offline" tone="error" />;
   return <StatusPill status="Error" tone="warning" />;
@@ -32,12 +43,13 @@ function TerminalStatus({ status }: { status: AdminDevice["status"] }) {
 
 export default function DevicesPage() {
   const { toast } = useToast();
-  const [devices, setDevices] = useState<AdminDevice[]>(DEMO_DEVICES);
+  const [devices, setDevices] = useState<LiveTerminal[]>([]);
+  const [loading, setLoading] = useState(true);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [command, setCommand] = useState<"restart" | "logoff" | null>(null);
 
-  const runCommand = (d: AdminDevice, cmd: "restart" | "logoff") => {
+  const runCommand = (d: LiveTerminal, cmd: "restart" | "logoff") => {
     setConfirmId(d.id);
     setCommand(cmd);
   };
@@ -55,7 +67,73 @@ export default function DevicesPage() {
     setCommand(null);
   };
 
-  const columns: DataTableColumn<AdminDevice>[] = [
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [{ data: terminals }, { data: heartbeats }] = await Promise.all([
+        insforge.database
+          .from("terminals")
+          .select("id,terminal_code,name,ip_address,software_version,scanner_vendor,scanner_model,printer_name,status,last_heartbeat_at,is_active,site:site_id(name)")
+          .order("name", { ascending: true }),
+        insforge.database
+          .from("terminal_heartbeats")
+          .select("terminal_id,printer_status,sync_pending_count,heartbeat_at")
+          .order("heartbeat_at", { ascending: false }),
+      ]);
+
+      // Latest heartbeat per terminal drives printer status + sync backlog.
+      const heartbeatByTerminal = new Map<string, { printer_status: string | null; sync_pending_count: number }>();
+      for (const h of heartbeats ?? []) {
+        if (!heartbeatByTerminal.has(h.terminal_id)) {
+          heartbeatByTerminal.set(h.terminal_id, {
+            printer_status: h.printer_status,
+            sync_pending_count: h.sync_pending_count ?? 0,
+          });
+        }
+      }
+
+      const rows: LiveTerminal[] = (terminals ?? []).map((t: any) => {
+        const hb = heartbeatByTerminal.get(t.id);
+        const printerStatus = (hb?.printer_status ?? "offline") as LiveTerminal["printer"]["status"];
+        return {
+          id: t.id,
+          name: t.name,
+          site: t.site?.name ?? "—",
+          ip_address: t.ip_address ?? "—",
+          version: t.software_version ?? "—",
+          scanner_vendor: t.scanner_vendor ?? "—",
+          scanner_model: t.scanner_model ?? "—",
+          last_heartbeat: t.last_heartbeat_at ?? undefined,
+          status: t.status ?? "offline",
+          printer: {
+            name: t.printer_name,
+            status: printerStatus,
+            detail: "",
+          },
+          syncBacklog: hb?.sync_pending_count ?? 0,
+          outlet: t.site?.name ?? "—",
+        };
+      });
+      setDevices(rows);
+    } catch (e) {
+      setDevices([]);
+      toast({
+        title: "Could not load terminals",
+        description: e instanceof Error ? e.message : "Live data unavailable",
+        variant: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  useEffect(() => {
+    load();
+    const t = setInterval(load, 30000);
+    return () => clearInterval(t);
+  }, [load]);
+
+  const columns: DataTableColumn<LiveTerminal>[] = [
     {
       key: "name",
       header: "Terminal",
@@ -63,7 +141,7 @@ export default function DevicesPage() {
       render: (d) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md font-medium text-on-surface">{d.name}</span>
-          <span className="font-data-mono text-data-mono text-on-surface-variant">{d.site}</span>
+          <span className="font-data-mono text-data-mono text-on-surface-variant">{d.outlet}</span>
         </span>
       ),
     },
@@ -98,10 +176,10 @@ export default function DevicesPage() {
         <span className="flex flex-col">
           <span className="flex items-center gap-1.5">
             <span className={`h-1.5 w-1.5 rounded-full ${d.printer.status === "online" ? "bg-success" : "bg-error"}`} />
-            <span className="font-data-mono text-data-mono text-on-surface">{d.printer.name}</span>
+            <span className="font-data-mono text-data-mono text-on-surface">{d.printer.name ?? "—"}</span>
           </span>
           <span className="font-data-mono text-data-mono text-on-surface-variant">
-            {d.printer.status === "online" ? "Online" : d.printer.status.replace("_", " ")} · {d.printer.width}
+            {d.printer.status === "online" ? "Online" : d.printer.status.replace("_", " ")}
           </span>
         </span>
       ),
@@ -166,6 +244,7 @@ export default function DevicesPage() {
         data={devices}
         rowKey={(d) => d.id}
         defaultSort={{ key: "name", direction: "asc" }}
+        loading={loading}
         toolbar={
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-body-md text-body-md text-on-surface-variant">
@@ -250,20 +329,22 @@ export default function DevicesPage() {
         </div>
       </Dialog>
 
-      {/* Remote command confirm */}
+      {/* Remote command confirm — pending native agent, acknowledged only */}
       <Dialog
         open={confirmId !== null}
         onOpenChange={(v) => { if (!v) setConfirmId(null); }}
         title={command === "restart" ? "Restart terminal?" : "End terminal session?"}
-        description={
-          command === "restart"
-            ? "The terminal will reboot and return to the operator login screen."
-            : "The POS session will be logged off. No transactions are lost — queued items sync after next sign-in."
-        }
+        description={(
+          <span>
+            Remote commands require a native terminal agent (bridge on :8766) which is not
+            deployed yet. This will only be acknowledged in the audit log; the terminal will
+            not actually restart until the agent exists.
+          </span>
+        )}
         footer={
           <>
             <Button variant="secondary" onClick={() => setConfirmId(null)}>Cancel</Button>
-            <Button onClick={confirmCommand}>Confirm</Button>
+            <Button onClick={confirmCommand}>Acknowledge Only</Button>
           </>
         }
       />
