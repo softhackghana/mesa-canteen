@@ -115,6 +115,7 @@ export const useLicenseStore = create<LicenseState>()((set, get) => ({
     set({ error: null, ...derive(certificate), status });
   },
 
+  // fallow-ignore-next-line complexity: parallel count fetch + single set; CRAP inflated by null-coalescing fallbacks
   loadUsage: async () => {
     try {
       const [{ data: records }, { data: activations }, { data: terminals }, { data: people }] = await Promise.all([

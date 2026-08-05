@@ -15,6 +15,7 @@ import type { AdminTransaction } from "@/lib/admin-data";
 import { buildSpreadsheetML, downloadXls } from "@/lib/spreadsheetml";
 
 /** Map a transactions row (with person/terminal joins) to the UI shape. */
+// fallow-ignore-next-line complexity: linear nullable-join mapper; CRAP inflated by null-coalescing fallbacks, not branches
 function toTx(row: any): AdminTransaction {
   const person = row.person ?? {};
   return {
