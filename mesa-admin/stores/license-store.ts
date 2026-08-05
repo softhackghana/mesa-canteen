@@ -12,7 +12,7 @@ import {
   type LicenseStatus,
 } from '@/lib/license';
 
-export interface LicenseUsage {
+interface LicenseUsage {
   terminalsUsed: number;
   terminalsLimit: number;
   identitiesUsed: number;
