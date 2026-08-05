@@ -12,10 +12,27 @@ import {
 } from "@/components";
 import { useLicenseStore } from "@/stores/license-store";
 import { isValidLicenseKey } from "@/lib/license";
-import { demoLicenseUsage, type LicenseUsage } from "@/lib/admin-data";
 
 function daysUntil(iso: string): number {
   return Math.max(0, Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000));
+}
+
+/** Usage values with cert-limit fallback when live DB usage is still loading. */
+function useUsage() {
+  const usage = useLicenseStore((s) => s.usage);
+  const limits = useLicenseStore((s) => s.limits);
+  if (usage) return usage;
+  return {
+    terminalsUsed: 0,
+    terminalsLimit: limits?.terminals ?? 5,
+    identitiesUsed: 0,
+    identitiesLimit: limits?.identities ?? 500,
+    activationCount: 0,
+    maxSites: 5,
+    dataRetention: "24 months",
+    systemId: "MES-—",
+    regionalNode: "—",
+  };
 }
 
 /** Linear usage bar with a fill color that shifts near the limit. */
@@ -43,10 +60,11 @@ function UsageBar({ label, used, limit, unit }: { label: string; used: number; l
 export default function LicensePage() {
   const { toast } = useToast();
   const license = useLicenseStore();
-  const usage = demoLicenseUsage();
+  const usage = useUsage();
 
   useEffect(() => {
     license.load();
+    license.loadUsage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -56,6 +74,15 @@ export default function LicensePage() {
   const [busy, setBusy] = useState(false);
 
   const status = license.status;
+
+  const deactivate = async () => {
+    const ok = await license.deactivate();
+    if (ok) {
+      toast({ title: "License deactivated", description: "Activation released; offline access revoked.", variant: "success" });
+    } else {
+      toast({ title: "Deactivation failed", description: license.error ?? "Unknown error", variant: "error" });
+    }
+  };
 
   const submit = async () => {
     const trimmed = key.trim();
@@ -89,7 +116,7 @@ export default function LicensePage() {
         description="Activation, renewals, and capacity usage for the MESA licensing platform."
         actions={
           <>
-            <Button variant="secondary" onClick={() => license.deactivate()}>
+            <Button variant="secondary" onClick={deactivate}>
               <span className="material-symbols-outlined text-body-lg" aria-hidden>link_off</span>
               Deactivate
             </Button>
@@ -154,7 +181,7 @@ export default function LicensePage() {
           <div className="flex items-center justify-between">
             <h2 className="font-headline-md text-headline-md text-on-surface">Capacity Usage</h2>
             <span className="font-data-mono text-data-mono text-on-surface-variant">
-              Activated {new Date(usage.activationDate).toLocaleDateString()} · {usage.dataRetention} retention
+              {usage.activationCount} activation{usage.activationCount === 1 ? "" : "s"} · {usage.dataRetention} retention
             </span>
           </div>
           <UsageBar label="POS Terminals" used={usage.terminalsUsed} limit={usage.terminalsLimit} unit="devices" />
@@ -174,7 +201,7 @@ export default function LicensePage() {
             </div>
           </div>
           <p className="font-data-mono text-data-mono text-on-surface-variant">
-            Usage figures mirror the licensing server report (FR-LIC-006). Values are demo fixtures.
+            Usage figures read live from the licensing records and people/terminal counts (FR-LIC-008/009).
           </p>
         </div>
       </div>
