@@ -21,16 +21,23 @@
 ## Phase 2 — Admin Typography & Token Cleanup
 - [x] 2.1 `components/layout/filter-chips.tsx` — use `font-body-md` for chip counts.
 - [x] 2.2 `app/(admin)/dashboard/page.tsx` — replace prose mono with `font-body-md`; fix terminal heartbeat age formatting; chart counts use `font-body-md`.
-- [x] 2.3 `app/(admin)/people/page.tsx` — mono cleanup; guard `initials()`; action button sizing.
-- [x] 2.4 `app/(admin)/meal-rules/page.tsx` — mono cleanup for day buttons, site/department tags, subsidy labels.
+- [x] 2.3 `app/(admin)/people/page.tsx` — mono cleanup; guard `initials()`; action button sizing; **search moved into `FilterToolbar` aligned with filter chips**.
+- [x] 2.4 `app/(admin)/meal-rules/page.tsx` — mono cleanup for day buttons, site/department tags, subsidy labels; **site filter moved into `PageHeader` actions**.
 - [x] 2.5 `app/(admin)/reports/page.tsx` — replace hand-rolled daily table with `DataTable`; add labels to date inputs; summary stats use `font-body-md font-semibold`; loading state.
 - [x] 2.6 `app/(admin)/templates/page.tsx` — listbox semantics, mono cleanup, preview width token, add-field button sizing.
 - [x] 2.7 `app/(admin)/devices/page.tsx` — mono cleanup; align heartbeat age with status color.
 - [x] 2.8 `app/(admin)/license/page.tsx` — mono cleanup; map dynamic color to token classes; deactivate secondary style.
 - [x] 2.9 `app/(admin)/settings/page.tsx` — mono cleanup; styled radio group.
-- [x] 2.10 `app/(admin)/audit/page.tsx` — mono cleanup; add `EmptyState`.
+- [x] 2.10 `app/(admin)/audit/page.tsx` — mono cleanup; add `EmptyState`; **severity chips + category select wrapped in `FilterToolbar`**.
 - [x] 2.11 `app/(admin)/people/enroll/page.tsx` — mono cleanup; SVG font via CSS token.
 - [x] 2.12 `app/login/page.tsx` — body typography, password toggle, SSO hint, footer version.
+
+## Phase 2b — Filter / Search Alignment
+- [x] 2b.1 Create `components/layout/filter-toolbar.tsx` — shared left/right filter bar with wrapping.
+- [x] 2b.2 `app/(admin)/people/page.tsx` — chips left, search right, removed from DataTable toolbar.
+- [x] 2b.3 `app/(admin)/audit/page.tsx` — chips left, category + count right; hash-chained badge moved to right-aligned row above table.
+- [x] 2b.4 `app/(admin)/meal-rules/page.tsx` — replaced scattered site-filter chip row with a `Select` inside `PageHeader` actions, matching the stitch mock.
+- [x] 2b.5 Checked `dashboard`, `devices`, `license`, `reports`, `templates`, `settings` — no chip/search misalignment remaining; dashboard uses header actions only, devices uses DataTable toolbar meta only.
 
 ## Phase 3 — POS Component Standardization & Tokens
 - [x] 3.1 Create `app/pos/_components/PosActions.tsx` — `PosPrimaryAction`, `PosSecondaryAction`, `PosTextAction` with loading state.

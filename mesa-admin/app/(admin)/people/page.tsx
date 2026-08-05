@@ -7,6 +7,7 @@ import {
   DataTable,
   Dialog,
   FilterChips,
+  FilterToolbar,
   Input,
   Label,
   PageHeader,
@@ -200,32 +201,34 @@ export default function PeoplePage() {
         }
       />
 
-      <FilterChips
-        options={FILTERS.map((f) => ({ ...f, count: countFor(f.value) }))}
-        value={filter}
-        onValueChange={(v) => {
-          setFilter(v as Filter);
-          setPage(1);
-        }}
-      />
+      <FilterToolbar
+        right={
+          <SearchInput
+            containerClassName="w-full sm:w-[300px]"
+            placeholder="Search name, EMP ID, department, site..."
+            value={query}
+            onSearch={(v) => {
+              setQuery(v);
+              setPage(1);
+            }}
+          />
+        }
+      >
+        <FilterChips
+          options={FILTERS.map((f) => ({ ...f, count: countFor(f.value) }))}
+          value={filter}
+          onValueChange={(v) => {
+            setFilter(v as Filter);
+            setPage(1);
+          }}
+        />
+      </FilterToolbar>
 
       <DataTable
         columns={columns}
         data={paged}
         rowKey={(p) => p.id}
         defaultSort={{ key: "employee", direction: "asc" }}
-        toolbar={
-          <div className="w-full max-w-sm">
-            <SearchInput
-              placeholder="Search name, EMP ID, department, site..."
-              value={query}
-              onSearch={(v) => {
-                setQuery(v);
-                setPage(1);
-              }}
-            />
-          </div>
-        }
         pagination={{
           page,
           pageSize,

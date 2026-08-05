@@ -7,6 +7,7 @@ import {
   Dialog,
   EmptyState,
   FilterChips,
+  FilterToolbar,
   PageHeader,
   Select,
   StatusPill,
@@ -225,28 +226,35 @@ export default function AuditPage() {
         }
       />
 
-      <FilterChips
-        options={[
-          { label: "All Events", value: "all" },
-          { label: "Info", value: "info" },
-          { label: "Warnings", value: "warning" },
-          { label: "Critical", value: "error" },
-        ]}
-        value={severity}
-        onValueChange={(v) => { setSeverity(v as Severity); setPage(1); }}
-      />
-
-      <div className="flex flex-wrap items-center gap-3">
-        <Select
-          label="Category"
-          value={category}
-          options={Object.entries(CATEGORY_LABELS).map(([value, label]) => ({ value, label }))}
-          onChange={(v) => { setCategory(v as Category); setPage(1); }}
+      <FilterToolbar
+        right={
+          <div className="flex flex-wrap items-center gap-3">
+            <Select
+              label="Category"
+              value={category}
+              options={Object.entries(CATEGORY_LABELS).map(([value, label]) => ({ value, label }))}
+              onChange={(v) => { setCategory(v as Category); setPage(1); }}
+            />
+            <span className="font-body-md text-body-md text-on-surface-variant">
+              {filtered.length} events in view · retention 24 months
+            </span>
+          </div>
+        }
+      >
+        <FilterChips
+          options={[
+            { label: "All Events", value: "all" },
+            { label: "Info", value: "info" },
+            { label: "Warnings", value: "warning" },
+            { label: "Critical", value: "error" },
+          ]}
+          value={severity}
+          onValueChange={(v) => { setSeverity(v as Severity); setPage(1); }}
         />
+      </FilterToolbar>
+
+      <div className="flex items-center justify-end">
         <span className="font-body-md text-body-md text-on-surface-variant">
-          {filtered.length} events in view · retention 24 months
-        </span>
-        <span className="ml-auto font-body-md text-body-md text-on-surface-variant">
           <span className="material-symbols-outlined align-middle text-body-md" aria-hidden>lock</span> SHA-256 hash-chained
         </span>
       </div>

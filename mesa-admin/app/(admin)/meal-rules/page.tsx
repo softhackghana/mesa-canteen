@@ -410,6 +410,12 @@ export default function MealRulesPage() {
         description="Manage entitlement logic, subsidies, and meal windows."
         actions={
           <>
+            <Select
+              value={siteFilter}
+              placeholder="All Sites (Global)"
+              options={[{ value: "all", label: "All Sites (Global)" }, ...ALL_SITES.map((s) => ({ value: s, label: s }))]}
+              onChange={(v) => setSiteFilter(v)}
+            />
             <Button
               variant="secondary"
               onClick={() => {
@@ -430,23 +436,6 @@ export default function MealRulesPage() {
           </>
         }
       />
-
-      <div className="flex flex-wrap items-center gap-2">
-        {["All Sites (Global)", "HQ Campus", "North Campus", "Tema Facility", "Distribution West"].map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => setSiteFilter(s === "All Sites (Global)" ? "all" : s)}
-            className={`rounded-full border px-4 py-1.5 font-nav-item text-nav-item text-body-md transition-colors ${
-              siteFilter === (s === "All Sites (Global)" ? "all" : s)
-                ? "border-primary-container bg-primary-container text-on-primary-container"
-                : "border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high"
-            }`}
-          >
-            {s}
-          </button>
-        ))}
-      </div>
 
       <DataTable
         columns={columns}

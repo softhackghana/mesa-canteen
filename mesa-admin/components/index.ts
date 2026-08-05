@@ -72,5 +72,6 @@ export {
 } from "@/components/layout/data-table";
 export { SearchInput, type SearchInputProps } from "@/components/layout/search-input";
 export { FilterChips, type FilterChipsProps, type FilterChip } from "@/components/layout/filter-chips";
+export { FilterToolbar, type FilterToolbarProps } from "@/components/layout/filter-toolbar";
 export { EmptyState, type EmptyStateProps } from "@/components/layout/empty-state";
 export { DEFAULT_SIDEBAR_SECTIONS } from "@/components/layout/default-sidebar";
