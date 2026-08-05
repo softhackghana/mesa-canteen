@@ -66,6 +66,7 @@ check('status: expired', currentStatus(cert(now - 10 * DAY)) === 'expired');
 const malformed = verifyCertificate({ ...cert(now + 1 * DAY), certificate: 'not-a-jwt' });
 check('verify: malformed jwt -> unactivated', malformed.status === 'unactivated' && malformed.certificate === null);
 
+async function main() {
 // --- real (async) certificate path ---
 // The dev certificate is deliberately unsigned, so parseCertificate must
 // reject on signature while still parsing claims.
@@ -84,3 +85,6 @@ if (failed) {
   process.exit(1);
 }
 console.log('license self-check passed');
+}
+
+main().catch((e) => { console.error(e); process.exit(1); });
