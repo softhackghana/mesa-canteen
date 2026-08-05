@@ -11,6 +11,7 @@ import {
   type DataTableColumn,
 } from "@/components";
 import { demoTransactions, type AdminTransaction } from "@/lib/admin-data";
+import { buildSpreadsheetML, downloadXls } from "@/lib/spreadsheetml";
 
 type ReportKind =
   | "consolidated"
@@ -50,6 +51,15 @@ interface GroupRow {
   employees: number;
   totalMeals: number;
   totalCost: number;
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 export default function ReportsPage() {
@@ -132,9 +142,71 @@ export default function ReportsPage() {
     toast({ title: "CSV exported", description: `${consolidated.length} group rows written.`, variant: "success" });
   };
 
-  // ponytail: PDF/Excel are stubs — a real export worker would render server-side.
-  const comingSoon = (fmt: string) =>
-    toast({ title: `${fmt} export coming soon`, description: "Server-side rendering is not wired up yet.", variant: "info" });
+  const exportXls = () => {
+    const rows = consolidated.map((r) => ({
+      cells: [r.department, r.costCentre, r.employees, r.totalMeals, r.totalCost] as (string | number)[],
+    }));
+    const xml = buildSpreadsheetML([
+      {
+        name: "Consolidated Meals",
+        rows: [
+          { cells: ["Department", "Cost Centre", "Employees", "Total Meals", "Total Cost (GHS)"] },
+          ...rows,
+          { cells: ["TOTAL", "", totals.employees, totals.meals, totals.cost] },
+        ],
+      },
+    ]);
+    downloadXls(xml, `mesa-consolidated-meals-${from}-to-${to}.xls`);
+    toast({ title: "Excel exported", description: `${consolidated.length} group rows written.`, variant: "success" });
+  };
+
+  // ponytail: PDF export uses the browser print pipeline rather than a server
+  // renderer. The user picks "Save as PDF" in the system print dialog.
+  const exportPdf = () => {
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>MESA Consolidated Meals Report</title>
+<style>
+  body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 24px; color: #111; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .range { color: #666; font-size: 12px; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; }
+  th { background: #f5f5f5; font-weight: 600; }
+  .right { text-align: right; }
+  .total td { font-weight: 700; border-top: 2px solid #111; border-bottom: none; }
+</style>
+</head>
+<body>
+<h1>MESA Consolidated Meals per Employee</h1>
+<div class="range">Period: ${from} → ${to}</div>
+<table>
+<thead>
+<tr><th>Department</th><th>Cost Centre</th><th class="right">Employees</th><th class="right">Total Meals</th><th class="right">Total Cost (GHS)</th></tr>
+</thead>
+<tbody>
+${consolidated
+  .map((r) => `<tr><td>${escapeHtml(r.department)}</td><td>${escapeHtml(r.costCentre)}</td><td class="right">${r.employees}</td><td class="right">${r.totalMeals}</td><td class="right">${r.totalCost.toFixed(2)}</td></tr>`)
+  .join("")}
+<tr class="total"><td>TOTAL</td><td></td><td class="right">${totals.employees}</td><td class="right">${totals.meals}</td><td class="right">${totals.cost.toFixed(2)}</td></tr>
+</tbody>
+</table>
+</body>
+</html>`;
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast({ title: "PDF export failed", description: "Allow pop-ups to use print-to-PDF.", variant: "error" });
+      return;
+    }
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => printWindow.print(), 250);
+    toast({ title: "PDF export opened", description: "Choose Save as PDF in the print dialog.", variant: "info" });
+  };
 
   const columns: DataTableColumn<GroupRow>[] = [
     {
@@ -176,8 +248,8 @@ export default function ReportsPage() {
               <span className="material-symbols-outlined text-body-lg" aria-hidden>download</span>
               Export CSV
             </Button>
-            <Button variant="secondary" onClick={() => comingSoon("PDF")}>Export PDF</Button>
-            <Button variant="secondary" onClick={() => comingSoon("Excel")}>Export Excel</Button>
+            <Button variant="secondary" onClick={() => exportPdf()}>Export PDF</Button>
+            <Button variant="secondary" onClick={() => exportXls()}>Export Excel</Button>
           </>
         }
       />
