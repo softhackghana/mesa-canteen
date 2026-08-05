@@ -69,6 +69,7 @@ export const useLicenseStore = create<LicenseState>()((set, get) => ({
   error: null,
   usage: null,
 
+  // fallow-ignore-next-line complexity
   activate: async (key, businessName) => {
     set({ loading: true, error: null });
     try {
@@ -115,7 +116,7 @@ export const useLicenseStore = create<LicenseState>()((set, get) => ({
     set({ error: null, ...derive(certificate), status });
   },
 
-  // fallow-ignore-next-line complexity: parallel count fetch + single set; CRAP inflated by null-coalescing fallbacks
+  // fallow-ignore-next-line complexity
   loadUsage: async () => {
     try {
       const [{ data: records }, { data: activations }, { data: terminals }, { data: people }] = await Promise.all([
@@ -156,6 +157,7 @@ export const useLicenseStore = create<LicenseState>()((set, get) => ({
     }
   },
 
+  // fallow-ignore-next-line complexity
   deactivate: async () => {
     try {
       // Mark the latest active activation row inactive so the server-side

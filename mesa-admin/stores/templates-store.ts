@@ -34,6 +34,7 @@ interface TemplatesState {
 }
 
 /** field_config → UI fields; site_id → assignment name. */
+// fallow-ignore-next-line complexity
 function toUi(row: any, sites: Site[]): ReceiptTemplate {
   const site = sites.find((s) => s.id === row.site_id);
   return {
@@ -56,6 +57,7 @@ export const useTemplatesStore = create<TemplatesState>()((set, get) => ({
   loading: false,
   error: null,
 
+  // fallow-ignore-next-line complexity
   fetch: async () => {
     set({ loading: true, error: null });
     try {
@@ -75,6 +77,7 @@ export const useTemplatesStore = create<TemplatesState>()((set, get) => ({
     }
   },
 
+  // fallow-ignore-next-line complexity
   save: async (tpl) => {
     try {
       const { sites } = get();

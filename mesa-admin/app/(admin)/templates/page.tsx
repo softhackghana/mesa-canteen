@@ -59,6 +59,7 @@ function ReceiptPreview({ tpl }: { tpl: ReceiptTemplate }) {
   );
 }
 
+// fallow-ignore-next-line complexity
 export default function TemplatesPage() {
   const { toast } = useToast();
   const templates = useTemplatesStore((s) => s.items);

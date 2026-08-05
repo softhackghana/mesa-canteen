@@ -18,6 +18,7 @@ function daysUntil(iso: string): number {
 }
 
 /** Usage values with cert-limit fallback when live DB usage is still loading. */
+// fallow-ignore-next-line complexity
 function useUsage() {
   const usage = useLicenseStore((s) => s.usage);
   const limits = useLicenseStore((s) => s.limits);

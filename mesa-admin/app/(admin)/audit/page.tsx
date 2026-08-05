@@ -51,7 +51,7 @@ function categoryFor(e: { entityType: string; action: string }): Exclude<Categor
 }
 
 /** Map an audit_logs row to the UI shape. */
-// fallow-ignore-next-line complexity: linear nullable-join mapper; CRAP inflated by null-coalescing fallbacks, not branches
+// fallow-ignore-next-line complexity
 function toEntry(row: any): AdminAuditEntry {
   const delta = row.delta == null ? "—" : typeof row.delta === "string" ? row.delta : JSON.stringify(row.delta);
   return {

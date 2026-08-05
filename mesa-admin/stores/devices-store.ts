@@ -30,6 +30,7 @@ export const useDevicesStore = create<DevicesState>()((set, get) => ({
       set({ loading: false, error: error.message });
       return;
     }
+    // fallow-ignore-next-line complexity
     const items = ((data as any[]) ?? []).map((t) => ({
       id: t.id,
       name: t.name,

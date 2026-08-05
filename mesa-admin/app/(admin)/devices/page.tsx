@@ -67,7 +67,7 @@ export default function DevicesPage() {
     setCommand(null);
   };
 
-  // fallow-ignore-next-line complexity: single fetch+map pipeline; CRAP inflated by null-coalescing fallbacks, not branches
+  // fallow-ignore-next-line complexity
   const load = useCallback(async () => {
     setLoading(true);
     try {
@@ -93,7 +93,7 @@ export default function DevicesPage() {
         }
       }
 
-      // fallow-ignore-next-line complexity: linear nullable-join mapper; CRAP inflated by null-coalescing fallbacks, not branches
+      // fallow-ignore-next-line complexity
       const rows: LiveTerminal[] = (terminals ?? []).map((t: any) => {
         const hb = heartbeatByTerminal.get(t.id);
         const printerStatus = (hb?.printer_status ?? "offline") as LiveTerminal["printer"]["status"];

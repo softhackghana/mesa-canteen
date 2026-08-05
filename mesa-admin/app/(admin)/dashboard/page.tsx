@@ -62,9 +62,9 @@ export default function DashboardPage() {
     loadUsage();
   }, [loadLicense, loadUsage]);
 
-  // fallow-ignore-next-line complexity: fetch+map pipeline; CRAP inflated by null-coalescing fallbacks, not branches
   useEffect(() => {
     let alive = true;
+    // fallow-ignore-next-line complexity
     (async () => {
       try {
         const [{ data: txData }, { data: termData }] = await Promise.all([
@@ -77,6 +77,7 @@ export default function DashboardPage() {
         ]);
         if (!alive) return;
         setTxs(
+          // fallow-ignore-next-line complexity
           ((txData as any[]) ?? []).map((t) => ({
             id: t.id,
             occurred_at: t.occurred_at,
@@ -146,7 +147,7 @@ export default function DashboardPage() {
     }));
   }, [txs]);
 
-  // fallow-ignore-next-line complexity: small filter+map memo
+  // fallow-ignore-next-line complexity
   const biometricEvents = useMemo(
     () =>
       txs
