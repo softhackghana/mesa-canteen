@@ -188,6 +188,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.material-symbols-outlined.fill {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
 /* Ready-to-scan fingerprint pulse (pos_ready_to_scan mockup). */
 .pulse-ring {
   animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;

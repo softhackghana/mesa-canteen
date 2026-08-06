@@ -26,7 +26,7 @@ export function PosPrimaryAction({
       aria-busy={loading}
       className={cn(
         "inline-flex min-h-14 items-center justify-center gap-2 rounded-lg",
-        "bg-primary px-6 py-3 text-on-primary font-semibold text-base",
+        "bg-primary px-6 py-3 font-kiosk-body text-kiosk-body text-on-primary font-semibold",
         "transition-colors hover:bg-primary/90 active:scale-[0.98]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
         "disabled:pointer-events-none disabled:opacity-60",
@@ -57,7 +57,7 @@ export function PosSecondaryAction({
       aria-busy={loading}
       className={cn(
         "inline-flex min-h-14 items-center justify-center gap-2 rounded-lg",
-        "border border-outline bg-surface-container-lowest px-6 py-3 text-on-surface font-semibold text-base",
+        "border border-outline bg-surface-container-lowest px-6 py-3 font-kiosk-body text-kiosk-body text-on-surface font-semibold",
         "transition-colors hover:bg-surface-container active:scale-[0.98]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
         "disabled:pointer-events-none disabled:opacity-60",
@@ -87,8 +87,8 @@ export function PosTextAction({
       aria-busy={loading}
       className={cn(
         "inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-4 py-2",
-        "text-primary underline decoration-primary/30 underline-offset-4",
-        "text-sm font-medium transition-colors hover:bg-surface-container-low active:scale-[0.98]",
+        "font-kiosk-label text-kiosk-label text-primary underline decoration-primary/30 underline-offset-4",
+        "font-medium transition-colors hover:bg-surface-container-low active:scale-[0.98]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
         "disabled:pointer-events-none disabled:opacity-60",
         className,

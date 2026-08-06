@@ -200,7 +200,7 @@ export default function DevicesPage() {
           <span className="flex flex-col items-start gap-1">
             <StatusPill status={live ? "Online" : "Offline"} tone={live ? "success" : "error"} />
             {d.syncBacklog > 0 && (
-              <span className="font-body-md text-body-md text-warning">{d.syncBacklog} queued</span>
+              <span className="font-body-md text-body-md text-on-warning-container">{d.syncBacklog} queued</span>
             )}
           </span>
         );

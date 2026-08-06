@@ -77,7 +77,7 @@ export function TopBar() {
         <div className="flex items-center gap-2 relative">
           <Icon
             name={offline ? "wifi_off" : "wifi"}
-            className={offline ? "text-warning text-body-lg" : "text-outline text-body-lg"}
+            className={offline ? "text-on-warning-container text-body-lg" : "text-outline text-body-lg"}
           />
           <span
             className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-surface ${
@@ -88,7 +88,7 @@ export function TopBar() {
 
         <button
           onClick={toggleDevOffline}
-          className={`min-h-9 px-3 py-1.5 rounded text-kiosk-label font-kiosk-label font-semibold border transition-colors ${
+          className={`min-h-11 px-3 py-1.5 rounded font-kiosk-label text-kiosk-label font-semibold border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
             offline
               ? "bg-warning-container text-on-warning-container border-warning"
               : "bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container"

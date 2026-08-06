@@ -95,6 +95,7 @@ export function DropdownMenu({
                 className={cn(
                   "flex w-full items-center gap-2 rounded-md px-3 py-2 text-left",
                   "font-body-md text-body-md transition-colors duration-100",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
                   item.destructive
                     ? "text-error hover:bg-error-container/50"
                     : "text-on-surface hover:bg-surface-container",

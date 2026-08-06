@@ -110,7 +110,7 @@ export default function PosLogin() {
                 key={i}
                 onClick={backspace}
                 aria-label="Backspace"
-                className="h-[72px] bg-surface-container rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant border border-transparent transition-all active:scale-95 flex items-center justify-center"
+                className="h-[72px] bg-surface-container rounded-lg text-on-surface-variant transition-all hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant border border-transparent active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               >
                 <Icon name="backspace" style={{ fontSize: 24 }} />
               </button>
@@ -118,7 +118,7 @@ export default function PosLogin() {
               <button
                 key={i}
                 onClick={() => press(k)}
-                className="h-[72px] bg-surface-container rounded-lg text-display-md font-display-md text-on-surface hover:bg-surface-container-high hover:border-outline-variant border border-transparent transition-all active:scale-95 flex items-center justify-center"
+                className="h-[72px] bg-surface-container rounded-lg text-display-md font-display-md text-on-surface transition-all hover:bg-surface-container-high hover:border-outline-variant border border-transparent active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               >
                 {k}
               </button>
