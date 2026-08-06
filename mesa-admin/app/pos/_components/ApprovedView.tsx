@@ -61,7 +61,7 @@ export function ApprovedView({ offline }: { offline?: boolean }) {
 
           <div className="mt-10 flex flex-col items-center gap-1 w-full">
             <h2 className="text-headline-md font-headline-md text-on-surface">{person.name}</h2>
-            <span className="font-data-mono text-data-mono text-outline">{person.employeeId}</span>
+            <span className="font-data-mono text-data-mono text-on-surface-variant">{person.employeeId}</span>
           </div>
 
           <div className="w-full border-t border-outline-variant my-6" />
@@ -103,7 +103,7 @@ export function ApprovedView({ offline }: { offline?: boolean }) {
             >
               Reprint Last Coupon
               {printerStatus !== "online" && (
-                <span className="text-kiosk-label font-kiosk-label uppercase text-warning">({printerStatus})</span>
+                <span className="text-kiosk-label font-kiosk-label uppercase text-on-warning-container">({printerStatus})</span>
               )}
             </PosSecondaryAction>
             {person.mealsRemaining <= 0 && offline && (

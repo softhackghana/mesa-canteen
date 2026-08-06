@@ -58,7 +58,7 @@ export function ManualEntrySheet({ offline }: { offline?: boolean }) {
                 setMode(m);
                 setValue("");
               }}
-              className={`flex-1 min-h-11 py-2 rounded text-kiosk-label font-kiosk-label font-medium border transition-colors ${
+              className={`flex-1 min-h-11 py-2 rounded font-kiosk-label text-kiosk-label font-medium border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                 mode === m
                   ? "bg-primary text-on-primary border-primary"
                   : "bg-surface-container-lowest text-on-surface-variant border-outline hover:bg-surface-container"
