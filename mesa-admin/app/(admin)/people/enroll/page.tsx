@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Button,
@@ -10,9 +10,12 @@ import {
   StatusPill,
   useToast,
 } from "@/components";
-import { DEMO_PEOPLE } from "@/lib/admin-data";
+import { usePeopleStore } from "@/stores/people-store";
 import { autoDetectAdapter } from "@/lib/biometrics";
 import { demoIdentities } from "@/lib/demo-data";
+import { buildEnrollment, type EnrollImpression } from "@/lib/enrollment-live";
+import { appendAuditLog } from "@/lib/audit";
+import { insforge } from "@/lib/insforge";
 
 type Step = 1 | 2 | 3;
 
@@ -85,17 +88,28 @@ function HandDiagram({ active }: { active: FingerId | null }) {
 
 export default function EnrollPage() {
   const { toast } = useToast();
+  const people = usePeopleStore((s) => s.items);
+  const fetchPeople = usePeopleStore((s) => s.fetch);
+
   const [step, setStep] = useState<Step>(1);
   const [employeeId, setEmployeeId] = useState("");
   const [finger, setFinger] = useState<FingerId>("right_index");
   const [impressions, setImpressions] = useState<Impression[]>([]);
   const [busy, setBusy] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [adapterNote, setAdapterNote] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
+  // Live People Master (PRD 10.2). Load on mount; only pending-enrollment
+  // people are eligible. useMemo over the store items keeps the select current.
+  useEffect(() => {
+    void fetchPeople();
+  }, [fetchPeople]);
+
+  const eligible = people.filter((p) => p.biometricStatus === "pending");
   const employee = useMemo(
-    () => DEMO_PEOPLE.find((p) => p.employee_id === employeeId) ?? null,
-    [employeeId],
+    () => people.find((p) => p.employee_id === employeeId) ?? null,
+    [people, employeeId],
   );
 
   // 1:N duplicate check against seeded templates (FR-IM-004). Simulated: a
@@ -145,18 +159,67 @@ export default function EnrollPage() {
     (step === 2 && impressions.length >= 1 && impressions.some((i) => i.accepted) && !duplicate) ||
     step === 3;
 
-  const save = () => {
+  const save = async () => {
+    if (!employee) return;
     setConfirmOpen(false);
-    toast({
-      title: `Enrollment saved for ${employee?.first_name} ${employee?.last_name}`,
-      description: `${impressions.length} template(s) stored · SourceAFIS minutiae only · audit-logged`,
-      variant: "success",
-    });
-    // reset for the next enrollment
-    setStep(1);
-    setEmployeeId("");
-    setImpressions([]);
-    setFinger("right_index");
+    setSaving(true);
+    try {
+      const verdict = buildEnrollment(
+        { id: employee.id, employee_id: employee.employee_id, first_name: employee.first_name, last_name: employee.last_name },
+        impressions as EnrollImpression[],
+        "digitalpersona",
+      );
+
+      // 1) persist accepted biometric templates (bytea hex -> DB)
+      const tplRes = await insforge.database.from("biometric_templates").insert(
+        verdict.templates.map((t) => ({
+          person_id: employee.id,
+          finger_position: t.finger_position,
+          template: t.template,
+          vendor: t.vendor,
+          quality_score: t.quality_score,
+        })),
+      );
+      if (tplRes.error) throw new Error(tplRes.error.message);
+
+      // 2) mark person enrolled + consented
+      const personRes = await insforge.database
+        .from("people")
+        .update(verdict.personPatch)
+        .eq("id", employee.id)
+        .select("id")
+        .maybeSingle();
+      if (personRes.error) throw new Error(personRes.error.message);
+
+      // 3) immutable audit entry
+      const audit = await appendAuditLog({
+        actor_type: "user",
+        entity_type: "people",
+        entity_id: verdict.audit.entityId,
+        action: verdict.audit.action,
+        delta: verdict.audit.delta,
+      });
+      if (audit.error) throw new Error(audit.error.message);
+
+      toast({
+        title: `Enrollment saved for ${employee.first_name} ${employee.last_name}`,
+        description: `${verdict.templates.length} template(s) stored · SourceAFIS minutiae · audit-logged`,
+        variant: "success",
+      });
+      void fetchPeople();
+      setStep(1);
+      setEmployeeId("");
+      setImpressions([]);
+      setFinger("right_index");
+    } catch (e) {
+      toast({
+        title: "Enrollment failed",
+        description: e instanceof Error ? e.message : "Unexpected error",
+        variant: "error",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -212,7 +275,7 @@ export default function EnrollPage() {
                 label="Employee"
                 placeholder="Search by name or EMP ID..."
                 value={employeeId}
-                options={DEMO_PEOPLE.filter((p) => p.biometricStatus === "pending").map((p) => ({
+                options={eligible.map((p) => ({
                   value: p.employee_id,
                   label: `${p.first_name} ${p.last_name} (${p.employee_id}) — ${p.department ?? ""}`,
                 }))}
@@ -378,7 +441,7 @@ export default function EnrollPage() {
                 <span className="material-symbols-outlined text-body-lg" aria-hidden>arrow_forward</span>
               </Button>
             ) : (
-              <Button onClick={() => setConfirmOpen(true)} disabled={!canAdvance}>
+              <Button onClick={() => setConfirmOpen(true)} disabled={!canAdvance || saving}>
                 <span className="material-symbols-outlined text-body-lg" aria-hidden>save</span>
                 Save Enrollment
               </Button>
@@ -438,7 +501,7 @@ export default function EnrollPage() {
         footer={
           <>
             <Button variant="secondary" onClick={() => setConfirmOpen(false)}>Cancel</Button>
-            <Button onClick={save}>Confirm & Save</Button>
+            <Button onClick={save} disabled={saving}>{saving ? "Saving…" : "Confirm & Save"}</Button>
           </>
         }
       >
