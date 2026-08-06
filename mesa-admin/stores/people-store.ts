@@ -1,28 +1,39 @@
 import { create } from 'zustand';
 import { insforge, type Person } from '@/lib/insforge';
+import type { AdminPerson } from '@/lib/admin-data';
+import {
+  PEOPLE_JOIN_SELECT,
+  buildCredentialMap,
+  buildTemplateCounts,
+  toAdminPerson,
+  type PeopleJoinRow,
+} from '@/lib/people-live';
 
 const TABLE = 'people';
-const PAGE_SIZE = 20;
 
 export interface PeopleFilters {
   search: string;
   status: 'all' | Person['status'];
+  /** Department id. Live rows carry department_id; the old name-column filter was the bug. */
   department: string;
 }
 
-export interface PeoplePagination {
-  page: number;
-  pageSize: number;
-  total: number;
+export interface OrgLookup {
+  id: string;
+  code: string;
+  name: string;
 }
 
 interface PeopleState {
-  items: Person[];
+  items: AdminPerson[];
   filters: PeopleFilters;
-  pagination: PeoplePagination;
+  departments: OrgLookup[];
+  costCentres: OrgLookup[];
+  sites: OrgLookup[];
   loading: boolean;
   error: string | null;
-  fetch: (opts?: { page?: number }) => Promise<void>;
+  fetch: () => Promise<void>;
+  setFilter: (patch: Partial<PeopleFilters>) => void;
   search: (query: string) => Promise<void>;
   add: (person: Omit<Person, 'id'>) => Promise<boolean>;
   update: (id: string, patch: Partial<Person>) => Promise<boolean>;
@@ -37,31 +48,42 @@ function errorMessage(e: unknown): string {
 export const usePeopleStore = create<PeopleState>()((set, get) => ({
   items: [],
   filters: { search: '', status: 'all', department: '' },
-  pagination: { page: 1, pageSize: PAGE_SIZE, total: 0 },
+  departments: [],
+  costCentres: [],
+  sites: [],
   loading: false,
   error: null,
 
-  fetch: async ({ page } = {}) => {
-    const { filters, pagination } = get();
-    const targetPage = page ?? pagination.page;
+  fetch: async () => {
+    const { filters } = get();
     set({ loading: true, error: null });
     try {
-      let query = insforge.database.from(TABLE).select('*', { count: 'exact' });
+      let query = insforge.database.from(TABLE).select(PEOPLE_JOIN_SELECT);
       if (filters.search) {
         const like = `%${filters.search}%`;
         query = query.or(`first_name.ilike.${like},last_name.ilike.${like},employee_id.ilike.${like}`);
       }
       if (filters.status !== 'all') query = query.eq('status', filters.status);
-      if (filters.department) query = query.eq('department', filters.department);
-      query = query.order('last_name', { ascending: true }).range(
-        (targetPage - 1) * pagination.pageSize,
-        targetPage * pagination.pageSize - 1
-      );
-      const { data, error, count } = await query;
-      if (error) throw error;
+      if (filters.department) query = query.eq('department_id', filters.department);
+      query = query.order('last_name', { ascending: true });
+
+      const [peopleRes, deptRes, ccRes, siteRes, tplRes, credRes] = await Promise.all([
+        query,
+        insforge.database.from('departments').select('id, code, name').order('name', { ascending: true }),
+        insforge.database.from('cost_centres').select('id, code, name').order('code', { ascending: true }),
+        insforge.database.from('sites').select('id, code, name').order('name', { ascending: true }),
+        insforge.database.from('biometric_templates').select('person_id').eq('is_active', true),
+        insforge.database.from('credentials').select('person_id, credential_type, credential_value').eq('is_active', true),
+      ]);
+      if (peopleRes.error) throw peopleRes.error;
+
+      const templateCounts = buildTemplateCounts((tplRes.data as Array<{ person_id: string }>) ?? []);
+      const credsByPerson = buildCredentialMap((credRes.data as Array<{ person_id: string; credential_type: string; credential_value: string }>) ?? []);
       set({
-        items: (data as Person[]) ?? [],
-        pagination: { ...pagination, page: targetPage, total: count ?? 0 },
+        items: ((peopleRes.data as PeopleJoinRow[]) ?? []).map((row) => toAdminPerson(row, templateCounts, credsByPerson)),
+        departments: (deptRes.data as OrgLookup[] | null) ?? [],
+        costCentres: (ccRes.data as OrgLookup[] | null) ?? [],
+        sites: (siteRes.data as OrgLookup[] | null) ?? [],
         loading: false,
         error: null,
       });
@@ -70,43 +92,44 @@ export const usePeopleStore = create<PeopleState>()((set, get) => ({
     }
   },
 
+  setFilter: (patch) => {
+    set({ filters: { ...get().filters, ...patch } });
+    void get().fetch();
+  },
+
   search: async (query) => {
-    set({ filters: { ...get().filters, search: query }, pagination: { ...get().pagination, page: 1 } });
-    await get().fetch({ page: 1 });
+    set({ filters: { ...get().filters, search: query } });
+    await get().fetch();
   },
 
   add: async (person) => {
-    const { data, error } = await insforge.database.from(TABLE).insert([person]).select();
+    const { error } = await insforge.database.from(TABLE).insert([person]);
     if (error) {
       set({ error: error.message });
       return false;
     }
-    set({ items: [...(data as Person[]), ...get().items], error: null });
+    await get().fetch();
     return true;
   },
 
   update: async (id, patch) => {
-    const { data, error } = await insforge.database.from(TABLE).update(patch).eq('id', id).select();
+    const { error } = await insforge.database.from(TABLE).update(patch).eq('id', id);
     if (error) {
       set({ error: error.message });
       return false;
     }
-    const updated = (data as Person[] | null)?.[0];
-    set({
-      items: updated ? get().items.map((p) => (p.id === id ? updated : p)) : get().items,
-      error: null,
-    });
+    await get().fetch();
     return true;
   },
 
   bulkImport: async (rows) => {
-    const { data, error } = await insforge.database.from(TABLE).insert(rows).select();
+    const { data, error } = await insforge.database.from(TABLE).insert(rows).select('id');
     if (error) {
       set({ error: error.message });
       return { imported: 0, failed: rows.length };
     }
-    set({ items: [...(data as Person[]), ...get().items], error: null });
-    return { imported: (data as Person[]).length, failed: rows.length - (data as Person[]).length };
+    await get().fetch();
+    return { imported: (data as Array<{ id: string }> | null)?.length ?? 0, failed: rows.length - ((data as Array<{ id: string }> | null)?.length ?? 0) };
   },
 
   remove: async (id) => {
@@ -115,7 +138,7 @@ export const usePeopleStore = create<PeopleState>()((set, get) => ({
       set({ error: error.message });
       return false;
     }
-    set({ items: get().items.filter((p) => p.id !== id), error: null });
+    await get().fetch();
     return true;
   },
 }));
