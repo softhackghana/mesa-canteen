@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Button,
@@ -11,7 +11,6 @@ import {
   Label,
   PageHeader,
   SearchInput,
-  Select,
   StatusPill,
   Tabs,
   TabsContent,
@@ -20,8 +19,7 @@ import {
   useToast,
   type DataTableColumn,
 } from "@/components";
-import { usePeopleStore } from "@/stores";
-import type { AdminPerson } from "@/lib/admin-data";
+import { DEMO_PEOPLE, type AdminPerson } from "@/lib/admin-data";
 
 type Filter = "all" | "active" | "inactive" | "enrolled" | "pending";
 
@@ -41,51 +39,26 @@ function initials(p: AdminPerson): string {
 
 export default function PeoplePage() {
   const { toast } = useToast();
-  const items = usePeopleStore((s) => s.items);
-  const departments = usePeopleStore((s) => s.departments);
-  const loading = usePeopleStore((s) => s.loading);
-  const departmentFilter = usePeopleStore((s) => s.filters.department);
-  const fetch = usePeopleStore((s) => s.fetch);
-  const setFilter = usePeopleStore((s) => s.setFilter);
-  const search = usePeopleStore((s) => s.search);
   const [query, setQuery] = useState("");
-  const [filter, setFilterChip] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [page, setPage] = useState(1);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [selected, setSelected] = useState<AdminPerson | null>(null);
   const pageSize = 10;
 
-  // Live query on mount; re-fetch when server-side filters change.
-  useEffect(() => {
-    void fetch();
-  }, [fetch]);
-
-  // Debounced server-side search (name / ID).
-  useEffect(() => {
-    const t = setTimeout(() => void search(query), 300);
-    return () => clearTimeout(t);
-  }, [query, search]);
-
-  // Status chips drive the server-side filter; biometric chips are derived
-  // client-side (biometricStatus comes from biometric_templates).
-  const onFilterChange = (v: string) => {
-    const chip = v as Filter;
-    setFilterChip(chip);
-    setPage(1);
-    setFilter({ status: chip === "active" || chip === "inactive" ? chip : "all" });
-  };
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter((p) => {
+    return DEMO_PEOPLE.filter((p) => {
+      if (filter === "active" && p.status !== "active") return false;
+      if (filter === "inactive" && p.status === "active") return false;
       if (filter === "enrolled" && p.biometricStatus !== "enrolled") return false;
       if (filter === "pending" && p.biometricStatus !== "pending") return false;
       if (!q) return true;
       const hay = `${p.first_name} ${p.last_name} ${p.employee_id} ${p.department ?? ""} ${p.cost_centre ?? ""} ${p.site ?? ""}`.toLowerCase();
       return hay.includes(q);
     });
-  }, [items, filter, query]);
+  }, [query, filter]);
 
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
 
@@ -145,11 +118,12 @@ export default function PeoplePage() {
       key: "status",
       header: "Status",
       sortable: true,
-      render: (p) => {
-        const label = p.status === "active" ? "Active" : p.status === "inactive" ? "Inactive" : p.status === "terminated" ? "Terminated" : "Pending";
-        const tone = p.status === "active" ? "success" : p.status === "pending_enrollment" ? "warning" : "neutral";
-        return <StatusPill status={label} tone={tone} />;
-      },
+      render: (p) => (
+        <StatusPill
+          status={p.status === "active" ? "Active" : p.status === "inactive" ? "Inactive" : "Terminated"}
+          tone={p.status === "active" ? "success" : "neutral"}
+        />
+      ),
     },
     {
       key: "actions",
@@ -205,14 +179,6 @@ export default function PeoplePage() {
                 setPage(1);
               }}
             />
-            <Select
-              options={[{ value: "", label: "All Departments" }, ...departments.map((d) => ({ value: d.id, label: d.name }))]}
-              value={departmentFilter}
-              onChange={(v) => {
-                setPage(1);
-                setFilter({ department: v });
-              }}
-            />
             <Button variant="secondary" onClick={() => setBulkOpen(true)}>
               <span className="material-symbols-outlined text-body-lg" aria-hidden>upload</span>
               Bulk Import CSV
@@ -231,25 +197,24 @@ export default function PeoplePage() {
       <FilterChips
         options={FILTERS}
         value={filter}
-        onValueChange={onFilterChange}
+        onValueChange={(v) => {
+          setFilter(v as Filter);
+          setPage(1);
+        }}
       />
 
-      {loading && filtered.length === 0 ? (
-        <p className="font-body-md text-body-md text-on-surface-variant">Loading employees…</p>
-      ) : (
-        <DataTable
-          columns={columns}
-          data={paged}
-          rowKey={(p) => p.id}
-          defaultSort={{ key: "employee", direction: "asc" }}
-          pagination={{
-            page,
-            pageSize,
-            total: filtered.length,
-            onPageChange: setPage,
-          }}
-        />
-      )}
+      <DataTable
+        columns={columns}
+        data={paged}
+        rowKey={(p) => p.id}
+        defaultSort={{ key: "employee", direction: "asc" }}
+        pagination={{
+          page,
+          pageSize,
+          total: filtered.length,
+          onPageChange: setPage,
+        }}
+      />
 
       {/* Bulk import modal (mesa_bulk_import_modal) */}
       <BulkImportDialog open={bulkOpen} onOpenChange={setBulkOpen} />
@@ -450,28 +415,7 @@ function SelectLike({ id, value, options, onChange }: { id?: string; value: stri
 function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenChange: (v: boolean) => void; person: AdminPerson | null }) {
   const { toast } = useToast();
   const isNew = !person;
-  // Add-employee mode needs a blank shape; live rows come from the store.
-  const p: AdminPerson = person ?? {
-    id: "",
-    employee_id: "",
-    first_name: "",
-    last_name: "",
-    email: null,
-    department_id: null,
-    cost_centre_id: null,
-    site_id: null,
-    status: "active",
-    hire_date: null,
-    hris_id: null,
-    biometric_consent: false,
-    consent_at: null,
-    photo_url: null,
-    created_at: "",
-    updated_at: "",
-    biometricStatus: "pending",
-    biometricTemplates: 0,
-    credential: "None",
-  };
+  const p = person ?? DEMO_PEOPLE[0];
 
   const details: Array<[string, string]> = [
     ["Employee ID", p.employee_id],
@@ -495,12 +439,7 @@ function ProfileDialog({ open, onOpenChange, person }: { open: boolean; onOpenCh
             {initials(p)}
           </span>
           {isNew ? "Add Employee" : `${p.first_name} ${p.last_name}`}
-          {!isNew && (
-            <StatusPill
-              status={p.status === "active" ? "ACTIVE" : p.status === "pending_enrollment" ? "PENDING" : "INACTIVE"}
-              tone={p.status === "active" ? "success" : p.status === "pending_enrollment" ? "warning" : "neutral"}
-            />
-          )}
+          {!isNew && <StatusPill status={p.status === "active" ? "ACTIVE" : "INACTIVE"} tone={p.status === "active" ? "success" : "neutral"} />}
         </span>
       }
       description={isNew ? "Create a new personnel profile." : p.employee_id}
