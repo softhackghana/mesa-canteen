@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PosPrimaryAction } from "../_components/PosActions";
 import { Icon } from "../_components/Icon";
+import { usePosStore } from "../_store";
 import { DEMO_OPERATOR, DEMO_SUPERVISOR } from "@/lib/demo-data";
 import { logAudit } from "@/lib/audit";
 import { cn } from "@/lib/cn";
@@ -33,10 +34,17 @@ export default function PosLogin() {
     const p = pin;
     if (p.length === 0) return;
     if (p === "1234" || p === DEMO_SUPERVISOR.pin) {
+      // Sign the operator into the kiosk store (PRD 14.4 operator session).
+      const op = p === DEMO_SUPERVISOR.pin ? DEMO_SUPERVISOR : DEMO_OPERATOR;
+      usePosStore.getState().setOperator({
+        id: op.id,
+        name: op.name,
+        role: op.role,
+      });
       await logAudit({
         kind: "login",
-        actorId: DEMO_OPERATOR.id,
-        actorName: DEMO_OPERATOR.name,
+        actorId: op.id,
+        actorName: op.name,
         detail: `Operator signed in via PIN on TERM-NY-01`,
         metadata: { terminalId: "TERM-NY-01" },
       });
@@ -52,6 +60,11 @@ export default function PosLogin() {
     setFpActive(true);
     // Simulated fingerprint auth (real adapter auto-detect happens on the kiosk).
     await new Promise((r) => setTimeout(r, 900));
+    usePosStore.getState().setOperator({
+      id: DEMO_OPERATOR.id,
+      name: DEMO_OPERATOR.name,
+      role: DEMO_OPERATOR.role,
+    });
     await logAudit({
       kind: "login",
       actorId: DEMO_OPERATOR.id,

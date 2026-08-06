@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { usePosStore } from "./_store";
 import { TopBar } from "./_components/TopBar";
 import { PosSecondaryAction } from "./_components/PosActions";
@@ -21,6 +22,7 @@ import { demoIdentities } from "@/lib/demo-data";
  * no sidebar. Renders the state machine from usePosStore.
  */
 export default function PosKiosk() {
+  const operator = usePosStore((s) => s.operator);
   const screen = usePosStore((s) => s.screen);
   const online = usePosStore((s) => s.online);
   const devOffline = usePosStore((s) => s.devOffline);
@@ -100,6 +102,20 @@ export default function PosKiosk() {
     }
     void scan();
   };
+
+  // Operator gate: kiosk requires an active sign-in (PRD 14.4). Without one,
+  // bounce to the login page which sets the operator in the store.
+  const router = useRouter();
+  useEffect(() => {
+    if (!operator) void router.replace("/pos/login");
+  }, [operator, router]);
+  if (!operator) {
+    return (
+      <div className="h-screen w-screen bg-background text-on-surface flex flex-col items-center justify-center gap-4">
+        <p className="font-body-md text-body-md text-on-surface-variant">Signing you in…</p>
+      </div>
+    );
+  }
 
   if (adapterStatus === "detecting") {
     return (

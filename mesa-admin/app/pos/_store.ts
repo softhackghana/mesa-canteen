@@ -22,6 +22,9 @@ import {
   type DemoIdentity,
   type MealPeriod,
 } from "@/lib/demo-data";
+import { transactionRow } from "@/lib/pos-live";
+import { appendAuditLog } from "@/lib/audit";
+import { insforge } from "@/lib/insforge";
 import { autoDetectAdapter, type IBiometricAdapter } from "@/lib/biometrics";
 import { posDb } from "@/lib/pos-db";
 import { printerClient, type PrinterStatus } from "@/lib/printer";
@@ -56,7 +59,7 @@ interface PosState {
   // terminal identity
   terminalId: string;
   siteName: string;
-  operator: { id: string; name: string; role: string };
+  operator: { id: string; name: string; role: string } | null;
   // connectivity
   online: boolean;
   devOffline: boolean;
@@ -81,6 +84,7 @@ interface PosState {
   scanBusy: boolean;
   // actions
   start: () => void;
+  setOperator: (op: { id: string; name: string; role: string } | null) => void;
   scan: (template?: string) => Promise<void>;
   attemptFallback: (id: string, method: "rfid" | "pin") => Promise<void>;
   openOverride: (person: DemoIdentity | null, method: MealTransaction["method"]) => void;
@@ -131,11 +135,57 @@ function issueTransaction(
 }
 
 /**
- * Persist a transaction: queue it in IndexedDB when offline so it survives a
- * reload and flushes on reconnect (FR-POS-002/003). Never throws into the UI.
+ * Persist a transaction to the live `transactions` table. Resolves the
+ * person/terminal/site uuids, inserts the row, and returns the ref on success
+ * (null when offline or the insert fails). Never throws into the UI.
+ */
+async function pushLiveTransaction(tx: MealTransaction, seq: number): Promise<string | null> {
+  try {
+    // Resolve person uuid by employee id (or synthetic guest id).
+    let personId: string | null = null;
+    if (tx.identityId !== "guest" && tx.employeeId) {
+      const personRes = await insforge.database
+        .from("people")
+        .select("id")
+        .eq("employee_id", tx.employeeId)
+        .maybeSingle();
+      if (personRes.error) throw personRes.error;
+      personId = (personRes.data as { id: string } | null)?.id ?? null;
+    }
+    // Resolve terminal uuid by code, then its site.
+    const termRes = await insforge.database
+      .from("terminals")
+      .select("id, site_id")
+      .eq("terminal_code", tx.terminalId)
+      .maybeSingle();
+    if (termRes.error) return null;
+    const term = termRes.data as { id: string; site_id: string | null } | null;
+    if (!term) return null;
+
+    const row = transactionRow(tx, personId, term.id, term.site_id, new Date(tx.issuedAt), seq);
+    const { data, error } = await insforge.database.from("transactions").insert([row]).select("transaction_ref").maybeSingle();
+    if (error) return null;
+    return (data as { transaction_ref: string } | null)?.transaction_ref ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Persist a transaction: push to the DB when online (FR-POS-001), or queue it
+ * in IndexedDB when offline so it survives a reload and flushes on reconnect
+ * (FR-POS-002/003). Never throws into the UI. Falls back to the offline queue
+ * when the live push fails so no meal is lost.
  */
 async function persistTransaction(tx: MealTransaction): Promise<void> {
-  if (usePosStore.getState().isOnline()) return;
+  if (usePosStore.getState().isOnline()) {
+    const ref = await pushLiveTransaction(tx, Date.now() % 1e6);
+    if (ref) {
+      tx.synced = true;
+      return;
+    }
+    // Live push failed — fall through to offline queue.
+  }
   try {
     await posDb.add("queue", {
       ...tx,
@@ -212,7 +262,9 @@ function meetsEntitlement(person: DemoIdentity): { ok: boolean; reason?: string 
 export const usePosStore = create<PosState>()((set, get) => ({
   terminalId: DEMO_TERMINAL_ID,
   siteName: DEMO_SITE.name,
-  operator: DEMO_OPERATOR,
+  // Operator is null until someone signs in on /pos/login; the kiosk page
+  // gates on it (PRD 14.4 operator session).
+  operator: null,
   // Must be deterministic: the server and the browser's first render have to
   // agree. Real connectivity is seeded on mount and kept fresh by the
   // online/offline listeners in page.tsx.
@@ -233,6 +285,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
   pendingIdentity: null,
   pendingMethod: "biometric",
   scanBusy: false,
+
+  setOperator: (op) => set({ operator: op }),
 
   start: async () => {
     const { adapter, note } = await autoDetectAdapter();
@@ -290,8 +344,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
       });
       await logAudit({
         kind: "meal_denied",
-        actorId: get().operator.id,
-        actorName: get().operator.name,
+        actorId: get()?.operator?.id ?? "unknown",
+        actorName: get()?.operator?.name ?? "Unknown",
         detail: `Biometric error: ${result.error}`,
       });
       return;
@@ -301,8 +355,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
       set({ screen: "no_match", denyReason: null, lastPerson: null });
       await logAudit({
         kind: "meal_denied",
-        actorId: get().operator.id,
-        actorName: get().operator.name,
+        actorId: get()?.operator?.id ?? "unknown",
+        actorName: get()?.operator?.name ?? "Unknown",
         detail: "No biometric match found.",
       });
       return;
@@ -323,8 +377,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
       });
       await logAudit({
         kind: "meal_denied",
-        actorId: get().operator.id,
-        actorName: get().operator.name,
+        actorId: get()?.operator?.id ?? "unknown",
+        actorName: get()?.operator?.name ?? "Unknown",
         detail: `${person.name} (${person.employeeId}) denied: ${check.reason}`,
         metadata: { identityId: person.id },
       });
@@ -343,8 +397,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
 
     await logAudit({
       kind: "meal_issued",
-      actorId: get().operator.id,
-      actorName: get().operator.name,
+      actorId: get()?.operator?.id ?? "unknown",
+      actorName: get()?.operator?.name ?? "Unknown",
       detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via biometric`,
       metadata: { transactionId: tx.id, identityId: person.id },
     });
@@ -375,8 +429,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
     await persistTransaction(tx);
     await logAudit({
       kind: "meal_issued",
-      actorId: get().operator.id,
-      actorName: get().operator.name,
+      actorId: get()?.operator?.id ?? "unknown",
+      actorName: get()?.operator?.name ?? "Unknown",
       detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via ${method}`,
       metadata: { transactionId: tx.id, identityId: person.id },
     });
@@ -433,8 +487,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
       });
       await logAudit({
         kind: "meal_issued",
-        actorId: get().operator.id,
-        actorName: get().operator.name,
+        actorId: get()?.operator?.id ?? "unknown",
+        actorName: get()?.operator?.name ?? "Unknown",
         detail: "Guest meal issued via supervisor override",
         metadata: { transactionId: tx.id },
       });
@@ -459,8 +513,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
     });
     await logAudit({
       kind: "meal_issued",
-      actorId: get().operator.id,
-      actorName: get().operator.name,
+      actorId: get()?.operator?.id ?? "unknown",
+      actorName: get()?.operator?.name ?? "Unknown",
       detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via supervisor override`,
       metadata: { transactionId: tx.id, identityId: person.id },
     });
@@ -497,8 +551,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
     await persistTransaction(tx);
     await logAudit({
       kind: "meal_issued",
-      actorId: get().operator.id,
-      actorName: get().operator.name,
+      actorId: get()?.operator?.id ?? "unknown",
+      actorName: get()?.operator?.name ?? "Unknown",
       detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via manual PIN entry`,
       metadata: { transactionId: tx.id, identityId: person.id },
     });
@@ -512,8 +566,8 @@ export const usePosStore = create<PosState>()((set, get) => ({
     if (!tx || !person) return;
     await logAudit({
       kind: "reprint",
-      actorId: s.operator.id,
-      actorName: s.operator.name,
+      actorId: s.operator?.id ?? "unknown",
+      actorName: s.operator?.name ?? "Unknown",
       detail: `Reprinted coupon for ${tx.id} (${person.name})`,
       metadata: { transactionId: tx.id },
     });
@@ -543,18 +597,35 @@ export const usePosStore = create<PosState>()((set, get) => ({
         set({ queuedCount: 0 });
         return 0;
       }
-      // Simulated central-server push: remove from queue on success.
+      // Replay each queued offline transaction into the live table, deleting
+      // only the rows that persist successfully (FR-POS-002/003 server sync).
+      let pushed = 0;
       for (const row of queued) {
-        if (typeof row.id === "number") await posDb.delete("queue", row.id);
+        const key = row.id;
+        const dbTx = {
+          ...row,
+          terminalId: row.terminalId ?? DEMO_TERMINAL_ID,
+          entitlement: row.entitlement ?? "lunch",
+          issuedAt: row.issuedAt ?? nowIso(),
+        } as MealTransaction;
+        const ref = await pushLiveTransaction(dbTx, Date.now() % 1e6);
+        if (ref && key != null) {
+          pushed++;
+          await posDb.delete("queue", key as IDBValidKey);
+        }
       }
-      set({ queuedCount: 0 });
-      await logAudit({
-        kind: "sync",
-        actorId: get().operator.id,
-        actorName: get().operator.name,
-        detail: `Pushed ${queued.length} queued offline transactions to server.`,
-      });
-      return queued.length;
+      const remaining = await posDb.count("queue");
+      set({ queuedCount: remaining });
+      if (pushed > 0) {
+        await appendAuditLog({
+          actor_type: "user",
+          entity_type: "sync_job",
+          entity_id: `pos-sync-${Date.now()}`,
+          action: "pos.sync",
+          delta: { pushed },
+        });
+      }
+      return pushed;
     } catch {
       return 0;
     }
@@ -567,13 +638,16 @@ export const usePosStore = create<PosState>()((set, get) => ({
   closeShiftSummary: () => set({ screen: "idle" }),
 
   endShift: async () => {
+    const op = get().operator;
     await logAudit({
       kind: "logout",
-      actorId: get().operator.id,
-      actorName: get().operator.name,
+      actorId: op?.id ?? "unknown",
+      actorName: op?.name ?? "Unknown",
       detail: "Shift ended, operator signed out.",
     });
     set({
+      // Clear the operator so the kiosk gates on sign-in again.
+      operator: null,
       screen: "idle",
       mealsServed: 0,
       lastTransaction: null,
@@ -612,8 +686,8 @@ async function dispatchCoupon(tx: MealTransaction, person: DemoIdentity, reprint
     const s = usePosStore.getState();
     await logAudit({
       kind: "printer_error",
-      actorId: s.operator.id,
-      actorName: s.operator.name,
+      actorId: s.operator?.id ?? "unknown",
+      actorName: s.operator?.name ?? "Unknown",
       detail: `Coupon print failed for ${tx.id}: ${res.reason}`,
       metadata: { transactionId: tx.id },
     });

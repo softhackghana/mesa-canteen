@@ -76,7 +76,7 @@ export class LocalDb {
     });
   }
 
-  async delete(store: string, id: number): Promise<void> {
+  async delete(store: string, id: IDBValidKey): Promise<void> {
     const db = await this.dbPromise;
     return new Promise((resolve, reject) => {
       const tx = db.transaction(store, "readwrite");

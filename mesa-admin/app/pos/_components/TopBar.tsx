@@ -57,7 +57,7 @@ export function TopBar() {
         </div>
         <div className="flex items-center gap-2">
           <Icon name="person" className="text-outline text-body-lg" />
-          <span>Operator: {operator.name}</span>
+          <span>Operator: {operator?.name ?? "—"}</span>
         </div>
         <div className="flex items-center gap-2">
           <Icon name="schedule" className="text-outline text-body-lg" />
