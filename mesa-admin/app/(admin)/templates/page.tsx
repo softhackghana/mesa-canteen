@@ -81,6 +81,7 @@ export default function TemplatesPage() {
   }, [fetchTemplates]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!selectedId && templates.length > 0) setSelectedId(templates[0].id);
   }, [templates, selectedId]);
 

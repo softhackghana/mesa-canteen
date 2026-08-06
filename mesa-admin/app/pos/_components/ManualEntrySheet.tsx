@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePosStore } from "../_store";
 import { Icon } from "./Icon";
-import { PosPrimaryAction, PosSecondaryAction, PosTextAction } from "./PosActions";
+import { PosPrimaryAction, PosTextAction } from "./PosActions";
 
 /**
  * Manual entry sheet (PRD 14.4 step 28): RFID/PIN fallback lookup. Mirrors the
@@ -14,7 +14,6 @@ export function ManualEntrySheet({ offline }: { offline?: boolean }) {
   const [mode, setMode] = useState<"rfid" | "pin">("rfid");
   const [value, setValue] = useState("");
   const manualId = usePosStore((s) => s.manualId);
-  const setManualId = (v: string) => usePosStore.setState({ manualId: v });
   const attemptFallback = usePosStore((s) => s.attemptFallback);
   const openOverride = usePosStore((s) => s.openOverride);
   const [submitBusy, setSubmitBusy] = useState(false);

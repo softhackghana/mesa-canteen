@@ -10,7 +10,6 @@ import { PosPrimaryAction, PosSecondaryAction, PosTextAction } from "./PosAction
  * try again, RFID fallback, PIN fallback, and supervisor override.
  */
 export function NoMatchView() {
-  const returnToIdle = usePosStore((s) => s.returnToIdle);
   const openOverride = usePosStore((s) => s.openOverride);
   const denyReason = usePosStore((s) => s.denyReason);
   const scan = usePosStore((s) => s.scan);

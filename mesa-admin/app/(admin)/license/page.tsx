@@ -206,7 +206,6 @@ export default function LicensePage() {
   const [businessName, setBusinessName] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const status = license.status;
   const loading = license.loading;
 
   const deactivate = async () => {

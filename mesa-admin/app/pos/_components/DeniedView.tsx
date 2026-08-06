@@ -2,7 +2,7 @@
 
 import { usePosStore } from "../_store";
 import { Icon } from "./Icon";
-import { PosPrimaryAction, PosSecondaryAction, PosTextAction } from "./PosActions";
+import { PosPrimaryAction, PosSecondaryAction } from "./PosActions";
 
 /**
  * Meal denied (duplicate / entitlement exceeded), per pos_meal_denied mockup.

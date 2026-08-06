@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
-  Input,
   Label,
   PageHeader,
   RadioGroup,
@@ -53,6 +52,7 @@ export default function SettingsPage() {
     void hydrate();
   }, [hydrate]);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!loading) setPrintEnabled(settings.receipt_printing_enabled);
   }, [loading, settings.receipt_printing_enabled]);
 

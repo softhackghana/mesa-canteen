@@ -24,7 +24,6 @@ export interface WindowBoundary {
   end: string;
 }
 
-const MINUTE_MS = 60 * 1000;
 
 /** Parse "HH:MM" (24h) into minutes since midnight. */
 function toMinutes(hhmm: string): number {
@@ -95,22 +94,6 @@ export function evaluateMealRule(
   const used = countInWindow(rule, transactions, at);
   const allowed = used < rule.max_meals;
   return { allowed, reason: allowed ? 'OK' : 'MAX_REACHED', used, max: rule.max_meals };
-}
-
-/**
- * Convenience: pick the person's applicable rule (assignment priority:
- * person > department > cost centre > site > global, first active match).
- * The DB function owns this in production
- * (public.evaluate_meal_rule, db/migrations/002_functions.sql); this helper
- * is for offline/POS use where assignments are already resolved.
- * ponytail: assignments are not modelled here — pass the already-resolved
- * rule (e.g. from a person's profile) as `rules[0]`.
- */
-export function pickRule(
-  rules: MealRule[],
-  _scope: { person?: string; department?: string; costCentre?: string; site?: string },
-): MealRule | null {
-  return rules.find((r) => r.is_active) ?? null;
 }
 
 // ---------------------------------------------------------------------------

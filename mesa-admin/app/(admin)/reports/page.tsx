@@ -17,7 +17,27 @@ import { buildSpreadsheetML, downloadXls } from "@/lib/spreadsheetml";
 
 /** Map a transactions row (with person/terminal joins) to the UI shape. */
 // fallow-ignore-next-line complexity
-function toTx(row: any): AdminTransaction {
+interface AdminTxRow {
+  id: string;
+  transaction_ref: string;
+  meal_period?: string | null;
+  status?: string | null;
+  auth_method?: string | null;
+  subsidy_amount?: number | null;
+  employee_amount?: number | null;
+  gross_amount?: number | null;
+  occurred_at: string;
+  site?: { name?: string } | null;
+  terminal?: { name?: string; site?: { name?: string } | null } | null;
+  person?: {
+    first_name?: string;
+    last_name?: string;
+    employee_id?: string;
+    department?: { name?: string } | null;
+    cost_centre?: { name?: string } | null;
+  } | null;
+}
+function toTx(row: AdminTxRow): AdminTransaction {
   const person = row.person ?? {};
   return {
     id: row.id,
@@ -108,7 +128,7 @@ export default function ReportsPage() {
           )
           .order("occurred_at", { ascending: false });
         if (error) throw error;
-        if (alive) setTxs(((data as any[]) ?? []).map(toTx));
+        if (alive) setTxs(((data as AdminTxRow[] | null) ?? []).map(toTx));
       } catch (e) {
         if (alive) {
           toast({ title: "Could not load transactions", description: e instanceof Error ? e.message : "Live data unavailable", variant: "error" });

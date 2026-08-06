@@ -40,7 +40,6 @@ function buildWorksheet(sheet: SpreadsheetSheet): string {
     let cellsXml = "";
     let idx = 0;
     for (const cell of row.cells) {
-      const col = columnName(idx);
       const { type, val } = cellType(cell);
       cellsXml += `<Cell ss:Index="${idx + 1}" ss:StyleID="s${type === "Number" ? 21 : 22}"><Data ss:Type="${type}">${val}</Data></Cell>`;
       idx++;
@@ -52,16 +51,6 @@ function buildWorksheet(sheet: SpreadsheetSheet): string {
       <Table>${rowsXml}</Table>
     </Worksheet>
   `;
-}
-
-function columnName(index: number): string {
-  let n = index;
-  let name = "";
-  while (n >= 0) {
-    name = String.fromCharCode((n % 26) + 65) + name;
-    n = Math.floor(n / 26) - 1;
-  }
-  return name || "A";
 }
 
 /** Build a SpreadsheetML 2003 document from one or more sheets. */

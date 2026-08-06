@@ -16,7 +16,6 @@ import { create } from "zustand";
 import {
   demoIdentities,
   DEMO_TERMINAL_ID,
-  DEMO_OPERATOR,
   DEMO_SUPERVISOR,
   DEMO_SITE,
   type DemoIdentity,

@@ -76,9 +76,24 @@ export default function DashboardPage() {
           insforge.database.from("terminals").select("id,name,status,last_heartbeat_at"),
         ]);
         if (!alive) return;
+        interface TxRow {
+          id: string;
+          occurred_at: string;
+          status: string;
+          meal_period: string;
+          gross_amount: number | null;
+          person?: { first_name?: string; last_name?: string; employee_id?: string } | null;
+          terminal?: { name?: string } | null;
+        }
+        interface TermRow {
+          id: string;
+          name: string;
+          status: string;
+          last_heartbeat_at: string | null;
+        }
         setTxs(
           // fallow-ignore-next-line complexity
-          ((txData as any[]) ?? []).map((t) => ({
+          ((txData as TxRow[] | null) ?? []).map((t) => ({
             id: t.id,
             occurred_at: t.occurred_at,
             status: t.status,
@@ -89,7 +104,7 @@ export default function DashboardPage() {
             terminal: t.terminal?.name ?? "—",
           })),
         );
-        setTerminals(((termData as any[]) ?? []).map((d) => ({ id: d.id, name: d.name, status: d.status, last_heartbeat_at: d.last_heartbeat_at ?? null })));
+        setTerminals(((termData as TermRow[] | null) ?? []).map((d) => ({ id: d.id, name: d.name, status: d.status, last_heartbeat_at: d.last_heartbeat_at ?? null })));
       } catch (e) {
         if (alive) {
           toast({ title: "Could not load dashboard data", description: e instanceof Error ? e.message : "Live data unavailable", variant: "error" });

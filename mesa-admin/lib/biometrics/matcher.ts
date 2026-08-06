@@ -1,4 +1,3 @@
-import type { DemoIdentity } from "@/lib/demo-data";
 
 /**
  * Minutiae matcher — genuine 1:N comparison over a minutiae template produced by

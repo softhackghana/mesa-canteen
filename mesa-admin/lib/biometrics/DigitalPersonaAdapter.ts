@@ -1,5 +1,4 @@
 import type { IBiometricAdapter, BiometricResult } from "./types";
-import type { DemoIdentity } from "@/lib/demo-data";
 
 /**
  * DigitalPersona adapter — real USB integration through a local WebSocket

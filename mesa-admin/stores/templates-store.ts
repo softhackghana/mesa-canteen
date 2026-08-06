@@ -35,19 +35,30 @@ interface TemplatesState {
 
 /** field_config → UI fields; site_id → assignment name. */
 // fallow-ignore-next-line complexity
-function toUi(row: any, sites: Site[]): ReceiptTemplate {
+type TemplateRow = {
+  id: string;
+  name: string;
+  code: string;
+  is_default?: boolean;
+  field_config?: unknown;
+  footer_text?: string;
+  site_id?: string | null;
+  logo_url?: string | null;
+  is_active?: boolean;
+};
+function toUi(row: TemplateRow, sites: Site[]): ReceiptTemplate {
   const site = sites.find((s) => s.id === row.site_id);
   return {
     id: row.id,
     name: row.name,
     code: row.code,
-    isDefault: row.is_default,
+    isDefault: row.is_default ?? false,
     version: 1,
     fields: (row.field_config ?? []) as TemplateField[],
     footerText: row.footer_text ?? '',
     logoUrl: row.logo_url ?? undefined,
     siteAssignment: site ? site.name : 'Global',
-    isActive: row.is_active,
+    isActive: row.is_active ?? true,
   };
 }
 
@@ -67,7 +78,7 @@ export const useTemplatesStore = create<TemplatesState>()((set, get) => ({
       ]);
       const siteRows = (sites as Site[]) ?? [];
       set({
-        items: ((rows as any[]) ?? []).map((r) => toUi(r, siteRows)),
+        items: ((rows as TemplateRow[] | null) ?? []).map((r) => toUi(r, siteRows)),
         sites: siteRows,
         loading: false,
         error: null,

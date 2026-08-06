@@ -93,6 +93,7 @@ export default function FinancePage() {
   }, [toast]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadHistory();
   }, [loadHistory]);
 

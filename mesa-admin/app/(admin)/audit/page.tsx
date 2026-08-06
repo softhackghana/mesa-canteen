@@ -54,7 +54,18 @@ function categoryFor(e: { entityType: string; action: string }): Exclude<Categor
 
 /** Map an audit_logs row to the UI shape. */
 // fallow-ignore-next-line complexity
-function toEntry(row: any): AdminAuditEntry {
+interface AdminAuditRow {
+  id: string;
+  occurred_at: string;
+  actor_id: string | null;
+  actor_type: string | null;
+  entity_type: string;
+  entity_id: string;
+  action: string;
+  delta: unknown;
+  ip_address: string | null;
+}
+function toEntry(row: AdminAuditRow): AdminAuditEntry {
   const delta = row.delta == null ? "—" : typeof row.delta === "string" ? row.delta : JSON.stringify(row.delta);
   return {
     id: row.id,
@@ -91,7 +102,7 @@ export default function AuditPage() {
           .order("occurred_at", { ascending: false })
           .limit(200);
         if (error) throw error;
-        if (alive) setEntries(((data as any[]) ?? []).map(toEntry));
+        if (alive) setEntries(((data as AdminAuditRow[] | null) ?? []).map(toEntry));
       } catch (e) {
         if (alive) {
           toast({ title: "Could not load audit log", description: e instanceof Error ? e.message : "Live data unavailable", variant: "error" });

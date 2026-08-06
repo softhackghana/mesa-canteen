@@ -16,7 +16,6 @@ import type {
   Person,
   MealRule,
   Device,
-  PosTransaction,
   Settings,
 } from "@/lib/types";
 

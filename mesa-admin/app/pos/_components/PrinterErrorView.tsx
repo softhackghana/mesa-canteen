@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePosStore } from "../_store";
 import { Icon } from "./Icon";
-import { PosPrimaryAction, PosSecondaryAction, PosTextAction } from "./PosActions";
+import { PosPrimaryAction, PosSecondaryAction } from "./PosActions";
 
 /**
  * Printer error state (FR-RCP-006, pos_printer_error mockup): meal was

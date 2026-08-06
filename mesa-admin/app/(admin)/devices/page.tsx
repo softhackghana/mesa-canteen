@@ -93,7 +93,19 @@ export default function DevicesPage() {
       }
 
       // fallow-ignore-next-line complexity
-      const rows: LiveTerminal[] = (terminals ?? []).map((t: any) => {
+      interface TermRow {
+        id: string;
+        name: string;
+        site?: { name?: string } | null;
+        ip_address?: string | null;
+        software_version?: string | null;
+        scanner_vendor?: string | null;
+        scanner_model?: string | null;
+        last_heartbeat_at?: string | null;
+        status?: string | null;
+        printer_name?: string | null;
+      }
+      const rows: LiveTerminal[] = ((terminals as TermRow[] | null) ?? []).map((t) => {
         const hb = heartbeatByTerminal.get(t.id);
         const printerStatus = (hb?.printer_status ?? "offline") as LiveTerminal["printer"]["status"];
         return {
@@ -105,9 +117,9 @@ export default function DevicesPage() {
           scanner_vendor: t.scanner_vendor ?? "—",
           scanner_model: t.scanner_model ?? "—",
           last_heartbeat: t.last_heartbeat_at ?? undefined,
-          status: t.status ?? "offline",
+          status: (t.status ?? "offline") as LiveTerminal["status"],
           printer: {
-            name: t.printer_name,
+            name: t.printer_name ?? null,
             status: printerStatus,
             detail: "",
           },
@@ -129,8 +141,9 @@ export default function DevicesPage() {
   }, [toast]);
 
   useEffect(() => {
-    load();
-    const t = setInterval(load, 30000);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load();
+    const t = setInterval(() => void load(), 30000);
     return () => clearInterval(t);
   }, [load]);
 

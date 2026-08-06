@@ -102,7 +102,6 @@ export async function logAudit(
     fallbackQueue.push(full);
     if (fallbackQueue.length > 50) fallbackQueue.shift();
   }
-  // eslint-disable-next-line no-console
   console.info("[audit]", full);
 }
 

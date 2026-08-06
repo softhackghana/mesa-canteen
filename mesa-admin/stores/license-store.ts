@@ -125,17 +125,20 @@ export const useLicenseStore = create<LicenseState>()((set, get) => ({
         insforge.database.from('terminals').select('id'),
         insforge.database.from('people').select('id'),
       ]);
-      const rec = (records as any[] | null)?.[0];
+      const rec = (records as Record<string, unknown>[] | null)?.[0];
       set({
         usage: {
-          terminalsUsed: (terminals as any[] | null)?.length ?? 0,
-          terminalsLimit: rec?.max_terminals ?? 5,
-          identitiesUsed: (people as any[] | null)?.length ?? 0,
-          identitiesLimit: rec?.max_identities ?? 500,
-          activationCount: (activations as any[] | null)?.length ?? 0,
+          terminalsUsed: (terminals as unknown[] | null)?.length ?? 0,
+          terminalsLimit: typeof rec?.max_terminals === 'number' ? rec.max_terminals : 5,
+          identitiesUsed: (people as unknown[] | null)?.length ?? 0,
+          identitiesLimit: typeof rec?.max_identities === 'number' ? rec.max_identities : 500,
+          activationCount: (activations as unknown[] | null)?.length ?? 0,
           maxSites: 5, // ponytail: no sites limit column; PRD 13.4 caps at 5
           dataRetention: '24 months',
-          systemId: 'MES-' + (rec?.id?.slice(0, 4) ?? '0000').toUpperCase() + '-X9',
+          systemId:
+            'MES-' +
+            (typeof rec?.id === 'string' ? rec.id.slice(0, 4) : '0000').toUpperCase() +
+            '-X9',
           regionalNode: 'North America - Central',
         },
       });
@@ -168,7 +171,7 @@ export const useLicenseStore = create<LicenseState>()((set, get) => ({
         .eq('is_active', true)
         .order('activated_at', { ascending: false })
         .limit(1);
-      const row = (active as any[] | null)?.[0];
+      const row = (active as { id: string }[] | null)?.[0];
       if (row) {
         await insforge.database.from('license_activations').update({ is_active: false, deactivated_at: new Date().toISOString() }).eq('id', row.id);
       }
