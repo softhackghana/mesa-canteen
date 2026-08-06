@@ -7,6 +7,7 @@ import { Icon } from "../_components/Icon";
 import { usePosStore } from "../_store";
 import { DEMO_OPERATOR, DEMO_SUPERVISOR } from "@/lib/demo-data";
 import { logAudit } from "@/lib/audit";
+import { insforge } from "@/lib/insforge";
 import { cn } from "@/lib/cn";
 
 /**
@@ -42,6 +43,11 @@ export default function PosLogin() {
         name: op.name,
         role: op.role,
       });
+      // The kiosk runs the shared InsForge client; live transaction inserts
+      // need a user access token (FR-POS-002/003). On a same-origin admin
+      // session the SDK's cookie-backed session is restored here; without
+      // one the insert fails gracefully and the meal queues offline.
+      await insforge.auth.getCurrentUser();
       await logAudit({
         kind: "login",
         actorId: op.id,
@@ -66,6 +72,7 @@ export default function PosLogin() {
       name: DEMO_OPERATOR.name,
       role: DEMO_OPERATOR.role,
     });
+    await insforge.auth.getCurrentUser();
     await logAudit({
       kind: "login",
       actorId: DEMO_OPERATOR.id,
