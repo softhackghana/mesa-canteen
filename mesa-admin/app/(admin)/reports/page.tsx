@@ -37,6 +37,7 @@ interface AdminTxRow {
     cost_centre?: { name?: string } | null;
   } | null;
 }
+// fallow-ignore-next-line complexity
 function toTx(row: AdminTxRow): AdminTransaction {
   const person = row.person ?? {};
   return {

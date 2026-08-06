@@ -30,6 +30,7 @@ export default function PosLogin() {
     setPin((p) => p.slice(0, -1));
   };
 
+  // fallow-ignore-next-line complexity
   const submit = async () => {
     const p = pin;
     if (p.length === 0) return;

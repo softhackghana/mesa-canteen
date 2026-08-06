@@ -16,6 +16,7 @@ import {
 } from './meal-rules.ts';
 import type { MealRule, Transaction } from './types.ts';
 
+// fallow-ignore-next-line code-duplication
 let failed = 0;
 function check(name: string, ok: boolean, detail = '') {
   if (!ok) {

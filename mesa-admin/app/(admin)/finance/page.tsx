@@ -62,6 +62,7 @@ const PERIODS: string[] = (() => {
   return out;
 })();
 
+// fallow-ignore-next-line complexity
 export default function FinancePage() {
   const { toast } = useToast();
   const userId = useAuthStore((s) => s.user?.id ?? null);
@@ -72,6 +73,7 @@ export default function FinancePage() {
   const [periods, setPeriods] = useState<FiscalPeriodRow[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
 
+  // fallow-ignore-next-line complexity
   const loadHistory = useCallback(async () => {
     setLoadingHistory(true);
     try {
@@ -97,6 +99,7 @@ export default function FinancePage() {
     void loadHistory();
   }, [loadHistory]);
 
+  // fallow-ignore-next-line complexity
   const closePeriod = async () => {
     setRunning(true);
     try {

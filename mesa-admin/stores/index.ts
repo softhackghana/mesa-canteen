@@ -20,5 +20,5 @@ export { useSettingsStore } from './settings-store';
 export { useTemplatesStore } from './templates-store';
 
 export type { Notification, NotificationCategory, NotificationSeverity } from './notifications-store';
-export type { PeopleFilters, OrgLookup } from './people-store';
+export type { PeopleFilters } from './people-store';
 export type { SettingsPatch } from './settings-store';

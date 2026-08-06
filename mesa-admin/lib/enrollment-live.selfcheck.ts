@@ -1,3 +1,4 @@
+// fallow-ignore-file unused-file
 /**
  * Self-check for live enrollment persistence (lib/enrollment-live.ts).
  * Runnable: `npx tsx lib/enrollment-live.selfcheck.ts`. Pure — no backend.

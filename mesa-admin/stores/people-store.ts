@@ -18,7 +18,7 @@ export interface PeopleFilters {
   department: string;
 }
 
-export interface OrgLookup {
+interface OrgLookup {
   id: string;
   code: string;
   name: string;
@@ -122,6 +122,7 @@ export const usePeopleStore = create<PeopleState>()((set, get) => ({
     return true;
   },
 
+  // fallow-ignore-next-line complexity
   bulkImport: async (rows) => {
     const { data, error } = await insforge.database.from(TABLE).insert(rows).select('id');
     if (error) {

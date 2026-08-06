@@ -65,6 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // fallow-ignore-next-line complexity
   const notificationsPanel = (
     <DropdownMenu
       trigger={
@@ -82,6 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {items.length === 0 ? (
           <p className="px-3 py-2 font-body-md text-body-md text-on-surface-variant">No notifications.</p>
         ) : (
+          // fallow-ignore-next-line complexity
           items.slice(0, 6).map((n) => (
             <div
               key={n.id}

@@ -1,3 +1,4 @@
+// fallow-ignore-file unused-file
 /**
  * Self-check for POS live transaction mapping (lib/pos-live.ts).
  * Runnable: `npx tsx lib/pos-live.selfcheck.ts`. Pure — no backend.

@@ -16,7 +16,6 @@ import type {
   Person,
   MealRule,
   Device,
-  Settings,
 } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
@@ -58,7 +57,7 @@ function mkPerson(seed: PersonSeed): AdminPerson {
   };
 }
 
-export const DEMO_PEOPLE: AdminPerson[] = [
+const DEMO_PEOPLE: AdminPerson[] = [
   mkPerson({
     id: "p-10492",
     employee_id: "EMP-10492",
@@ -542,69 +541,6 @@ export const AVAILABLE_FIELDS: TemplateField[] = [
   { key: "custom_message", label: "Custom Message", align: "left", size: "small", bold: false },
 ];
 
-export interface ReceiptTemplate {
-  id: string;
-  name: string;
-  code: string;
-  isDefault: boolean;
-  version: number;
-  fields: TemplateField[];
-  footerText: string;
-  logoUrl?: string;
-  siteAssignment: string; // "Global" or a site name
-  isActive: boolean;
-}
-
-export const DEFAULT_TEMPLATE_FIELDS: TemplateField[] = [
-  { key: "business_name", label: "Business Name", align: "center", size: "medium", bold: true },
-  { key: "employee_name", label: "Employee Name", align: "left", size: "medium", bold: false },
-  { key: "employee_id", label: "Employee ID", align: "left", size: "small", bold: false },
-  { key: "department", label: "Department", align: "left", size: "small", bold: false },
-  { key: "meal_period", label: "Meal Period", align: "left", size: "small", bold: false },
-  { key: "date", label: "Date", align: "left", size: "small", bold: false },
-  { key: "time", label: "Time", align: "left", size: "small", bold: false },
-  { key: "transaction_ref", label: "Transaction Ref", align: "left", size: "small", bold: false },
-  { key: "subsidy_amount", label: "Subsidy Amount", align: "right", size: "small", bold: false },
-  { key: "employee_amount", label: "Employee-Paid", align: "right", size: "small", bold: false },
-  { key: "qr_code", label: "QR Code", align: "center", size: "medium", bold: false },
-];
-
-export const DEFAULT_TEMPLATE: ReceiptTemplate = {
-  id: "tpl-default",
-  name: "Default Coupon",
-  code: "TPL-DEFAULT",
-  isDefault: true,
-  version: 1,
-  fields: DEFAULT_TEMPLATE_FIELDS,
-  footerText: "Thank you. Meal issued by MESA.",
-  siteAssignment: "Global",
-  isActive: true,
-};
-
-export const DEMO_TEMPLATES: ReceiptTemplate[] = [
-  DEFAULT_TEMPLATE,
-  {
-    id: "tpl-central",
-    name: "Central Cafeteria V2",
-    code: "TPL-CENTRAL",
-    isDefault: false,
-    version: 3,
-    fields: [
-      { key: "business_name", label: "Business Name", align: "center", size: "large", bold: true },
-      { key: "employee_name", label: "Employee Name", align: "left", size: "medium", bold: true },
-      { key: "employee_id", label: "Employee ID", align: "left", size: "small", bold: false },
-      { key: "meal_period", label: "Meal Period", align: "center", size: "medium", bold: true },
-      { key: "date", label: "Date", align: "left", size: "small", bold: false },
-      { key: "time", label: "Time", align: "left", size: "small", bold: false },
-      { key: "transaction_ref", label: "Transaction Ref", align: "left", size: "small", bold: false },
-      { key: "custom_message", label: "Custom Message", align: "center", size: "medium", bold: false },
-    ],
-    footerText: "POWERED BY MESA SYSTEMS · THANK YOU FOR YOUR SERVICE",
-    siteAssignment: "HQ Campus",
-    isActive: true,
-  },
-];
-
 // ---------------------------------------------------------------------------
 // Settings (PRD 10.12 receipt printing)
 // ---------------------------------------------------------------------------
@@ -623,14 +559,6 @@ export const DEMO_SITE_PRINT_OVERRIDES: SitePrintOverride[] = [
   { site: "Executive Lounge", enabled: true, printer: "PRT-EXEC-009", printerStatus: "online", template: "Premium-Gold" },
   { site: "Tema Facility", enabled: false, printer: "PRT-TX-003", printerStatus: "offline", template: "Standard V2" },
 ];
-
-export function demoSettings(): Settings {
-  return {
-    receipt_printing_enabled: true,
-    default_template_id: "tpl-default",
-    site_template_overrides: { "HQ Campus": "tpl-central" },
-  };
-}
 
 // ---------------------------------------------------------------------------
 // License usage (mirrors license-store + PRD 10.11)

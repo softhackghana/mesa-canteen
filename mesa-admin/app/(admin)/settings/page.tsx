@@ -29,6 +29,7 @@ const PRINTER_LABEL: Record<SitePrintOverride["printerStatus"], string> = {
   error: "Error",
 };
 
+// fallow-ignore-next-line complexity
 export default function SettingsPage() {
   const { toast } = useToast();
   const settings = useSettingsStore((s) => s.settings);

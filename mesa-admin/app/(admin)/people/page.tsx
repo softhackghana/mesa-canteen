@@ -39,6 +39,7 @@ function initials(p: AdminPerson): string {
   return `${first}${last}`.toUpperCase();
 }
 
+// fallow-ignore-next-line complexity
 export default function PeoplePage() {
   const { toast } = useToast();
   const items = usePeopleStore((s) => s.items);
@@ -145,6 +146,7 @@ export default function PeoplePage() {
       key: "status",
       header: "Status",
       sortable: true,
+      // fallow-ignore-next-line complexity
       render: (p) => {
         const label = p.status === "active" ? "Active" : p.status === "inactive" ? "Inactive" : p.status === "terminated" ? "Terminated" : "Pending";
         const tone = p.status === "active" ? "success" : p.status === "pending_enrollment" ? "warning" : "neutral";

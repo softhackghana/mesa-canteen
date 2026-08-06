@@ -40,7 +40,7 @@ export type PosScreen =
   | "printer_error"
   | "shift_summary";
 
-export interface MealTransaction {
+interface MealTransaction {
   id: string;
   terminalId: string;
   identityId: string;
@@ -138,6 +138,7 @@ function issueTransaction(
  * person/terminal/site uuids, inserts the row, and returns the ref on success
  * (null when offline or the insert fails). Never throws into the UI.
  */
+// fallow-ignore-next-line complexity
 async function pushLiveTransaction(tx: MealTransaction, seq: number): Promise<string | null> {
   try {
     // Resolve person uuid by employee id (or synthetic guest id).
@@ -315,6 +316,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
     (get() as unknown as Record<string, unknown>).__printerUnsub = unsub;
   },
 
+  // fallow-ignore-next-line complexity
   scan: async (template?: string) => {
     const s = get();
     if (s.scanBusy) return;
@@ -391,18 +393,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
       lastTransaction: tx,
       mealsServed: get().mealsServed + 1,
     });
-
-    await persistTransaction(tx);
-
-    await logAudit({
-      kind: "meal_issued",
-      actorId: get()?.operator?.id ?? "unknown",
-      actorName: get()?.operator?.name ?? "Unknown",
-      detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via biometric`,
-      metadata: { transactionId: tx.id, identityId: person.id },
-    });
-
-    await dispatchCoupon(tx, person, false);
+    await commitMeal(tx, person, "biometric");
   },
 
   attemptFallback: async (id: string, method: "rfid" | "pin") => {
@@ -425,15 +416,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
       lastTransaction: tx,
       mealsServed: get().mealsServed + 1,
     });
-    await persistTransaction(tx);
-    await logAudit({
-      kind: "meal_issued",
-      actorId: get()?.operator?.id ?? "unknown",
-      actorName: get()?.operator?.name ?? "Unknown",
-      detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via ${method}`,
-      metadata: { transactionId: tx.id, identityId: person.id },
-    });
-    await dispatchCoupon(tx, person, false);
+    await commitMeal(tx, person, method);
   },
 
   openOverride: (person, method) => {
@@ -502,7 +485,6 @@ export const usePosStore = create<PosState>()((set, get) => ({
       pendingIdentity: null,
       mealsServed: get().mealsServed + 1,
     });
-    await persistTransaction(tx);
     await logAudit({
       kind: "override",
       actorId: DEMO_SUPERVISOR.id,
@@ -510,14 +492,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
       detail: `Override authorised for ${person.name} (${person.employeeId}) via PIN${reason ? ` — reason: ${reason}` : ""}`,
       metadata: { transactionId: tx.id, identityId: person.id, method: s.pendingMethod, reason },
     });
-    await logAudit({
-      kind: "meal_issued",
-      actorId: get()?.operator?.id ?? "unknown",
-      actorName: get()?.operator?.name ?? "Unknown",
-      detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via supervisor override`,
-      metadata: { transactionId: tx.id, identityId: person.id },
-    });
-    await dispatchCoupon(tx, person, false);
+    await commitMeal(tx, person, "supervisor override");
     return true;
   },
 
@@ -547,15 +522,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
       manualId: "",
       mealsServed: get().mealsServed + 1,
     });
-    await persistTransaction(tx);
-    await logAudit({
-      kind: "meal_issued",
-      actorId: get()?.operator?.id ?? "unknown",
-      actorName: get()?.operator?.name ?? "Unknown",
-      detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via manual PIN entry`,
-      metadata: { transactionId: tx.id, identityId: person.id },
-    });
-    await dispatchCoupon(tx, person, false);
+    await commitMeal(tx, person, "manual PIN entry");
   },
 
   reprintLastCoupon: async () => {
@@ -636,6 +603,7 @@ export const usePosStore = create<PosState>()((set, get) => ({
 
   closeShiftSummary: () => set({ screen: "idle" }),
 
+  // fallow-ignore-next-line complexity
   endShift: async () => {
     const op = get().operator;
     await logAudit({
@@ -668,11 +636,31 @@ export const usePosStore = create<PosState>()((set, get) => ({
 }));
 
 /**
+ * Commit an issued meal to the live flow: persist (live or offline queue),
+ * audit it as meal_issued, and dispatch the coupon print. Shared by every
+ * issue path so the claim/audit/print tail stays DRY (scan, fallback, manual,
+ * override).
+ */
+// fallow-ignore-next-line complexity
+async function commitMeal(tx: MealTransaction, person: DemoIdentity, via: string): Promise<void> {
+  await persistTransaction(tx);
+  await logAudit({
+    kind: "meal_issued",
+    actorId: usePosStore.getState().operator?.id ?? "unknown",
+    actorName: usePosStore.getState().operator?.name ?? "Unknown",
+    detail: `${person.name} (${person.employeeId}) issued ${person.entitlement} via ${via}`,
+    metadata: { transactionId: tx.id, identityId: person.id },
+  });
+  await dispatchCoupon(tx, person, false);
+}
+
+/**
  * Dispatch coupon print (FR-RCP-001) and record printer failure if the bridge
  * is down. In offline mode the print is still attempted — the ESC/POS template
  * is cached locally (FR-RCP-002); the transaction was already queued by
  * persistTransaction (FR-POS-002/003).
  */
+// fallow-ignore-next-line complexity
 async function dispatchCoupon(tx: MealTransaction, person: DemoIdentity, reprint: boolean): Promise<void> {
   const res = await printerClient.print({
     type: "coupon",

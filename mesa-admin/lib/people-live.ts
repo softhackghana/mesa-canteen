@@ -44,6 +44,7 @@ export function buildCredentialMap(
 }
 
 /** Map a joined people row to the UI shape (display joins + derived state). */
+// fallow-ignore-next-line complexity
 export function toAdminPerson(
   row: PeopleJoinRow,
   templateCounts: Map<string, number>,

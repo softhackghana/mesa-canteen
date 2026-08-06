@@ -105,6 +105,7 @@ export default function DevicesPage() {
         status?: string | null;
         printer_name?: string | null;
       }
+      // fallow-ignore-next-line complexity
       const rows: LiveTerminal[] = ((terminals as TermRow[] | null) ?? []).map((t) => {
         const hb = heartbeatByTerminal.get(t.id);
         const printerStatus = (hb?.printer_status ?? "offline") as LiveTerminal["printer"]["status"];

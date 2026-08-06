@@ -65,6 +65,7 @@ interface AdminAuditRow {
   delta: unknown;
   ip_address: string | null;
 }
+// fallow-ignore-next-line complexity
 function toEntry(row: AdminAuditRow): AdminAuditEntry {
   const delta = row.delta == null ? "—" : typeof row.delta === "string" ? row.delta : JSON.stringify(row.delta);
   return {

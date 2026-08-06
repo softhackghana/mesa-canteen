@@ -52,12 +52,8 @@ export function mealPeriodFor(entitlement: MealTransaction['entitlement']): stri
   return entitlement;
 }
 
-/** Unique transaction reference for a queued replay (id-wise stable per row). */
-export function refForKey(key: number | string): string {
-  return `SYNC-${Date.now().toString(36).toUpperCase()}-${key.toString(36).toUpperCase()}`;
-}
-
-/** Build a ready-to-insert `transactions` row from the display transaction. */
+/**
+ * Build a ready-to-insert `transactions` row from the display transaction. */
 export function transactionRow(
   tx: MealTransaction,
   personId: string | null,

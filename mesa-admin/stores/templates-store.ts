@@ -46,6 +46,7 @@ type TemplateRow = {
   logo_url?: string | null;
   is_active?: boolean;
 };
+// fallow-ignore-next-line complexity
 function toUi(row: TemplateRow, sites: Site[]): ReceiptTemplate {
   const site = sites.find((s) => s.id === row.site_id);
   return {

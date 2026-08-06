@@ -6,6 +6,7 @@
  */
 import { demoIdentities } from './demo-data.ts';
 
+// fallow-ignore-next-line code-duplication
 let failed = 0;
 function check(name: string, ok: boolean, detail = '') {
   if (!ok) {

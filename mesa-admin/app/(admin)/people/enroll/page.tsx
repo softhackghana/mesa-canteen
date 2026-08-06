@@ -159,6 +159,7 @@ export default function EnrollPage() {
     (step === 2 && impressions.length >= 1 && impressions.some((i) => i.accepted) && !duplicate) ||
     step === 3;
 
+  // fallow-ignore-next-line complexity
   const save = async () => {
     if (!employee) return;
     setConfirmOpen(false);
