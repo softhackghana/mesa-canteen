@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -13,7 +13,8 @@ import {
   Switch,
   useToast,
 } from "@/components";
-import { DEMO_SITE_PRINT_OVERRIDES, demoSettings, type SitePrintOverride } from "@/lib/admin-data";
+import { DEMO_SITE_PRINT_OVERRIDES, type SitePrintOverride } from "@/lib/admin-data";
+import { useSettingsStore } from "@/stores/settings-store";
 
 const PRINTER_TONE: Record<SitePrintOverride["printerStatus"], "success" | "warning" | "error" | "neutral"> = {
   online: "success",
@@ -31,7 +32,11 @@ const PRINTER_LABEL: Record<SitePrintOverride["printerStatus"], string> = {
 
 export default function SettingsPage() {
   const { toast } = useToast();
-  const settings = demoSettings();
+  const settings = useSettingsStore((s) => s.settings);
+  const loading = useSettingsStore((s) => s.loading);
+  const error = useSettingsStore((s) => s.error);
+  const hydrate = useSettingsStore((s) => s.hydrate);
+  const update = useSettingsStore((s) => s.update);
   const [printEnabled, setPrintEnabled] = useState(settings.receipt_printing_enabled);
   const [defaultTemplate, setDefaultTemplate] = useState("Standard V2");
   const [overrides, setOverrides] = useState<SitePrintOverride[]>(DEMO_SITE_PRINT_OVERRIDES);
@@ -42,13 +47,23 @@ export default function SettingsPage() {
 
   const [saving, setSaving] = useState(false);
 
-  const save = () => {
+  // Live settings hydrate (PRD 10.12). Sync checked/template state from the
+  // row once loaded.
+  useEffect(() => {
+    void hydrate();
+  }, [hydrate]);
+  useEffect(() => {
+    if (!loading) setPrintEnabled(settings.receipt_printing_enabled);
+  }, [loading, settings.receipt_printing_enabled]);
+
+  const save = async () => {
     setSaving(true);
-    // ponytail: settings are fixture-only; defer the success state to avoid a
-    // blocking synchronous UI jump. Real failure handling gets added when the
-    // backend write exists.
-    setTimeout(() => {
-      setSaving(false);
+    const ok = await update({
+      receipt_printing_enabled: printEnabled,
+      default_template_id: defaultTemplate,
+    });
+    setSaving(false);
+    if (ok) {
       setSaved(true);
       setSavedAt(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
       toast({
@@ -57,7 +72,13 @@ export default function SettingsPage() {
         variant: "success",
       });
       setTimeout(() => setSaved(false), 2500);
-    }, 350);
+    } else {
+      toast({
+        title: "Save failed",
+        description: error ?? "Could not persist settings to the backend.",
+        variant: "error",
+      });
+    }
   };
 
   const toggleOverride = (site: string) => {

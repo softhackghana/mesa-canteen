@@ -250,3 +250,10 @@ from public.transactions tx
 join public.receipt_template_versions tv on true
 where tx.transaction_ref = 'TXN-20260803-6'
   and not exists (select 1 from public.print_jobs p where p.transaction_id = tx.id);
+
+-- =====================================================================
+-- System settings (single global row, PRD 10.12)
+-- =====================================================================
+insert into public.settings (id, receipt_printing_enabled, default_template_id, site_template_overrides)
+values ('global', true, 'TPL-DEFAULT', '{"HQ Campus": "TPL-DEFAULT"}'::jsonb)
+on conflict (id) do nothing;

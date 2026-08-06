@@ -433,6 +433,22 @@ create index if not exists idx_audit_logs_actor on public.audit_logs(actor_id);
 create index if not exists idx_audit_logs_time on public.audit_logs(occurred_at desc);
 
 -- =====================================================================
+-- System settings (single-row global config, PRD 10.12 receipt printing)
+-- Likely written-only by admins and read by terminals/POS; kept wide open
+-- under the same convention as other MESA tables.
+-- =====================================================================
+
+create table if not exists public.settings (
+  id                      text primary key,          -- fixed 'global'
+  receipt_printing_enabled boolean not null default true,
+  default_template_id     text,                      -- receipt template id/label
+  site_template_overrides jsonb not null default '{}'::jsonb,
+  updated_at              timestamptz not null default now()
+);
+
+alter table public.settings enable row level security;
+
+-- =====================================================================
 -- RLS policies
 -- Convention: authenticated users get full CRUD on MESA tables (fine-grained
 -- RBAC is applied at the API layer; ponytail: replace with role-based
@@ -564,3 +580,9 @@ drop policy if exists "mesa_audit_logs_insert" on public.audit_logs;
 create policy "mesa_audit_logs_insert" on public.audit_logs
   for insert to authenticated, anon
   with check (auth.uid() is not null);
+
+-- settings
+drop policy if exists "mesa_settings_all" on public.settings;
+create policy "mesa_settings_all" on public.settings
+  for all to authenticated, anon
+  using (auth.uid() is not null) with check (auth.uid() is not null);
