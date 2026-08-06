@@ -121,7 +121,7 @@
   <tr><td rowspan="5" style="white-space:nowrap"><b>10.3 POS &amp; Meal Issuance</b></td>
     <td>FR-POS-001 · background scanner polling</td><td><span class="chip part">PARTIAL</span></td><td>Polling model via adapter; browser demo uses simulated adapter.</td></tr>
   <tr><td>FR-POS-002 · offline AES-256 encrypted cache</td><td><span class="chip part">PARTIAL</span></td><td>Offline queue in localStorage + IndexedDB wrapper (<code>lib/pos-db.ts</code>); durable encrypted template cache pending native layer.</td></tr>
-  <tr><td>FR-POS-003 · auto push on reconnect</td><td><span class="chip ok">DONE</span></td><td><code>syncQueue()</code> in POS store.</td></tr>
+  <tr><td>FR-POS-003 · auto push on reconnect</td><td><span class="chip ok">DONE</span></td><td><code>syncQueue()</code> in POS store. Live path verified: kiosk sign-in now restores the InsForge session (<code>getCurrentUser()</code>), so scans insert live <code>transactions</code> rows; offline queue remains the fallback.</td></tr>
   <tr><td>FR-POS-004 · sub-1s name/photo/entitlement</td><td><span class="chip ok">DONE</span></td><td>Local match → instant approve/deny views.</td></tr>
   <tr><td>FR-POS-005 · Supervisor Override</td><td><span class="chip ok">DONE</span></td><td>OverrideModal + audit-logged override flow.</td></tr>
 
@@ -229,10 +229,11 @@
   <p><span class="kw">✓</span> Live data verified in-browser: dashboard KPIs/chart/terminal health, audit trail, reports consolidated table, devices terminal list, license usage counts, template designer persistence — all read real InsForge rows</p>
   <p><span class="kw">✓</span> Real minutiae matcher <code>lib/biometrics/matcher.ts</code> 1:N + selfcheck; XLSX/SpreadsheetML export round-trip verified</p>
   <p><span class="kw">✓</span> Fallow audit gate passes on the gap-closing changeset; probe scripts consolidated into <code>scripts/probe-backend.mjs</code></p>
+  <p><span class="kw">✓</span> POS kiosk live path E2E: operator PIN <code>1234</code> → biometric scan (key 4, EMP-5632 Daniel Okafor) → UI coupon + live DB row <code>TXN-20260806223732-IA3L</code> (approved); Force Sync flushed queued row <code>TXN-20260806220341-3DTH</code>; night out-of-window scan correctly queued (DB trigger <code>NO_RULE</code>, no live row). Root cause of silent queuing: SDK token manager is in-memory, kiosk never restored the cookie session → placeholder anon key → <code>AUTH_INVALID_CREDENTIALS</code> 401; fixed by <code>getCurrentUser()</code> on kiosk sign-in (<code>ddf861e</code>).</p>
 </div>
 
 <footer>
-  MESA · Meal Entitlement, Service &amp; Access Platform — Confidential · PRD v1.3 (2026-05-29) · Status: Phase 1 complete, 2026-08-05<br/>
+  MESA · Meal Entitlement, Service &amp; Access Platform — Confidential · PRD v1.3 (2026-05-29) · Status: Phase 1 complete, 2026-08-06<br/>
   Regenerate this tracer after any scope-affecting change; keep in sync with <code>docs/</code> PRD versions.
 </footer>
 

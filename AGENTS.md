@@ -48,7 +48,7 @@ Admin login for manual testing: `marcus.johnson@mesa.example` / `MesaAdmin123!`.
 
 **The API proxy is load-bearing.** `app/api/[...path]/route.ts` proxies all `/api/*` to InsForge. It exists because the SDK's refresh cookie is `Secure; SameSite=None`, which the browser drops over plain-http cross-origin — sessions died on every reload. The proxy makes the cookie same-origin, strips `Secure`, relaxes `SameSite`, and purges stale duplicate refresh cookies (they broke the backend CSRF nonce check). `lib/insforge.ts` therefore points the browser client at `window.location.origin`, not the backend URL. Don't "simplify" either of these back to a direct connection.
 
-**Two data sources, mid-migration.** `lib/admin-data.ts` holds `DEMO_*` fixtures that mirror `db/seed.sql`; most admin pages still read those. People and meal rules are live via InsForge. When wiring a page to real data, replace the fixture read with `insforge.database.from(...)` — the fixture shapes already match `lib/types.ts`.
+**Two data sources, mid-migration.** `lib/admin-data.ts` holds `DEMO_*` fixtures that mirror `db/seed.sql`; a few admin pages still read those (settings print overrides, meal-rules day labels, templates field list; type-only imports in people/reports). People, meal rules, dashboard KPIs/chart/terminal health, audit trail, reports tables, devices, license usage, and template persistence are live via InsForge. When wiring a page to real data, replace the fixture read with `insforge.database.from(...)` — the fixture shapes already match `lib/types.ts`.
 
 **Hardware never breaks the UI.** Both device layers talk to local WebSocket bridges and degrade to explicit UI states rather than throwing:
 
@@ -76,7 +76,7 @@ Admin login for manual testing: `marcus.johnson@mesa.example` / `MesaAdmin123!`.
 
 ## Known gaps
 
-PDF/Excel export stubbed (CSV works). Suprema/ZKTeco adapters simulated. SourceAFIS matching is interface-only. No ESC/POS bridge daemon. Enrollment UI runs on demo identities, not live `people` rows. Dashboard/reports/devices/audit pages read fixtures. HRIS APIs and email/SMS notifications not started. Month-end close has a DB function but no admin UI. Full list with PRD mapping: `docs/dev-tracer.html`.
+PDF/Excel export stubbed (CSV works). Suprema/ZKTeco adapters simulated. SourceAFIS matching is interface-only. No ESC/POS bridge daemon. Enrollment UI runs on demo identities, not live `people` rows. HRIS APIs and email/SMS notifications not started. Month-end close has a DB function but no admin UI. POS kiosk inserts live `transactions` rows (session restored on sign-in, `ddf861e`); known gap: `queuedCount` starts at 0 and is never seeded from IndexedDB on kiosk mount, so the 15s heartbeat sync won't flush pre-existing queued rows until an online event, dev-toggle, or manual Force Sync. Full list with PRD mapping: `docs/dev-tracer.html`.
 
 ## DOX Framework
 
