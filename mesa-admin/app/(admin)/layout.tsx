@@ -28,6 +28,7 @@ const ADMIN_SECTIONS: SidebarSection[] = [
   {
     title: "FINANCE",
     items: [
+      { label: "Finance & Period Close", href: "/finance", icon: "payments", fillWhenActive: true },
       { label: "Reports", href: "/reports", icon: "analytics", fillWhenActive: true },
       { label: "Receipt Templates", href: "/templates", icon: "receipt_long", fillWhenActive: true },
     ],
