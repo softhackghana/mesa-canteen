@@ -271,25 +271,25 @@ export default function TemplatesPage() {
                     </span>
                   </span>
                   <div className="flex items-center gap-2">
-                    <Select
+                    <select
                       value={f.align}
-                      options={[
-                        { value: "left", label: "Left" },
-                        { value: "center", label: "Center" },
-                        { value: "right", label: "Right" },
-                      ]}
-                      onChange={(v) => {
-                        const align = v as TemplateField["align"];
+                      onChange={(e) => {
+                        const align = e.target.value as TemplateField["align"];
                         patchSelected({ fields: selected.fields.map((x, xi) => (xi === i ? { ...x, align } : x)) });
                       }}
-                    />
+                      className="h-8 rounded border border-outline bg-surface-container-lowest px-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none"
+                    >
+                      <option value="left">Left</option>
+                      <option value="center">Center</option>
+                      <option value="right">Right</option>
+                    </select>
                     <button
                       type="button"
                       aria-label={`Remove ${f.label}`}
                       onClick={() => {
                         patchSelected({ fields: selected.fields.filter((_, xi) => xi !== i) });
                       }}
-                      className="flex h-8 w-8 items-center justify-center rounded border border-outline text-on-surface-variant transition-colors hover:bg-error-container hover:text-on-error-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                      className="flex h-8 w-8 items-center justify-center rounded border border-outline text-on-surface-variant hover:bg-error-container hover:text-on-error-container"
                     >
                       <span className="material-symbols-outlined text-body-md" aria-hidden>close</span>
                     </button>
@@ -310,7 +310,7 @@ export default function TemplatesPage() {
                   onClick={() => {
                     patchSelected({ fields: [...selected.fields, { ...f }] });
                   }}
-                  className="rounded-full border border-outline-variant px-3 py-1 font-data-mono text-data-mono text-on-surface transition-colors hover:border-primary hover:bg-primary-container/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  className="rounded-full border border-outline-variant px-3 py-1 font-data-mono text-data-mono text-on-surface hover:border-primary hover:bg-primary-container/10 hover:text-primary"
                 >
                   + {f.label}
                 </button>

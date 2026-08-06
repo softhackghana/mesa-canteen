@@ -40,24 +40,15 @@ export default function SettingsPage() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [paperSize, setPaperSize] = useState("80mm");
 
-  const [saving, setSaving] = useState(false);
-
   const save = () => {
-    setSaving(true);
-    // ponytail: settings are fixture-only; defer the success state to avoid a
-    // blocking synchronous UI jump. Real failure handling gets added when the
-    // backend write exists.
-    setTimeout(() => {
-      setSaving(false);
-      setSaved(true);
-      setSavedAt(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-      toast({
-        title: "Settings saved",
-        description: "Site overrides pushed to terminals on next heartbeat.",
-        variant: "success",
-      });
-      setTimeout(() => setSaved(false), 2500);
-    }, 350);
+    setSaved(true);
+    setSavedAt(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    toast({
+      title: "Settings saved",
+      description: "Site overrides pushed to terminals on next heartbeat.",
+      variant: "success",
+    });
+    setTimeout(() => setSaved(false), 2500);
   };
 
   const toggleOverride = (site: string) => {
@@ -75,9 +66,9 @@ export default function SettingsPage() {
               <span className="material-symbols-outlined text-body-lg" aria-hidden>refresh</span>
               Push to Terminals
             </Button>
-            <Button onClick={save} disabled={saving} aria-busy={saving}>
+            <Button onClick={save}>
               <span className="material-symbols-outlined text-body-lg" aria-hidden>save</span>
-              {saving ? "Saving…" : "Save Changes"}
+              Save Changes
             </Button>
           </>
         }

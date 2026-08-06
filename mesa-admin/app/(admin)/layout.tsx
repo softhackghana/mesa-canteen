@@ -10,7 +10,7 @@ const ADMIN_SECTIONS: SidebarSection[] = [
   {
     title: "OPERATIONS",
     items: [
-      { label: "Dashboard", href: "/dashboard", icon: "dashboard", fillWhenActive: true },
+      { label: "Dashboard", href: "/", icon: "dashboard", fillWhenActive: true },
       { label: "POS Terminals", href: "/pos", icon: "point_of_sale" },
     ],
   },

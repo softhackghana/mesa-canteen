@@ -42,7 +42,7 @@ export function FilterChips({
               onValueChange?.(chip.value);
             }}
             className={cn(
-              "rounded-full border px-4 py-1.5 font-nav-item text-nav-item",
+              "rounded-full border px-4 py-1.5 font-nav-item text-nav-item text-body-md",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
               "transition-colors duration-150",
               active

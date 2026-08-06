@@ -41,6 +41,8 @@ export interface AppShellProps {
 }
 
 const DEFAULT_FOOTER: SidebarItem[] = [
+  { label: "Support", href: "/support", icon: "help" },
+  { label: "User Guide", href: "/guide", icon: "description" },
   { label: "Logout", href: "/logout", icon: "logout" },
 ];
 

@@ -49,7 +49,7 @@ export function ScanRing({
         <Icon
           name={offline ? "qr_code_scanner" : scanning ? "radar" : "fingerprint"}
           fill={!scanning}
-          className={cn("text-primary", offline && "text-on-warning-container", scanning && "animate-spin")}
+          className={cn("text-primary", offline && "text-warning", scanning && "animate-spin")}
           style={{ fontSize: offline ? 64 : 64 }}
         />
       </div>

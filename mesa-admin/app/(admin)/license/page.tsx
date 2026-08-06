@@ -7,11 +7,10 @@ import {
   Input,
   Label,
   PageHeader,
-  Skeleton,
   StatusPill,
   useToast,
 } from "@/components";
-import { useLicenseStore, type LicenseState } from "@/stores/license-store";
+import { useLicenseStore } from "@/stores/license-store";
 import { isValidLicenseKey } from "@/lib/license";
 
 function daysUntil(iso: string): number {
@@ -35,137 +34,6 @@ function useUsage() {
     systemId: "MES-—",
     regionalNode: "—",
   };
-}
-
-/** Skeleton placeholders for the license status card. */
-function LicenseStatusSkeleton() {
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-7 w-40" />
-          <Skeleton className="h-4 w-24" />
-        </div>
-        <Skeleton className="h-6 w-24 rounded-full" />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <Skeleton className="h-20 rounded-lg" />
-        <Skeleton className="h-20 rounded-lg" />
-      </div>
-      <Skeleton className="h-28 rounded-lg" />
-    </div>
-  );
-}
-
-/** Skeleton placeholders for the capacity usage panel. */
-function LicenseUsageSkeleton() {
-  return (
-    <div className="flex flex-col gap-4">
-      <Skeleton className="h-3 w-full rounded-full" />
-      <div className="flex justify-between">
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="h-4 w-20" />
-      </div>
-      <Skeleton className="h-3 w-full rounded-full" />
-      <div className="flex justify-between">
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="h-4 w-20" />
-      </div>
-      <div className="grid grid-cols-3 gap-3 border-t border-outline-variant pt-4">
-        <Skeleton className="h-14 rounded-lg" />
-        <Skeleton className="h-14 rounded-lg" />
-        <Skeleton className="h-14 rounded-lg" />
-      </div>
-    </div>
-  );
-}
-
-// fallow-ignore-next-line complexity — pre-existing status logic relocated from LicensePage for render clarity.
-function LicenseStatusCard({
-  license,
-  usage,
-  onActivate,
-}: {
-  license: LicenseState;
-  usage: ReturnType<typeof useUsage>;
-  onActivate: () => void;
-}) {
-  const status = license.status;
-  return (
-    <>
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="font-body-lg text-body-lg font-semibold text-on-surface">{license.businessName ?? "Not activated"}</p>
-          <p className="font-data-mono text-data-mono text-on-surface-variant">
-            {license.tier ? license.tier.charAt(0).toUpperCase() + license.tier.slice(1) : "—"} Plan
-          </p>
-        </div>
-        <StatusPill
-          status={status === "active" ? "ACTIVE" : status === "grace" ? "GRACE" : status === "expired" ? "EXPIRED" : "UNACTIVATED"}
-          tone={status === "active" ? "success" : status === "grace" ? "warning" : "error"}
-        />
-      </div>
-
-      <dl className="grid grid-cols-2 gap-3">
-        <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-          <dt className="font-label-md text-label-md uppercase text-on-surface-variant">Expiry</dt>
-          <dd className="font-body-md text-body-md text-on-surface">
-            {license.expiry ? new Date(license.expiry).toLocaleDateString() : "—"}
-          </dd>
-          {license.expiry && status === "active" && (
-            <dd className="font-body-md text-body-md text-on-surface-variant">{daysUntil(license.expiry)} days remaining</dd>
-          )}
-        </div>
-        <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-          <dt className="font-label-md text-label-md uppercase text-on-surface-variant">Offline Window</dt>
-          <dd className="font-body-md text-body-md text-on-surface">{license.remainingOfflineHours}h</dd>
-          <dd className="font-body-md text-body-md text-on-surface-variant">since last validation</dd>
-        </div>
-      </dl>
-
-      <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-        <dt className="font-label-md text-label-md uppercase text-on-surface-variant">System ID</dt>
-        <dd className="font-body-md text-body-md text-on-surface">{usage.systemId}</dd>
-        <dt className="mt-2 font-label-md text-label-md uppercase text-on-surface-variant">Regional Node</dt>
-        <dd className="font-body-md text-body-md text-on-surface">{usage.regionalNode}</dd>
-      </div>
-
-      {status === "unactivated" && (
-        <Button onClick={onActivate}>
-          <span className="material-symbols-outlined text-body-lg" aria-hidden>key</span>
-          Activate License
-        </Button>
-      )}
-    </>
-  );
-}
-
-/** Capacity usage panel. */
-function LicenseUsagePanel({ usage }: { usage: ReturnType<typeof useUsage> }) {
-  const pct = (used: number, limit: number) => (limit > 0 ? Math.round((used / limit) * 100) : 0);
-  return (
-    <>
-      <UsageBar label="POS Terminals" used={usage.terminalsUsed} limit={usage.terminalsLimit} unit="devices" />
-      <UsageBar label="Enrolled Identities" used={usage.identitiesUsed} limit={usage.identitiesLimit} unit="profiles" />
-      <div className="grid grid-cols-2 gap-3 border-t border-outline-variant pt-4 sm:grid-cols-3">
-        <div>
-          <p className="font-label-md text-label-md uppercase text-on-surface-variant">Max Sites</p>
-          <p className="font-body-md text-body-md text-on-surface">{usage.maxSites}</p>
-        </div>
-        <div>
-          <p className="font-label-md text-label-md uppercase text-on-surface-variant">Data Retention</p>
-          <p className="font-body-md text-body-md text-on-surface">{usage.dataRetention}</p>
-        </div>
-        <div>
-          <p className="font-label-md text-label-md uppercase text-on-surface-variant">Terminal Limit</p>
-          <p className="font-body-md text-body-md text-on-surface">{pct(usage.terminalsUsed, usage.terminalsLimit)}%</p>
-        </div>
-      </div>
-      <p className="font-body-md text-body-md text-on-surface-variant">
-        Usage figures read live from the licensing records and people/terminal counts (FR-LIC-008/009).
-      </p>
-    </>
-  );
 }
 
 /** Linear usage bar with a fill color that shifts near the limit. */
@@ -207,7 +75,6 @@ export default function LicensePage() {
   const [busy, setBusy] = useState(false);
 
   const status = license.status;
-  const loading = license.loading;
 
   const deactivate = async () => {
     const ok = await license.deactivate();
@@ -241,6 +108,8 @@ export default function LicensePage() {
     }
   };
 
+  const pct = (used: number, limit: number) => (limit > 0 ? Math.round((used / limit) * 100) : 0);
+
   return (
     <div className="flex flex-col gap-4">
       <PageHeader
@@ -263,7 +132,49 @@ export default function LicensePage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Status card */}
         <div className="flex flex-col gap-4 rounded-lg border border-outline-variant bg-surface-container-lowest p-6">
-          {loading ? <LicenseStatusSkeleton /> : <LicenseStatusCard license={license} usage={usage} onActivate={() => setDialog("activate")} />}
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="font-body-lg text-body-lg font-semibold text-on-surface">{license.businessName ?? "Not activated"}</p>
+              <p className="font-data-mono text-data-mono text-on-surface-variant">
+                {license.tier ? license.tier.charAt(0).toUpperCase() + license.tier.slice(1) : "—"} Plan
+              </p>
+            </div>
+            <StatusPill
+              status={status === "active" ? "ACTIVE" : status === "grace" ? "GRACE" : status === "expired" ? "EXPIRED" : "UNACTIVATED"}
+              tone={status === "active" ? "success" : status === "grace" ? "warning" : "error"}
+            />
+          </div>
+
+          <dl className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
+              <dt className="font-label-md text-label-md uppercase text-on-surface-variant">Expiry</dt>
+              <dd className="font-body-md text-body-md text-on-surface">
+                {license.expiry ? new Date(license.expiry).toLocaleDateString() : "—"}
+              </dd>
+              {license.expiry && status === "active" && (
+                <dd className="font-body-md text-body-md text-on-surface-variant">{daysUntil(license.expiry)} days remaining</dd>
+              )}
+            </div>
+            <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
+              <dt className="font-label-md text-label-md uppercase text-on-surface-variant">Offline Window</dt>
+              <dd className="font-body-md text-body-md text-on-surface">{license.remainingOfflineHours}h</dd>
+              <dd className="font-body-md text-body-md text-on-surface-variant">since last validation</dd>
+            </div>
+          </dl>
+
+          <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
+            <dt className="font-label-md text-label-md uppercase text-on-surface-variant">System ID</dt>
+            <dd className="font-body-md text-body-md text-on-surface">{usage.systemId}</dd>
+            <dt className="mt-2 font-label-md text-label-md uppercase text-on-surface-variant">Regional Node</dt>
+            <dd className="font-body-md text-body-md text-on-surface">{usage.regionalNode}</dd>
+          </div>
+
+          {status === "unactivated" && (
+            <Button onClick={() => setDialog("activate")}>
+              <span className="material-symbols-outlined text-body-lg" aria-hidden>key</span>
+              Activate License
+            </Button>
+          )}
         </div>
 
         {/* Usage */}
@@ -274,7 +185,25 @@ export default function LicensePage() {
               {usage.activationCount} activation{usage.activationCount === 1 ? "" : "s"} · {usage.dataRetention} retention
             </span>
           </div>
-          {loading ? <LicenseUsageSkeleton /> : <LicenseUsagePanel usage={usage} />}
+          <UsageBar label="POS Terminals" used={usage.terminalsUsed} limit={usage.terminalsLimit} unit="devices" />
+          <UsageBar label="Enrolled Identities" used={usage.identitiesUsed} limit={usage.identitiesLimit} unit="profiles" />
+          <div className="grid grid-cols-2 gap-3 border-t border-outline-variant pt-4 sm:grid-cols-3">
+            <div>
+              <p className="font-label-md text-label-md uppercase text-on-surface-variant">Max Sites</p>
+              <p className="font-body-md text-body-md text-on-surface">{usage.maxSites}</p>
+            </div>
+            <div>
+              <p className="font-label-md text-label-md uppercase text-on-surface-variant">Data Retention</p>
+              <p className="font-body-md text-body-md text-on-surface">{usage.dataRetention}</p>
+            </div>
+            <div>
+              <p className="font-label-md text-label-md uppercase text-on-surface-variant">Terminal Limit</p>
+              <p className="font-body-md text-body-md text-on-surface">{pct(usage.terminalsUsed, usage.terminalsLimit)}%</p>
+            </div>
+          </div>
+          <p className="font-body-md text-body-md text-on-surface-variant">
+            Usage figures read live from the licensing records and people/terminal counts (FR-LIC-008/009).
+          </p>
         </div>
       </div>
 

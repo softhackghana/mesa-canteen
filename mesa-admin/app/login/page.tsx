@@ -48,7 +48,7 @@ export default function LoginPage() {
           type="button"
           disabled
           title="SSO (SAML 2.0 / OAuth2) ships in Phase 3 — sign in with credentials below."
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 px-4 font-nav-item text-nav-item text-on-primary transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 px-4 font-nav-item text-nav-item text-on-primary transition-colors duration-200 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span className="material-symbols-outlined text-headline-md" aria-hidden>
             shield_person
@@ -106,7 +106,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="mt-1 self-end font-body-md text-body-md text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
+              className="mt-1 self-end font-body-md text-body-md text-primary hover:underline"
             >
               {showPassword ? "Hide password" : "Show password"}
             </button>
@@ -121,7 +121,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-6 flex w-full items-center justify-center rounded-lg bg-primary py-3 px-4 font-nav-item text-nav-item text-on-primary transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:opacity-60"
+            className="mt-6 flex w-full items-center justify-center rounded-lg bg-primary py-3 px-4 font-nav-item text-nav-item text-on-primary transition-colors duration-200 hover:bg-primary/90 disabled:opacity-60"
           >
             {loading ? "Signing in…" : "Sign In"}
           </button>

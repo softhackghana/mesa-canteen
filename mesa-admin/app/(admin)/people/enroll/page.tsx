@@ -264,7 +264,7 @@ export default function EnrollPage() {
                           key={f.id}
                           type="button"
                           onClick={() => setFinger(f.id)}
-                          className={`flex items-center justify-between rounded-lg border px-3 py-2 font-nav-item text-nav-item transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                          className={`flex items-center justify-between rounded-lg border px-3 py-2 font-nav-item text-nav-item transition-colors ${
                             finger === f.id
                               ? "border-primary bg-primary-container/10 text-primary"
                               : "border-outline-variant text-on-surface hover:bg-surface-container"

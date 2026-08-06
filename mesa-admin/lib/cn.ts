@@ -23,34 +23,23 @@ export function cn(...inputs: Array<string | false | null | undefined>): string 
       cls.startsWith("text-nav-") ||
       cls.startsWith("text-label") ||
       cls.startsWith("text-data") ||
-      cls.startsWith("text-table") ||
-      cls.startsWith("text-display") ||
-      cls.startsWith("text-kiosk")
+      cls.startsWith("text-table")
     ) {
       return "font-size";
     }
     if (cls.startsWith("text-[") && /^text-\[\d/.test(cls)) {
       return "font-size";
     }
-    if (/^text-(left|center|right|justify|start|end)$/.test(cls)) return "text-align";
     if (cls.startsWith("text-")) return "text-color";
     if (cls.startsWith("bg-")) return "bg";
     if (cls === "border" || cls === "border-0" || cls === "border-2" || cls === "border-4") {
       return "border-width";
     }
-    // A side-specific border width (border-b, border-l-[3px], border-t-2) is a
-    // different axis from the border colour it sits next to.
-    const side = /^border-([tblrxy])(?:-(\d+|\[.+\]))?$/.exec(cls);
-    if (side) return `border-${side[1]}-width`;
     if (cls.startsWith("border-")) return "border-color";
     if (cls.startsWith("rounded-")) return "radius";
     if (cls.startsWith("shadow-")) return "shadow";
-    // Each spacing/sizing axis is its own group, so px-6 cannot evict py-3 and
-    // h-10 cannot evict w-full. Longest prefixes first.
-    const box = /^(px|py|pt|pb|pl|pr|p|mx|my|mt|mb|ml|mr|m)-/.exec(cls);
-    if (box) return box[1];
-    const size = /^(min-w|min-h|max-w|max-h|w|h)-/.exec(cls);
-    if (size) return size[1];
+    if (/^(p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr)-/.test(cls)) return "box";
+    if (/^(w|h|min-w|min-h|max-w|max-h)-/.test(cls)) return "size";
     if (/^gap(-[xy])?-/.test(cls)) return "gap";
     if (cls === "flex" || cls === "flex-1" || cls === "flex-auto" || cls === "flex-none") {
       return "flex";

@@ -24,7 +24,7 @@ interface LicenseUsage {
   regionalNode: string;
 }
 
-export interface LicenseState {
+interface LicenseState {
   certificate: LicenseCertificate | null;
   status: LicenseStatus;
   businessName: string | null;

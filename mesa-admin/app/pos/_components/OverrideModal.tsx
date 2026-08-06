@@ -86,11 +86,11 @@ export function OverrideModal() {
                 readOnly
                 value={pinEntry ? "•".repeat(pinEntry.length) : ""}
                 placeholder="••••"
-                className="w-full bg-surface-container-lowest border-b-2 border-primary text-center text-headline-md font-headline-md py-2 tracking-[0.5em] text-on-surface placeholder:text-on-surface-variant focus:outline-none focus-visible:border-primary"
+                className="w-full bg-surface-container-lowest border-b-2 border-primary text-center text-headline-md font-headline-md py-2 tracking-[0.5em] text-on-surface placeholder:text-outline focus:outline-none focus-visible:border-primary"
               />
               <button
                 onClick={backspace}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
                 aria-label="Backspace"
               >
                 <Icon name="backspace" />
@@ -177,7 +177,7 @@ export function OverrideModal() {
               Authorise Override
             </PosPrimaryAction>
           </div>
-          <div className="flex items-center justify-center gap-1.5 text-on-surface-variant text-kiosk-label font-kiosk-label">
+          <div className="flex items-center justify-center gap-1.5 text-outline text-kiosk-label font-kiosk-label">
             <Icon name="policy" style={{ fontSize: 14 }} />
             <span className="font-data-mono text-data-mono uppercase tracking-wide">
               This action is logged for audit purposes (AX-{auditRef})
