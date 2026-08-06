@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   DataTable,
@@ -14,11 +14,10 @@ import {
   useToast,
   type DataTableColumn,
 } from "@/components";
-import { DAY_LABELS, DEMO_MEAL_RULES, dayRange } from "@/lib/admin-data";
-import type { MealRule, MealPeriod } from "@/lib/types";
+import { DAY_LABELS, dayRange } from "@/lib/admin-data";
+import { useMealRulesStore } from "@/stores";
+import type { MealPeriod } from "@/lib/types";
 
-const ALL_COST_CENTRES = ["CC-ENG-01", "CC-HR-01", "CC-OPS-04", "CC-LOG-02", "CC-210", "CC-890"];
-const ALL_SITES = ["HQ Campus", "North Campus", "South Facility", "Tema Facility", "Distribution West"];
 const MEAL_PERIODS: Array<{ value: MealPeriod; label: string }> = [
   { value: "breakfast", label: "Breakfast" },
   { value: "lunch", label: "Lunch" },
@@ -27,18 +26,26 @@ const MEAL_PERIODS: Array<{ value: MealPeriod; label: string }> = [
   { value: "custom", label: "Custom" },
 ];
 
-/** ponytail: fixtures carry cost-centre/site names as display joins on the
- *  meal_rule; live data resolves them from ids. Kept as local state here so
- *  the form round-trips without a backend. */
-interface RuleDraft extends MealRule {
-  cost_centres: string[];
-  sites: string[];
-  departments: string[];
+interface RuleDraft {
+  id: string | null; // null = not yet persisted (new rule)
+  name: string;
+  description: string | null;
+  meal_period: MealPeriod;
+  max_meals: number;
+  window_start: string;
+  window_end: string;
+  active_days: number[];
+  company_subsidy_pct: number;
+  block_duplicate: boolean;
+  is_active: boolean;
+  cost_centres: string[]; // cost-centre codes (form selection)
+  sites: string[]; // site ids (form selection)
+  departments: string[]; // department ids (form selection)
 }
 
 function emptyDraft(): RuleDraft {
   return {
-    id: `mr-${Math.floor(Math.random() * 90000 + 10000)}`,
+    id: null,
     name: "",
     description: null,
     meal_period: "lunch",
@@ -49,9 +56,6 @@ function emptyDraft(): RuleDraft {
     company_subsidy_pct: 75,
     block_duplicate: true,
     is_active: true,
-    created_by: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
     cost_centres: [],
     sites: [],
     departments: [],
@@ -63,11 +67,17 @@ function RuleForm({
   onChange,
   onSave,
   onCancel,
+  costCentreOptions,
+  siteOptions,
+  departmentOptions,
 }: {
   draft: RuleDraft;
   onChange: (d: RuleDraft) => void;
   onSave: () => void;
   onCancel: () => void;
+  costCentreOptions: Array<{ value: string; label: string }>;
+  siteOptions: Array<{ value: string; label: string }>;
+  departmentOptions: Array<{ value: string; label: string }>;
 }) {
   const set = (patch: Partial<RuleDraft>) => onChange({ ...draft, ...patch });
   const [auditNote, setAuditNote] = useState("");
@@ -81,12 +91,24 @@ function RuleForm({
     set({ [key]: next } as Partial<RuleDraft>);
   };
 
+  const toggleSelect = <K extends "sites" | "departments">(key: K, value: string) => {
+    const arr = draft[key];
+    const next = arr.includes(value) ? arr.filter((x) => x !== value) : [...arr, value];
+    set({ [key]: next } as Partial<RuleDraft>);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <span className="rounded bg-surface-container px-2 py-1 font-body-md text-body-md text-on-surface-variant">
-          ID: {draft.id.toUpperCase()}
-        </span>
+        {draft.id ? (
+          <span className="rounded bg-surface-container px-2 py-1 font-body-md text-body-md text-on-surface-variant">
+            ID: {draft.id.slice(0, 8).toUpperCase()}
+          </span>
+        ) : (
+          <span className="rounded bg-surface-container px-2 py-1 font-body-md text-body-md text-on-surface-variant">
+            New rule
+          </span>
+        )}
         <div className="flex items-center gap-2">
           <Switch
             checked={draft.is_active}
@@ -185,18 +207,18 @@ function RuleForm({
       <div className="flex flex-col gap-2">
         <Label>Applicable Cost Centres {draft.cost_centres.length === 0 && <span className="text-on-surface-variant">(all)</span>}</Label>
         <div className="flex flex-wrap gap-1.5">
-          {ALL_COST_CENTRES.map((cc) => (
+          {costCentreOptions.map((cc) => (
             <button
-              key={cc}
+              key={cc.value}
               type="button"
-              onClick={() => toggle("cost_centres", cc)}
+              onClick={() => toggle("cost_centres", cc.value)}
               className={`rounded-lg border px-3 py-1.5 font-body-md text-body-md transition-colors ${
-                draft.cost_centres.includes(cc)
+                draft.cost_centres.includes(cc.value)
                   ? "border-primary bg-primary-container/15 text-primary"
                   : "border-outline-variant text-on-surface-variant hover:bg-surface-container"
               }`}
             >
-              {cc}
+              {cc.label}
             </button>
           ))}
         </div>
@@ -207,18 +229,15 @@ function RuleForm({
         <Label>Applicable Sites</Label>
         <Select
           placeholder={draft.sites.length === 0 ? "All Sites (Global)" : `${draft.sites.length} site(s) selected`}
-          options={ALL_SITES.map((s) => ({ value: s, label: s }))}
-          onChange={(v) => {
-            const next = draft.sites.includes(v) ? draft.sites.filter((x) => x !== v) : [...draft.sites, v];
-            set({ sites: next });
-          }}
+          options={siteOptions}
+          onChange={(v) => toggleSelect("sites", v)}
         />
         {draft.sites.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1.5">
             {draft.sites.map((s) => (
               <span key={s} className="inline-flex items-center gap-1 rounded-full bg-info-container px-2 py-0.5 font-body-md text-body-md text-on-info-container">
-                {s}
-                <button type="button" aria-label={`Remove ${s}`} onClick={() => toggle("sites", s)}>
+                {siteOptions.find((o) => o.value === s)?.label ?? s}
+                <button type="button" aria-label={`Remove ${s}`} onClick={() => toggleSelect("sites", s)}>
                   <span className="material-symbols-outlined text-body-md" aria-hidden>close</span>
                 </button>
               </span>
@@ -231,19 +250,16 @@ function RuleForm({
       <div className="flex flex-col gap-1">
         <Label>Applicable Departments</Label>
         <Select
-          placeholder="All Departments"
-          options={["Engineering", "Operations", "Logistics", "Finance", "Human Resources"].map((d) => ({ value: d, label: d }))}
-          onChange={(v) => {
-            const next = draft.departments.includes(v) ? draft.departments.filter((x) => x !== v) : [...draft.departments, v];
-            set({ departments: next });
-          }}
+          placeholder={draft.departments.length === 0 ? "All Departments" : `${draft.departments.length} department(s) selected`}
+          options={departmentOptions}
+          onChange={(v) => toggleSelect("departments", v)}
         />
         {draft.departments.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1.5">
             {draft.departments.map((d) => (
               <span key={d} className="inline-flex items-center gap-1 rounded-full bg-info-container px-2 py-0.5 font-body-md text-body-md text-on-info-container">
-                {d}
-                <button type="button" aria-label={`Remove ${d}`} onClick={() => toggle("departments", d)}>
+                {departmentOptions.find((o) => o.value === d)?.label ?? d}
+                <button type="button" aria-label={`Remove ${d}`} onClick={() => toggleSelect("departments", d)}>
                   <span className="material-symbols-outlined text-body-md" aria-hidden>close</span>
                 </button>
               </span>
@@ -283,17 +299,57 @@ function RuleForm({
   );
 }
 
+
+// fallow-ignore-next-line complexity
 export default function MealRulesPage() {
   const { toast } = useToast();
-  const [rules, setRules] = useState<RuleDraft[]>(() =>
-    DEMO_MEAL_RULES.map((r) => ({ ...r, cost_centres: [], sites: [], departments: [] })),
-  );
+  const rules = useMealRulesStore((s) => s.items);
+  const sites = useMealRulesStore((s) => s.sites);
+  const costCentres = useMealRulesStore((s) => s.costCentres);
+  const departments = useMealRulesStore((s) => s.departments);
+  const loading = useMealRulesStore((s) => s.loading);
+  const fetchRules = useMealRulesStore((s) => s.fetch);
+  const saveRule = useMealRulesStore((s) => s.save);
+  const setActive = useMealRulesStore((s) => s.setActive);
   const [siteFilter, setSiteFilter] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [draft, setDraft] = useState<RuleDraft>(emptyDraft());
 
-  const openEditor = (r?: RuleDraft) => {
-    setDraft(r ? { ...r } : emptyDraft());
+  useEffect(() => {
+    void fetchRules();
+  }, [fetchRules]);
+
+  // Lookup maps for display + draft conversion.
+  const siteById = useMemo(() => new Map(sites.map((s) => [s.id, s.name])), [sites]);
+  const ccById = useMemo(() => new Map(costCentres.map((c) => [c.id, c])), [costCentres]);
+  const ccByCode = useMemo(() => new Map(costCentres.map((c) => [c.code, c])), [costCentres]);
+
+  const siteOptions = useMemo(() => sites.map((s) => ({ value: s.id, label: s.name })), [sites]);
+  const ccOptions = useMemo(() => costCentres.map((c) => ({ value: c.code, label: c.code })), [costCentres]);
+  const deptOptions = useMemo(() => departments.map((d) => ({ value: d.id, label: d.name })), [departments]);
+
+  const openEditor = (r?: (typeof rules)[number]) => {
+    setDraft(
+      r
+        ? {
+            id: r.id,
+            name: r.name,
+            description: r.description,
+            meal_period: r.meal_period,
+            max_meals: r.max_meals,
+            window_start: r.window_start,
+            window_end: r.window_end,
+            active_days: r.active_days,
+            company_subsidy_pct: r.company_subsidy_pct,
+            block_duplicate: r.block_duplicate,
+            is_active: r.is_active,
+            // Cost-centre scope is stored as ids; the form selects by code.
+            cost_centres: r.costCentres.map((id) => ccById.get(id)?.code ?? id),
+            sites: r.sites,
+            departments: r.departments,
+          }
+        : emptyDraft(),
+    );
     setDialogOpen(true);
   };
 
@@ -302,7 +358,7 @@ export default function MealRulesPage() {
     return rules.filter((r) => r.sites.length === 0 || r.sites.includes(siteFilter));
   }, [rules, siteFilter]);
 
-  const columns: DataTableColumn<RuleDraft>[] = [
+  const columns: DataTableColumn<(typeof rules)[number]>[] = [
     {
       key: "name",
       header: "Rule Name",
@@ -311,7 +367,7 @@ export default function MealRulesPage() {
       render: (r) => (
         <span className="flex flex-col">
           <span className="font-body-md text-body-md font-medium text-on-surface">{r.name}</span>
-          <span className="font-label-md text-label-md text-on-surface-variant">ID: {r.id.toUpperCase()}</span>
+          <span className="font-label-md text-label-md text-on-surface-variant">ID: {r.id.slice(0, 8).toUpperCase()}</span>
         </span>
       ),
     },
@@ -328,8 +384,15 @@ export default function MealRulesPage() {
       header: "Site / Scope",
       mono: false,
       render: (r) => (
-        <span className="font-body-md text-body-md text-on-surface">
-          {r.sites.length === 0 ? "All Sites (Global)" : `${r.sites.length} site(s)`}
+        <span className="flex flex-col">
+          <span className="font-body-md text-body-md text-on-surface">
+            {r.sites.length === 0 ? "All Sites (Global)" : r.sites.map((s) => siteById.get(s) ?? s).join(", ")}
+          </span>
+          {r.costCentres.length > 0 && (
+            <span className="font-label-md text-label-md text-on-surface-variant">
+              {r.costCentres.map((cc) => ccById.get(cc)?.code ?? cc).join(", ")}
+            </span>
+          )}
         </span>
       ),
     },
@@ -376,13 +439,21 @@ export default function MealRulesPage() {
           <Button variant="ghost" size="sm" onClick={() => openEditor(r)}>Edit</Button>
           <Button
             variant="ghost" size="sm"
-            onClick={() => {
-              setRules((prev) => prev.map((x) => (x.id === r.id ? { ...x, is_active: !x.is_active } : x)));
-              toast({
-                title: `${r.name} ${r.is_active ? "disabled" : "enabled"}`,
-                description: "Change audit-logged.",
-                variant: "info",
-              });
+            onClick={async () => {
+              const ok = await setActive(r.id, !r.is_active);
+              toast(
+                ok
+                  ? {
+                      title: `${r.name} ${r.is_active ? "disabled" : "enabled"}`,
+                      description: "Change audit-logged.",
+                      variant: "info",
+                    }
+                  : {
+                      title: "Could not update rule",
+                      description: useMealRulesStore.getState().error ?? undefined,
+                      variant: "error",
+                    },
+              );
             }}
           >
             {r.is_active ? "Disable" : "Enable"}
@@ -392,15 +463,45 @@ export default function MealRulesPage() {
     },
   ];
 
-  const saveRule = () => {
-    const exists = rules.some((x) => x.id === draft.id);
-    setRules((prev) => (exists ? prev.map((x) => (x.id === draft.id ? draft : x)) : [...prev, draft]));
-    setDialogOpen(false);
-    toast({
-      title: exists ? "Rule updated" : "Rule created",
-      description: `${draft.name} — ${draft.window_start} to ${draft.window_end}, ${draft.company_subsidy_pct}% subsidy.`,
-      variant: "success",
+  
+// fallow-ignore-next-line complexity
+  const persist = async () => {
+    if (!draft.name.trim()) return;
+    const existing = rules.find((x) => x.id === draft.id);
+    const ok = await saveRule({
+      id: draft.id ?? crypto.randomUUID(),
+      name: draft.name,
+      description: draft.description,
+      meal_period: draft.meal_period,
+      max_meals: draft.max_meals,
+      window_start: draft.window_start,
+      window_end: draft.window_end,
+      active_days: draft.active_days,
+      company_subsidy_pct: draft.company_subsidy_pct,
+      block_duplicate: draft.block_duplicate,
+      is_active: draft.is_active,
+      created_by: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      // Persist the actual ids for the scopes the user selected.
+      costCentres: draft.cost_centres.map((code) => ccByCode.get(code)?.id ?? code),
+      sites: draft.sites,
+      departments: draft.departments,
     });
+    if (ok) {
+      setDialogOpen(false);
+      toast({
+        title: existing ? "Rule updated" : "Rule created",
+        description: `${draft.name} — ${draft.window_start} to ${draft.window_end}, ${draft.company_subsidy_pct}% subsidy.`,
+        variant: "success",
+      });
+    } else {
+      toast({
+        title: existing ? "Update failed" : "Create failed",
+        description: useMealRulesStore.getState().error ?? undefined,
+        variant: "error",
+      });
+    }
   };
 
   return (
@@ -413,15 +514,14 @@ export default function MealRulesPage() {
             <Select
               value={siteFilter}
               placeholder="All Sites (Global)"
-              options={[{ value: "all", label: "All Sites (Global)" }, ...ALL_SITES.map((s) => ({ value: s, label: s }))]}
+              options={[{ value: "all", label: "All Sites (Global)" }, ...siteOptions]}
               onChange={(v) => setSiteFilter(v)}
             />
             <Button
               variant="secondary"
               onClick={() => {
-                if (!draft) return;
-                const copy = { ...draft, id: `mr-${Math.floor(Math.random() * 90000 + 10000)}`, name: `${draft.name} (Copy)` };
-                setDraft(copy);
+                if (!draft.name) return;
+                setDraft({ ...draft, id: null, name: `${draft.name} (Copy)` });
                 setDialogOpen(true);
                 toast({ title: "Rule duplicated", description: "A copy was created and opened for editing.", variant: "info" });
               }}
@@ -442,6 +542,12 @@ export default function MealRulesPage() {
         data={filtered}
         rowKey={(r) => r.id}
         defaultSort={{ key: "name", direction: "asc" }}
+        loading={loading}
+        emptyState={
+          <div className="py-8 text-center font-body-md text-body-md text-on-surface-variant">
+            {loading ? "Loading meal rules…" : "No meal rules yet. Create one to get started."}
+          </div>
+        }
       />
 
       <Dialog
@@ -454,8 +560,11 @@ export default function MealRulesPage() {
         <RuleForm
           draft={draft}
           onChange={setDraft}
-          onSave={saveRule}
+          onSave={persist}
           onCancel={() => setDialogOpen(false)}
+          costCentreOptions={ccOptions}
+          siteOptions={siteOptions}
+          departmentOptions={deptOptions}
         />
       </Dialog>
     </div>

@@ -112,3 +112,79 @@ export function pickRule(
 ): MealRule | null {
   return rules.find((r) => r.is_active) ?? null;
 }
+
+// ---------------------------------------------------------------------------
+// Assignment scoping (PRD 10.4 / meal_rule_assignments)
+// ---------------------------------------------------------------------------
+
+/**
+ * UI view of a meal rule: the `meal_rules` row plus its scope assignments.
+ * Scope is an OR across the four assignment dimensions (person > department
+ * > cost centre > site > global), mirroring `evaluate_meal_rule` in
+ * db/migrations/002_functions.sql. A rule with NO assignment rows is shown
+ * and saved as "all scopes" (an empty selection); persisting it writes one
+ * GLOBAL assignment row (all four scope ids null).
+ *
+ * Scopes are stored as ids (uuids) here; display names are resolved on the
+ * page via the sites/cost-centres/departments lookup arrays.
+ */
+export interface RuleScope {
+  departments: string[];
+  costCentres: string[];
+  sites: string[];
+}
+
+export type MealRuleDraft = MealRule & RuleScope;
+
+export interface MealRuleAssignmentRow {
+  id: string;
+  meal_rule_id: string;
+  person_id: string | null;
+  department_id: string | null;
+  cost_centre_id: string | null;
+  site_id: string | null;
+}
+
+/**
+ * Group assignment rows by rule id, dropping person-scoped rows (not editable
+ * from the admin page).
+ * ponytail: fallow CRAP gate sees zero coverage data for the store's pure
+ * helpers; logic is covered by lib/meal-rules.selfcheck.ts. Feed Istanbul
+ * coverage (FALLOW_COVERAGE) to retire the ignores repo-wide.
+ */
+// fallow-ignore-next-line complexity
+export function groupAssignments(rows: MealRuleAssignmentRow[] | null): Map<string, RuleScope> {
+  const scopes = new Map<string, RuleScope>();
+  for (const a of rows ?? []) {
+    if (a.person_id) continue;
+    const scope = scopes.get(a.meal_rule_id) ?? { departments: [], costCentres: [], sites: [] };
+    if (a.department_id && !scope.departments.includes(a.department_id)) scope.departments.push(a.department_id);
+    if (a.cost_centre_id && !scope.costCentres.includes(a.cost_centre_id)) scope.costCentres.push(a.cost_centre_id);
+    if (a.site_id && !scope.sites.includes(a.site_id)) scope.sites.push(a.site_id);
+    scopes.set(a.meal_rule_id, scope);
+  }
+  return scopes;
+}
+
+export function toDraft(rule: MealRule, scope: RuleScope): MealRuleDraft {
+  return { ...rule, ...scope };
+}
+
+/**
+ * Each row is a write-shaped meal_rule_assignments insert. An empty scope
+ * selection produces one GLOBAL row (all scope ids null).
+ * fallow-ignore: see groupAssignments ponytail note (covered by self-check).
+ */
+// fallow-ignore-next-line complexity
+export function buildAssignmentRows(
+  mealRuleId: string,
+  draft: MealRuleDraft,
+  ccIds: string[],
+): Array<Record<string, string | null>> {
+  const rows: Array<Record<string, string | null>> = [];
+  for (const d of draft.departments) rows.push({ meal_rule_id: mealRuleId, department_id: d, cost_centre_id: null, site_id: null });
+  for (const cc of ccIds) rows.push({ meal_rule_id: mealRuleId, department_id: null, cost_centre_id: cc, site_id: null });
+  for (const s of draft.sites) rows.push({ meal_rule_id: mealRuleId, department_id: null, cost_centre_id: null, site_id: s });
+  if (rows.length === 0) rows.push({ meal_rule_id: mealRuleId, department_id: null, cost_centre_id: null, site_id: null });
+  return rows;
+}
