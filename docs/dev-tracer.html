@@ -77,7 +77,7 @@
   <tr>
     <td><b>MVP — Phase 1</b><br/>native enrollment, People Master, offline POS, core reporting, RBAC, ECDSA licensing, receipt printing, template designer, multi-modal fallback</td>
     <td><span class="chip ok">DONE</span></td>
-    <td>All 11 admin routes + full POS kiosk + licensing engine + meal-rules engine + DB schema/RLS/triggers + native DigitalPersona bridge (<code>bridge/digitalpersona/</code>, ws://127.0.0.1:8765). Live data on dashboard/audit/reports/devices/license/templates; real minutiae matcher (<code>lib/biometrics/matcher.ts</code>); XLSX/SpreadsheetML export. Remaining: ESC/POS printer bridge daemon + server-side template persistence for enrollment (native agent).</td>
+    <td>All 11 admin routes + full POS kiosk + licensing engine + meal-rules engine + DB schema/RLS/triggers + native DigitalPersona bridge (<code>bridge/digitalpersona/</code>, ws://127.0.0.1:8765). Live data on dashboard/audit/reports/devices/license/templates; real minutiae matcher (<code>lib/biometrics/matcher.ts</code>); XLSX/SpreadsheetML export. Remaining: real ESC/POS printer print on Windows hardware (<code>bridge/escpos/</code> daemon protocol-complete) + server-side template persistence for enrollment (native agent).</td>
   </tr>
   <tr>
     <td><b>Phase 2</b><br/>HRIS/AD sync, automated month-end, fraud &amp; exception dashboards, configurable shift rules</td>
@@ -189,7 +189,7 @@
 <h2>4 · What Is Deferred (deliberately)</h2>
 <ul>
   <li><span class="chip defer">DEFERRED</span> <b>Vendor licensing portal</b> — internal vendor tool (PRD §13.9); out of product scope by decision. App-side crypto complete.</li>
-  <li><span class="chip defer">DEFERRED</span> <b>ESC/POS printer bridge daemon</b> — no bridge daemon exists yet; <code>print()</code> fails cleanly and the POS shows Printer Error view + audit-logs <code>printer_error</code> (FR-RCP-002/003).</li>
+  <li><span class="chip defer">DEFERRED</span> <b>ESC/POS printer bridge daemon</b> — daemon exists at <code>bridge/escpos/</code> (ws://127.0.0.1:8766, usb/spooler/stdout backends, self-check passing) but needs a Windows host + USB thermal printer to print for real. Without the daemon running, <code>print()</code> fails cleanly and the POS shows Printer Error view + audit-logs <code>printer_error</code> (FR-RCP-002/003).</li>
   <li><span class="chip defer">DEFERRED</span> <b>Suprema + ZKTeco real adapters</b> — simulated via <code>SimulatedBiometricAdapter</code> by decision; DigitalPersona is the real integration. Swap-in when vendor SDKs available.</li>
   <li><span class="chip defer">DEFERRED</span> <b>SAML 2.0 / OAuth2 SSO</b> — Phase 3 (PRD §9). Current auth: InsForge email/password + token sessions.</li>
   <li><span class="chip defer">DEFERRED</span> <b>Phase 3 scope</b> — facial recognition, employee self-service app, wallet/cashless payments, turnstile integration, predictive meal analytics, webhooks.</li>
@@ -198,7 +198,7 @@
 <h2>5 · Remaining Work for a Full Build (prioritized)</h2>
 <h3>Hardware &amp; native layer (MVP completion)</h3>
 <ul>
-  <li><b>ESC/POS printer bridge daemon</b> — browser ↔ USB printer over ws://127.0.0.1:8766 (port distinct from biometrics 8765). <code>lib/printer.ts</code> client is ready; the daemon is the missing half.</li>
+  <li><b>ESC/POS printer bridge on real hardware</b> — daemon at <code>bridge/escpos/</code> is protocol-complete (ws://127.0.0.1:8766, usb/spooler/stdout backends, self-check passing). Remaining: run it on the Windows kiosk with a USB thermal printer and verify a real coupon prints (FR-RCP-001/003).</li>
   <li><b>Server-side template persistence for enrollment</b> — enrollment runs on demo identities today; save captured templates to <code>biometric_templates</code> when the data worker lands.</li>
   <li><b>SourceAFIS matching</b> — WebAssembly/native engine swap-in for the JS minutiae matcher when procured.</li>
   <li><b>Suprema / ZKTeco adapters</b> against real SDKs once procured (PRD risk #1 mitigation: adapter pattern ready).</li>

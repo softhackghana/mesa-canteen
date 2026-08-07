@@ -53,7 +53,7 @@ Admin login for manual testing: `marcus.johnson@mesa.example` / `MesaAdmin123!`.
 **Hardware never breaks the UI.** Both device layers talk to local WebSocket bridges and degrade to explicit UI states rather than throwing:
 
 - Biometrics — `lib/biometrics/`, `ws://127.0.0.1:8765`. `autoDetectAdapter()` tries `DigitalPersonaAdapter` and falls back to `SimulatedBiometricAdapter` over `lib/demo-data.ts` identities (FR-IM-007). The simulator is how you test enrollment and POS scanning without hardware; POS keys `1`–`4` are seeded identities, `5` is no-match.
-- Printer — `lib/printer.ts`, `ws://127.0.0.1:8766`. No bridge daemon exists yet, so `print()` fails and the POS shows its Printer Error view + audit-logs `printer_error`. Keep the two ports distinct; they have drifted before.
+- Printer — `lib/printer.ts`, `ws://127.0.0.1:8766`. The bridge daemon lives in `bridge/escpos/` (usb/spooler/stdout backends; `selfcheck.py` passes without hardware). Until it runs on a Windows host with a USB thermal printer, `print()` fails and the POS shows its Printer Error view + audit-logs `printer_error`. Keep the two ports (8765 biometrics / 8766 printer) distinct; they have drifted before.
 
 **Offline is a first-class path.** `lib/pos-db.ts` is a hand-rolled IndexedDB wrapper (queued transactions, audit events, template cache). `usePosStore` queues on offline and `forceSync()` drains. `toggleDevOffline` simulates network loss for testing.
 
@@ -76,7 +76,7 @@ Admin login for manual testing: `marcus.johnson@mesa.example` / `MesaAdmin123!`.
 
 ## Known gaps
 
-PDF/Excel export stubbed (CSV works). Suprema/ZKTeco adapters simulated. SourceAFIS matching is interface-only. No ESC/POS bridge daemon. Enrollment UI runs on demo identities, not live `people` rows. HRIS APIs and email/SMS notifications not started. Month-end close has a DB function but no admin UI. POS kiosk inserts live `transactions` rows (session restored on sign-in, `ddf861e`); known gap: `queuedCount` starts at 0 and is never seeded from IndexedDB on kiosk mount, so the 15s heartbeat sync won't flush pre-existing queued rows until an online event, dev-toggle, or manual Force Sync. Full list with PRD mapping: `docs/dev-tracer.html`.
+PDF/Excel export stubbed (CSV works). Suprema/ZKTeco adapters simulated. SourceAFIS matching is interface-only. ESC/POS bridge daemon exists (`bridge/escpos/`, protocol-complete) but untested on real printer hardware. Enrollment UI runs on demo identities, not live `people` rows. HRIS APIs and email/SMS notifications not started. Month-end close has a DB function but no admin UI. POS kiosk inserts live `transactions` rows (session restored on sign-in, `ddf861e`); known gap: `queuedCount` starts at 0 and is never seeded from IndexedDB on kiosk mount, so the 15s heartbeat sync won't flush pre-existing queued rows until an online event, dev-toggle, or manual Force Sync. Full list with PRD mapping: `docs/dev-tracer.html`.
 
 ## DOX Framework
 

@@ -4,3 +4,6 @@ CLAUDE.md
 # Browser test artifacts
 cookies.txt
 *.pem
+# Python bridge virtualenvs / bytecode
+bridge/**/.venv/
+bridge/**/__pycache__/
